@@ -1,6 +1,7 @@
 package top.ycmt.thetrackofshadow.game
 
-import taboolib.common.platform.function.warning
+import top.ycmt.thetrackofshadow.conf.GameSetting
+import top.ycmt.thetrackofshadow.pkg.logger.logger
 
 // 游戏管理器
 object GameManager {
@@ -11,8 +12,9 @@ object GameManager {
     private var gameCounter: UInt = 0u
 
     // 创建游戏
-    fun createGame(gameName: String): Game {
-        val game = Game(gameCounter++, gameName)
+    fun createGame(gameSetting: GameSetting): Game {
+        gameCounter += 1u
+        val game = Game(gameCounter, gameSetting)
         gameMap[game.gameId] = game
         return game
     }
@@ -21,7 +23,7 @@ object GameManager {
     fun removeGame(gameId: UInt) {
         val game = gameMap[gameId]
         if (game == null) {
-            warning("游戏不存在, gameId: $gameId")
+            logger.error("游戏不存在， gameId: $gameId")
             return
         }
         gameMap.remove(gameId)

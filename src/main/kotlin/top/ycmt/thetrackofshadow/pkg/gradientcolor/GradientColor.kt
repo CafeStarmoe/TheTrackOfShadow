@@ -52,7 +52,11 @@ class GradientColor {
             // 获取文本中的字符
             val char = colorSetting.text[i]
             // 计算当前字符在文本中的百分比位置
-            val percentage = i.toFloat() / (colorSetting.text.length - 1)
+            val percentage = if (colorSetting.text.length - 1 > 0) {
+                i.toFloat() / (colorSetting.text.length - 1)
+            } else {
+                0f // 或者设置为 1f，具体根据需求来决定
+            }
             // 插值计算当前字符对应的颜色
             val currentColor = interpolateColors(colorSetting.colors, percentage)
 

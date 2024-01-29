@@ -1,6 +1,6 @@
 package top.ycmt.thetrackofshadow.pkg.gradientcolor
 
-// 文本颜色设置
+// 文本颜色设置数据
 data class ColorSetting(
     // 文本
     val text: String,
