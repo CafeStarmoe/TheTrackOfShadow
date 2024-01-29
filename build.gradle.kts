@@ -33,6 +33,8 @@ taboolib {
         install(BUKKIT)
         // 安装 Bukkit 拓展工具
         install(BUKKIT_UTIL, BUKKIT_XSERIES)
+        // 安装Raw 信息构建工具与 1.16 RGB 颜色转换
+        install(CHAT)
     }
     // 版本配置
     // 此处列出所有可用选项，除 "TabooLib 版本" 外均省略
@@ -67,9 +69,9 @@ taboolib {
         // 插件加载阶段
         // START 表示这个插件在服务器启动时就开始加载。
         // POSTWORLD 表示这个插件在第一个世界加载完成后开始加载。
-        load("START")
+        load("POSTWORLD")
         // api版本
-        bukkitApi("1.13")
+        bukkitApi("1.20")
     }
 }
 
