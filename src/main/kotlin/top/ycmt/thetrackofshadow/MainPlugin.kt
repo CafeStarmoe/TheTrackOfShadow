@@ -5,7 +5,7 @@ import taboolib.common.platform.Plugin
 import taboolib.common.platform.function.pluginVersion
 import taboolib.module.chat.impl.DefaultComponent
 import taboolib.module.chat.toGradientColor
-import top.ycmt.thetrackofshadow.conf.GameSetting
+import top.ycmt.thetrackofshadow.common.config.GameSetting
 import top.ycmt.thetrackofshadow.game.GameManager
 import top.ycmt.thetrackofshadow.pkg.logger.logger
 
@@ -35,8 +35,8 @@ class MainPlugin : Plugin() {
         // 显示启用信息
         logger.info("插件就绪，版本：$pluginVersion")
         // 运行测试游戏
-        for (i in 0 until 100) {
-            val gameSetting = GameSetting("test$i", 10u, 30u)
+        for (i in 1 until 5 + 1) {
+            val gameSetting = GameSetting("test$i", 2, 10, 30)
             GameManager.createGame(gameSetting)
         }
     }

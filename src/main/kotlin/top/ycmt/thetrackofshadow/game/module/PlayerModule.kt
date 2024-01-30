@@ -1,5 +1,6 @@
 package top.ycmt.thetrackofshadow.game.module
 
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.pkg.logger.logger
@@ -21,7 +22,7 @@ class PlayerModule(private val game: Game) {
             return
         }
         // 校验是否已满人
-        if (playerList.size >= game.gameSetting.playerCount.toInt()) {
+        if (playerList.size >= game.gameSetting.maxPlayerCount) {
             logger.error("玩家列表已满人, size: ${playerList.size}, gameName: ${game.gameSetting.gameName}")
             player.sendFailedMessage("游戏${game.gameSetting.gameName}已满人")
             return
@@ -29,5 +30,10 @@ class PlayerModule(private val game: Game) {
         // 玩家列表添加玩家
         playerList.add(player.uniqueId)
         player.sendSuccessMessage("你加入了游戏${game.gameSetting.gameName}")
+    }
+
+    // 获取在线游戏玩家列表
+    fun getOnlinePlayerList(): List<Player> {
+        return playerList.mapNotNull { Bukkit.getPlayer(it) }
     }
 }

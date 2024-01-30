@@ -3,8 +3,8 @@ package top.ycmt.thetrackofshadow.pkg.logger
 import taboolib.common.platform.function.console
 import taboolib.common.platform.function.severe
 import taboolib.common.platform.function.warning
-import taboolib.module.chat.impl.DefaultComponent
 import taboolib.module.chat.toGradientColor
+import top.ycmt.thetrackofshadow.common.constant.PrefixConst
 
 val logger: Logger = Logger()
 
@@ -13,35 +13,38 @@ class Logger {
 
     // 标准日志
     fun info(vararg msgList: String) {
-        for (s in msgList) {
-            val formatMsg = DefaultComponent()
-                .append("TheTrackOfShadow".toGradientColor(listOf(0xffd89d, 0x76d3c3, 0x8a95f5))).bold()
-                .append("->".toGradientColor(listOf(0xffa3ca, 0xffb5ef))).bold()
-                .append(" ")
-                .append("§f$s §3${getStackTrace()}")
-                .toLegacyText()
-            console().sendMessage(formatMsg)
+        msgList.forEach {
+            console().sendMessage(
+                PrefixConst.PrefixMessage + "§f$it ${
+                    getStackTrace().toGradientColor(
+                        listOf(
+                            0xccffff,
+                            0x88dbfe
+                        )
+                    )
+                }"
+            )
         }
     }
 
     // 警告日志
     fun warn(vararg msgList: String) {
-        for (s in msgList) {
-            warning("$s ${getStackTrace()}")
+        msgList.forEach {
+            warning("$it ${getStackTrace()}")
         }
     }
 
     // 错误日志
     fun error(vararg msgList: String) {
-        for (s in msgList) {
-            severe("$s ${getStackTrace()}")
+        msgList.forEach {
+            severe("$it ${getStackTrace()}")
         }
     }
 
     // 无格式标准日志
     fun log(vararg msgList: String) {
-        for (s in msgList) {
-            console().sendMessage(s)
+        msgList.forEach {
+            console().sendMessage(it)
         }
     }
 

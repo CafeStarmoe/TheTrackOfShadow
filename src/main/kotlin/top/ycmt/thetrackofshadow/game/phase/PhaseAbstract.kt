@@ -8,7 +8,7 @@ abstract class PhaseAbstract : PhaseInterface {
     var isDone: Boolean = false
         private set
 
-    abstract override fun handle() // 处理当前阶段
+    abstract override fun onTick() // 处理当前阶段
 
     // 完成该阶段
     fun Done() {
