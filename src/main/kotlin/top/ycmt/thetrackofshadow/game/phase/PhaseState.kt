@@ -1,4 +1,4 @@
-package top.ycmt.thetrackofshadow.game.state
+package top.ycmt.thetrackofshadow.game.phase
 
 // 游戏阶段状态
 enum class PhaseState {

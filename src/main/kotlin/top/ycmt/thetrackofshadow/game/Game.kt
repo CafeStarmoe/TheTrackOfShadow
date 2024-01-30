@@ -1,19 +1,19 @@
 package top.ycmt.thetrackofshadow.game
 
-import org.bukkit.scheduler.BukkitRunnable
+import taboolib.common.platform.function.submit
 import top.ycmt.thetrackofshadow.conf.GameSetting
 import top.ycmt.thetrackofshadow.game.module.PlayerModule
-import top.ycmt.thetrackofshadow.game.runnable.LobbyPhase
-import top.ycmt.thetrackofshadow.game.state.PhaseState
-import top.ycmt.thetrackofshadow.game.state.PhaseState.INIT_PHASE
-import top.ycmt.thetrackofshadow.game.state.PhaseState.LOBBY_PHASE
+import top.ycmt.thetrackofshadow.game.phase.InitPhase
+import top.ycmt.thetrackofshadow.game.phase.LobbyPhase
+import top.ycmt.thetrackofshadow.game.phase.PhaseAbstract
+import top.ycmt.thetrackofshadow.game.phase.PhaseState
+import top.ycmt.thetrackofshadow.game.phase.PhaseState.INIT_PHASE
+import top.ycmt.thetrackofshadow.game.phase.PhaseState.LOBBY_PHASE
 import top.ycmt.thetrackofshadow.pkg.logger.logger
 
 
 // 游戏对象
 class Game(
-    // 游戏id
-    val gameId: UInt,
     // 游戏设置数据
     val gameSetting: GameSetting
 ) {
@@ -24,20 +24,25 @@ class Game(
     private var phaseState: PhaseState = INIT_PHASE
 
     // 游戏阶段定时器
-    private lateinit var gamePhase: BukkitRunnable
+    private var gamePhase: PhaseAbstract = InitPhase(this)
 
     init {
-        initGame()
+        logger.info("游戏初始化, gameName: ${gameSetting.gameName}")
+
+        // 运行游戏主调度器
+        gameMainTask()
     }
 
-    // 初始化游戏
-    private fun initGame() {
-        logger.info("游戏初始化, gameId: $gameId")
-        // 随机宝箱放置
-        // 宝箱物品设置
-
-        // 初始化完毕进入下一阶段
-        nextPhase()
+    // 游戏主调度器
+    private fun gameMainTask() {
+        submit(period = 1 * 20L) {
+            // 执行当前阶段任务
+            gamePhase.handle()
+            // 阶段处理完成跳转下一阶段
+            if (gamePhase.isDone) {
+                nextPhase()
+            }
+        }
     }
 
     // 设置游戏为下阶段
@@ -52,15 +57,13 @@ class Game(
         // 设置阶段
         phaseState = phases[nextPhaseIndex]
         // 根据阶段运行阶段定时器
-        when (phaseState) {
+        gamePhase = when (phaseState) {
+            // 初始化游戏阶段
+            INIT_PHASE -> InitPhase(this)
             // 大厅等待阶段
-            LOBBY_PHASE -> gamePhase = LobbyPhase(this)
-            else -> {
-                logger.error("阶段无效, phaseState: $phaseState")
-                return
-            }
+            LOBBY_PHASE -> LobbyPhase(this)
         }
-        logger.info("游戏执行下一阶段, gameId: $gameId, phaseState: $phaseState")
+        logger.info("游戏执行下一阶段, gameName: ${gameSetting.gameName}, phaseState: $phaseState")
     }
 
 }

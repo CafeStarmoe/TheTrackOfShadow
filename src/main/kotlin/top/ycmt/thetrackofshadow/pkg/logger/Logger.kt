@@ -3,8 +3,8 @@ package top.ycmt.thetrackofshadow.pkg.logger
 import taboolib.common.platform.function.console
 import taboolib.common.platform.function.severe
 import taboolib.common.platform.function.warning
-import top.ycmt.thetrackofshadow.pkg.gradientcolor.ColorSetting
-import top.ycmt.thetrackofshadow.pkg.gradientcolor.GradientColor
+import taboolib.module.chat.impl.DefaultComponent
+import taboolib.module.chat.toGradientColor
 
 val logger: Logger = Logger()
 
@@ -14,13 +14,12 @@ class Logger {
     // 标准日志
     fun info(vararg msgList: String) {
         for (s in msgList) {
-            val formatMsg = GradientColor(
-                ColorSetting("TheTrackOfShadow", listOf("#ffd89d", "#76d3c3", "#8a95f5"), isBold = true),
-                ColorSetting(" "),
-                ColorSetting("->", listOf("#ffa3ca", "#ffb5ef"), isBold = true),
-                ColorSetting(" "),
-                ColorSetting(s, listOf("#c1ecff", "#53b4eb"), isBold = true),
-            ).generate()
+            val formatMsg = DefaultComponent()
+                .append("TheTrackOfShadow".toGradientColor(listOf(0xffd89d, 0x76d3c3, 0x8a95f5))).bold()
+                .append("->".toGradientColor(listOf(0xffa3ca, 0xffb5ef))).bold()
+                .append(" ")
+                .append("§f$s §3${getStackTrace()}")
+                .toLegacyText()
             console().sendMessage(formatMsg)
         }
     }
