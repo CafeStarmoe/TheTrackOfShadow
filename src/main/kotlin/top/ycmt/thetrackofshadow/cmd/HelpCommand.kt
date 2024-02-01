@@ -5,6 +5,7 @@ import taboolib.common.platform.command.CommandContext
 import taboolib.common.platform.command.subCommand
 import taboolib.module.chat.impl.DefaultComponent
 import taboolib.module.chat.toGradientColor
+import top.ycmt.thetrackofshadow.constant.MessageConst
 
 // 显示帮助命令
 val helpCommand = subCommand {
@@ -20,16 +21,11 @@ fun sendHelpMsg(sender: ProxyCommandSender, cmd: CommandContext<ProxyCommandSend
         DefaultComponent()
             .append("-----//".toGradientColor(listOf(0x727272, 0xe1e1e1))).bold()
             .append(" ")
-            .append("TheTrackOfShadow".toGradientColor(listOf(0xffd89d, 0x76d3c3, 0x8a95f5))).bold()
+            .append(MessageConst.CNLogoMessage)
             .append(" §f§l- ")
             .append("HELP".toGradientColor(listOf(0xc4ffff, 0x7493ff))).bold()
             .append(" ")
             .append("//-----".toGradientColor(listOf(0xe1e1e1, 0x727272))).bold()
-    ).sendTo(sender)
-    DefaultComponent().sendTo(sender)
-    DefaultComponent().append(
-        DefaultComponent()
-            .append(">> 所有重要的子命令及注释:".toGradientColor(listOf(0xededed, 0x797979))).bold()
     ).sendTo(sender)
     DefaultComponent().sendTo(sender)
     DefaultComponent().append(

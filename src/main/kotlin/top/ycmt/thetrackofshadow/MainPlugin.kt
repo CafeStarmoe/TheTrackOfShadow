@@ -1,11 +1,13 @@
 package top.ycmt.thetrackofshadow
 
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import taboolib.common.platform.Plugin
 import taboolib.common.platform.function.pluginVersion
 import taboolib.module.chat.impl.DefaultComponent
 import taboolib.module.chat.toGradientColor
-import top.ycmt.thetrackofshadow.common.config.GameSetting
+import top.ycmt.thetrackofshadow.config.GameSetting
+import top.ycmt.thetrackofshadow.constant.MessageConst
 import top.ycmt.thetrackofshadow.game.GameManager
 import top.ycmt.thetrackofshadow.pkg.logger.logger
 
@@ -19,7 +21,7 @@ class MainPlugin : Plugin() {
             DefaultComponent()
                 .append("正在加载".toGradientColor(listOf(0xd5d5ff, 0x9e9eee))).bold()
                 .append(" ")
-                .append("TheTrackOfShadow".toGradientColor(listOf(0xffd89d, 0x76d3c3, 0x8a95f5))).bold()
+                .append(MessageConst.ENLogoMessage)
                 .append(" ")
                 .append("Beta".toGradientColor(listOf(0xffd6d6, 0xe14d4d))).bold()
                 .append("...".toGradientColor(listOf(0xf4f4f4, 0x808080))).bold()
@@ -36,7 +38,15 @@ class MainPlugin : Plugin() {
         logger.info("插件就绪，版本：$pluginVersion")
         // 运行测试游戏
         for (i in 1 until 5 + 1) {
-            val gameSetting = GameSetting("test$i", 2, 10, 30)
+            val gameSetting = GameSetting(
+                "test$i",
+                "testMap",
+                2,
+                10,
+                30,
+                Location(Bukkit.getWorld("world"), 100.0, 0.0, 100.0),
+                Location(Bukkit.getWorld("world"), 300.0, 100.0, 300.0),
+            )
             GameManager.createGame(gameSetting)
         }
     }
@@ -49,7 +59,7 @@ class MainPlugin : Plugin() {
             DefaultComponent()
                 .append("正在卸载".toGradientColor(listOf(0xfcc3f3, 0xee80b5))).bold()
                 .append(" ")
-                .append("TheTrackOfShadow".toGradientColor(listOf(0xffd89d, 0x76d3c3, 0x8a95f5))).bold()
+                .append(MessageConst.ENLogoMessage)
                 .append(" ")
                 .append("Beta".toGradientColor(listOf(0xffd6d6, 0xe14d4d))).bold()
                 .append("...".toGradientColor(listOf(0xf4f4f4, 0x808080))).bold()

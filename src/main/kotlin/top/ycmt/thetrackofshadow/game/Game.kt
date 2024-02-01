@@ -7,15 +7,15 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import taboolib.common.platform.function.submit
 import taboolib.platform.util.bukkitPlugin
-import top.ycmt.thetrackofshadow.common.config.GameSetting
-import top.ycmt.thetrackofshadow.common.constant.PrefixConst
+import top.ycmt.thetrackofshadow.config.GameSetting
+import top.ycmt.thetrackofshadow.constant.MessageConst
 import top.ycmt.thetrackofshadow.game.module.PlayerModule
 import top.ycmt.thetrackofshadow.game.phase.PhaseAbstract
 import top.ycmt.thetrackofshadow.game.phase.PhaseState
-import top.ycmt.thetrackofshadow.game.phase.PhaseState.INIT_PHASE
-import top.ycmt.thetrackofshadow.game.phase.PhaseState.LOBBY_PHASE
+import top.ycmt.thetrackofshadow.game.phase.PhaseState.*
 import top.ycmt.thetrackofshadow.game.phase.impl.InitPhase
 import top.ycmt.thetrackofshadow.game.phase.impl.LobbyPhase
+import top.ycmt.thetrackofshadow.game.phase.impl.RunningPhase
 import top.ycmt.thetrackofshadow.pkg.logger.logger
 
 // 游戏对象
@@ -29,7 +29,7 @@ class Game(
     // 游戏阶段状态
     private var phaseState: PhaseState = INIT_PHASE
 
-    // 游戏阶段定时器
+    // 游戏当前阶段
     private var gamePhase: PhaseAbstract = InitPhase(this)
 
     init {
@@ -42,7 +42,7 @@ class Game(
     // 游戏主调度器
     private fun gameMainTask() {
         submit(period = 1 * 20L) {
-            // 执行当前阶段任务
+            // 执行当前阶段
             gamePhase.onTick()
             // 阶段处理完成跳转下一阶段
             if (gamePhase.isDone) {
@@ -51,7 +51,7 @@ class Game(
         }
     }
 
-    // 设置游戏为下阶段
+    // 进行下一阶段
     private fun nextPhase() {
         val phases = PhaseState.values()
         val nextPhaseIndex = phaseState.ordinal + 1
@@ -60,14 +60,16 @@ class Game(
             logger.error("索引越界, nextPhaseIndex: $nextPhaseIndex, phasesSize: ${phases.size}")
             return
         }
-        // 设置阶段
+        // 设置阶段状态
         phaseState = phases[nextPhaseIndex]
-        // 根据阶段运行阶段定时器
+        // 根据阶段状态设置阶段
         gamePhase = when (phaseState) {
             // 初始化游戏阶段
             INIT_PHASE -> InitPhase(this)
             // 大厅等待阶段
             LOBBY_PHASE -> LobbyPhase(this)
+            // 游戏运行阶段
+            RUNNING_PHASE -> RunningPhase(this)
         }
         logger.info("游戏执行下一阶段, gameName: ${gameSetting.gameName}, phaseState: $phaseState")
     }
@@ -97,22 +99,22 @@ class Game(
 
     // 设置所有玩家的属性 如生命值 饱和度 药水效果 模式...
     // 参数: 玩家对象 是否清空物品栏
-    fun initPlayer(playerList: List<Player>, cleanItem: Boolean = false) {
-        playerList.forEach {
+    fun initPlayer(players: List<Player>, cleanItem: Boolean = false) {
+        players.forEach {
             initPlayer(it, cleanItem)
         }
     }
 
     // 设置玩家隐藏
     fun hidePlayer(player: Player) {
-        playerModule.getOnlinePlayerList().forEach {
+        playerModule.getOnlinePlayers().forEach {
             it.hidePlayer(bukkitPlugin, player)
         }
     }
 
     // 设置玩家显示
     fun showPlayer(player: Player) {
-        playerModule.getOnlinePlayerList().forEach {
+        playerModule.getOnlinePlayers().forEach {
             it.showPlayer(bukkitPlugin, player)
         }
     }
@@ -125,8 +127,8 @@ class Game(
 //    }
 //
 //    // 清除所有玩家的计分板
-//    fun cleanScoreboard(playerList: List<Player>) {
-//        playerList.forEach {
+//    fun cleanScoreboard(players: List<Player>) {
+//        players.forEach {
 //            cleanScoreboard(it)
 //        }
 //    }
@@ -139,38 +141,38 @@ class Game(
     }
 
     // 给游戏中的玩家删除药水效果
-    fun removeEffect(playerList: List<Player>, effectType: PotionEffectType) {
-        playerList.forEach {
+    fun removeEffect(players: List<Player>, effectType: PotionEffectType) {
+        players.forEach {
             it.removePotionEffect(effectType)
         }
     }
 
     // 给游戏中的玩家添加药水效果
-    fun addEffect(playerList: List<Player>, effectType: PotionEffectType, duration: Int, amplifier: Int) {
-        playerList.forEach {
+    fun addEffect(players: List<Player>, effectType: PotionEffectType, duration: Int, amplifier: Int) {
+        players.forEach {
             it.addPotionEffect(PotionEffect(effectType, duration, amplifier))
         }
     }
 
     // 给游戏中的玩家发送声音
-    fun playSound(playerList: List<Player>, sound: Sound) {
-        playerList.forEach {
+    fun playSound(players: List<Player>, sound: Sound) {
+        players.forEach {
             it.playSound(it.location, sound, 1f, 1f)
         }
     }
 
     // 给游戏中的玩家发送Title
-    fun sendTitle(playerList: List<Player>, title: String, subTitle: String, fadeIn: Int, stay: Int, fadeOut: Int) {
-        playerList.forEach {
+    fun sendTitle(players: List<Player>, title: String, subTitle: String, fadeIn: Int, stay: Int, fadeOut: Int) {
+        players.forEach {
             it.sendTitle(title, subTitle, fadeIn, stay, fadeOut)
         }
     }
 
     // 给游戏中的玩家发送消息
-    fun sendMessage(playerList: List<Player>, vararg msg: String) {
-        playerList.forEach { p ->
+    fun sendMessage(players: List<Player>, vararg msg: String) {
+        players.forEach { p ->
             msg.forEach {
-                p.sendMessage(PrefixConst.PrefixMessage + it)
+                p.sendMessage(MessageConst.CNPrefixMessage + it)
             }
         }
     }

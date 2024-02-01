@@ -1,7 +1,7 @@
 package top.ycmt.thetrackofshadow.game
 
 import org.bukkit.entity.Player
-import top.ycmt.thetrackofshadow.common.config.GameSetting
+import top.ycmt.thetrackofshadow.config.GameSetting
 import top.ycmt.thetrackofshadow.pkg.logger.logger
 import top.ycmt.thetrackofshadow.pkg.message.sendFailedMessage
 

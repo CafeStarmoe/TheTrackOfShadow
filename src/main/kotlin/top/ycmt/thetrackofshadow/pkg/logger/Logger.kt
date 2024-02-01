@@ -4,7 +4,7 @@ import taboolib.common.platform.function.console
 import taboolib.common.platform.function.severe
 import taboolib.common.platform.function.warning
 import taboolib.module.chat.toGradientColor
-import top.ycmt.thetrackofshadow.common.constant.PrefixConst
+import top.ycmt.thetrackofshadow.constant.MessageConst
 
 val logger: Logger = Logger()
 
@@ -15,7 +15,7 @@ class Logger {
     fun info(vararg msgList: String) {
         msgList.forEach {
             console().sendMessage(
-                PrefixConst.PrefixMessage + "§f$it ${
+                MessageConst.ENPrefixMessage + "§f$it ${
                     getStackTrace().toGradientColor(
                         listOf(
                             0xccffff,

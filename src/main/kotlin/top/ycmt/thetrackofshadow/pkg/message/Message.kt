@@ -1,18 +1,18 @@
 package top.ycmt.thetrackofshadow.pkg.message
 
 import taboolib.module.chat.toGradientColor
-import top.ycmt.thetrackofshadow.common.constant.PrefixConst
+import top.ycmt.thetrackofshadow.constant.MessageConst
 
 // 发送成功格式的消息
 fun org.bukkit.entity.Player.sendSuccessMessage(vararg msgList: String) {
     msgList.forEach {
-        this.sendMessage(PrefixConst.PrefixMessage + it.toGradientColor(listOf(0xdeffd2, 0xbee8ff)))
+        this.sendMessage(MessageConst.CNPrefixMessage + it.toGradientColor(listOf(0xdeffd2, 0xbee8ff)))
     }
 }
 
 // 发送失败格式的消息
 fun org.bukkit.entity.Player.sendFailedMessage(vararg msgList: String) {
     msgList.forEach {
-        this.sendMessage(PrefixConst.PrefixMessage + it.toGradientColor(listOf(0xffcbcb, 0xff7093)))
+        this.sendMessage(MessageConst.CNPrefixMessage + it.toGradientColor(listOf(0xffcbcb, 0xff7093)))
     }
 }
