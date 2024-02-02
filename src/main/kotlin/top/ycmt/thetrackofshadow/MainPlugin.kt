@@ -1,9 +1,9 @@
 package top.ycmt.thetrackofshadow
 
 import org.bukkit.Bukkit
-import org.bukkit.Location
 import taboolib.common.platform.Plugin
 import taboolib.common.platform.function.pluginVersion
+import taboolib.common.util.Vector
 import taboolib.module.chat.impl.DefaultComponent
 import taboolib.module.chat.toGradientColor
 import top.ycmt.thetrackofshadow.config.GameSetting
@@ -43,9 +43,10 @@ class MainPlugin : Plugin() {
                 "testMap",
                 2,
                 10,
-                30,
-                Location(Bukkit.getWorld("world"), 100.0, 0.0, 100.0),
-                Location(Bukkit.getWorld("world"), 300.0, 100.0, 300.0),
+                5,
+                "world",
+                Vector(-191, 40, -191),
+                Vector(-639, 80, 191)
             )
             GameManager.createGame(gameSetting)
         }

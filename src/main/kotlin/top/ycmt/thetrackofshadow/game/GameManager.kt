@@ -3,7 +3,7 @@ package top.ycmt.thetrackofshadow.game
 import org.bukkit.entity.Player
 import top.ycmt.thetrackofshadow.config.GameSetting
 import top.ycmt.thetrackofshadow.pkg.logger.logger
-import top.ycmt.thetrackofshadow.pkg.message.sendFailedMessage
+import top.ycmt.thetrackofshadow.pkg.message.sendFailMsg
 
 // 游戏管理器
 object GameManager {
@@ -42,7 +42,7 @@ object GameManager {
         val game = gameMap[gameName]
         if (game == null) {
             logger.error("游戏不存在, gameName: $gameName")
-            player.sendFailedMessage("游戏${gameName}不存在。")
+            player.sendFailMsg("游戏${gameName}不存在。")
             return
         }
         // TODO 校验玩家是否已经加入了一个游戏

@@ -8,7 +8,6 @@ import org.bukkit.potion.PotionEffectType
 import taboolib.common.platform.function.submit
 import taboolib.platform.util.bukkitPlugin
 import top.ycmt.thetrackofshadow.config.GameSetting
-import top.ycmt.thetrackofshadow.constant.MessageConst
 import top.ycmt.thetrackofshadow.game.module.PlayerModule
 import top.ycmt.thetrackofshadow.game.phase.PhaseAbstract
 import top.ycmt.thetrackofshadow.game.phase.PhaseState
@@ -17,20 +16,14 @@ import top.ycmt.thetrackofshadow.game.phase.impl.InitPhase
 import top.ycmt.thetrackofshadow.game.phase.impl.LobbyPhase
 import top.ycmt.thetrackofshadow.game.phase.impl.RunningPhase
 import top.ycmt.thetrackofshadow.pkg.logger.logger
+import top.ycmt.thetrackofshadow.pkg.message.sendMsg
+import top.ycmt.thetrackofshadow.pkg.scoreboard.ScoreBoard
 
 // 游戏对象
-class Game(
-    // 游戏设置数据
-    val gameSetting: GameSetting
-) {
-    // 游戏玩家模块
-    val playerModule: PlayerModule = PlayerModule(this)
-
-    // 游戏阶段状态
-    private var phaseState: PhaseState = INIT_PHASE
-
-    // 游戏当前阶段
-    private var gamePhase: PhaseAbstract = InitPhase(this)
+class Game(val gameSetting: GameSetting) {
+    val playerModule = PlayerModule(this) // 游戏玩家模块
+    private var phaseState = INIT_PHASE // 游戏阶段状态
+    private var gamePhase: PhaseAbstract = InitPhase(this) // 游戏当前阶段
 
     init {
         logger.info("游戏初始化, gameName: ${gameSetting.gameName}")
@@ -42,6 +35,8 @@ class Game(
     // 游戏主调度器
     private fun gameMainTask() {
         submit(period = 1 * 20L) {
+            // 刷新在线玩家对象列表
+            playerModule.refreshOnlinePlayers()
             // 执行当前阶段
             gamePhase.onTick()
             // 阶段处理完成跳转下一阶段
@@ -107,31 +102,31 @@ class Game(
 
     // 设置玩家隐藏
     fun hidePlayer(player: Player) {
-        playerModule.getOnlinePlayers().forEach {
+        playerModule.onlinePLayers.forEach {
             it.hidePlayer(bukkitPlugin, player)
         }
     }
 
     // 设置玩家显示
     fun showPlayer(player: Player) {
-        playerModule.getOnlinePlayers().forEach {
+        playerModule.onlinePLayers.forEach {
             it.showPlayer(bukkitPlugin, player)
         }
     }
 
-//    // 清除某个玩家的计分板
-//    fun cleanScoreboard(player: Player) {
-//        if (ScoreHelper.hasScore(player)) {
-//            ScoreHelper.removeScore(player)
-//        }
-//    }
-//
-//    // 清除所有玩家的计分板
-//    fun cleanScoreboard(players: List<Player>) {
-//        players.forEach {
-//            cleanScoreboard(it)
-//        }
-//    }
+    // 清除某个玩家的计分板
+    fun cleanScoreboard(player: Player) {
+        if (ScoreBoard.hasScore(player)) {
+            ScoreBoard.removeScore(player)
+        }
+    }
+
+    // 清除所有玩家的计分板
+    fun cleanScoreboard(players: List<Player>) {
+        players.forEach {
+            cleanScoreboard(it)
+        }
+    }
 
     // 给游戏中的某个玩家清空药水效果
     fun clearEffect(player: Player) {
@@ -169,11 +164,9 @@ class Game(
     }
 
     // 给游戏中的玩家发送消息
-    fun sendMessage(players: List<Player>, vararg msg: String) {
+    fun sendMsg(players: List<Player>, vararg msg: String) {
         players.forEach { p ->
-            msg.forEach {
-                p.sendMessage(MessageConst.CNPrefixMessage + it)
-            }
+            p.sendMsg(*msg)
         }
     }
 

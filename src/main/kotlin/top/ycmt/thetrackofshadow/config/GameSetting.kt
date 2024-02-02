@@ -1,6 +1,6 @@
 package top.ycmt.thetrackofshadow.config
 
-import org.bukkit.Location
+import taboolib.common.util.Vector
 
 // 游戏设置数据
 data class GameSetting(
@@ -15,6 +15,7 @@ data class GameSetting(
     // 大厅等待时间 单位秒
     val lobbyWaitTick: Long,
     // 游戏地图坐标
-    val gameMapLoc1: Location,
-    val gameMapLoc2: Location,
+    val gameMapWorld: String,
+    val gameMapVector1: Vector,
+    val gameMapVector2: Vector,
 )

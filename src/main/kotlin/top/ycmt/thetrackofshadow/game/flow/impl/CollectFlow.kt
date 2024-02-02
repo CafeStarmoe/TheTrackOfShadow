@@ -9,8 +9,6 @@ class CollectFlow(override val game: Game) : FlowAbstract() {
     private var waitTick = TimeUnit.MINUTES.toSeconds(10) // 搜集流程时间
 
     override fun onTick() {
-        val onlinePLayers = game.playerModule.getOnlinePlayers()
-
         when (waitTick) {
             0L -> {
                 // 完成该流程 进行下一流程
@@ -18,7 +16,7 @@ class CollectFlow(override val game: Game) : FlowAbstract() {
             }
 
             else -> {
-                game.sendMessage(onlinePLayers, "搜集流程剩余${waitTick}秒")
+                game.sendMsg(game.playerModule.onlinePLayers, "搜集流程剩余${waitTick}秒")
             }
         }
         waitTick--
