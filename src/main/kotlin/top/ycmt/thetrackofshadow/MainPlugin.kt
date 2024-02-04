@@ -7,7 +7,7 @@ import taboolib.common.util.Vector
 import taboolib.module.chat.impl.DefaultComponent
 import taboolib.module.chat.toGradientColor
 import top.ycmt.thetrackofshadow.config.GameSetting
-import top.ycmt.thetrackofshadow.constant.MessageConst
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst.EN_LOGO_LEGACY_TEXT
 import top.ycmt.thetrackofshadow.game.GameManager
 import top.ycmt.thetrackofshadow.pkg.logger.logger
 
@@ -21,7 +21,7 @@ class MainPlugin : Plugin() {
             DefaultComponent()
                 .append("正在加载".toGradientColor(listOf(0xd5d5ff, 0x9e9eee))).bold()
                 .append(" ")
-                .append(MessageConst.ENLogoMessage)
+                .append(EN_LOGO_LEGACY_TEXT)
                 .append(" ")
                 .append("Beta".toGradientColor(listOf(0xffd6d6, 0xe14d4d))).bold()
                 .append("...".toGradientColor(listOf(0xf4f4f4, 0x808080))).bold()
@@ -60,7 +60,7 @@ class MainPlugin : Plugin() {
             DefaultComponent()
                 .append("正在卸载".toGradientColor(listOf(0xfcc3f3, 0xee80b5))).bold()
                 .append(" ")
-                .append(MessageConst.ENLogoMessage)
+                .append(EN_LOGO_LEGACY_TEXT)
                 .append(" ")
                 .append("Beta".toGradientColor(listOf(0xffd6d6, 0xe14d4d))).bold()
                 .append("...".toGradientColor(listOf(0xf4f4f4, 0x808080))).bold()

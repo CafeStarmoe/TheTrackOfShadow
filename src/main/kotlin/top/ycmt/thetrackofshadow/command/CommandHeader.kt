@@ -1,4 +1,4 @@
-package top.ycmt.thetrackofshadow.cmd
+package top.ycmt.thetrackofshadow.command
 
 import taboolib.common.platform.ProxyCommandSender
 import taboolib.common.platform.command.CommandBody

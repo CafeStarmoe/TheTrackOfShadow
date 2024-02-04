@@ -1,67 +1,206 @@
 package top.ycmt.thetrackofshadow.game.phase.impl
 
+import org.bukkit.entity.Player
+import taboolib.module.chat.impl.DefaultComponent
+import taboolib.module.chat.toGradientColor
+import top.ycmt.thetrackofshadow.constant.GameConst.GAME_MAX_TIME
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst.CN_LOGO_LEGACY_TEXT
 import top.ycmt.thetrackofshadow.game.Game
-import top.ycmt.thetrackofshadow.game.flow.FlowAbstract
-import top.ycmt.thetrackofshadow.game.flow.FlowState
-import top.ycmt.thetrackofshadow.game.flow.FlowState.*
-import top.ycmt.thetrackofshadow.game.flow.impl.CollectFlow
-import top.ycmt.thetrackofshadow.game.flow.impl.ReadyFlow
-import top.ycmt.thetrackofshadow.game.flow.impl.TeleportFlow
+import top.ycmt.thetrackofshadow.game.event.EventAbstract
+import top.ycmt.thetrackofshadow.game.event.imp.StartEvent
+import top.ycmt.thetrackofshadow.game.event.imp.TeleportEvent
 import top.ycmt.thetrackofshadow.game.phase.PhaseAbstract
-import top.ycmt.thetrackofshadow.pkg.logger.logger
+import top.ycmt.thetrackofshadow.pkg.scoreboard.ScoreBoard
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 // 游戏运行阶段
 class RunningPhase(override val game: Game) : PhaseAbstract() {
     private var gameTick = 0L // 游戏tick
-    private var flowState = TELEPORT_FLOW // 游戏流程状态
-    private var gameFlow: FlowAbstract = TeleportFlow(game) // 游戏当前流程
+
+    // 游戏事件列表
+    private val events: List<EventAbstract> = listOf(
+        TeleportEvent(game), // 随机传送事件
+        StartEvent(game), // 开始事件
+    )
 
     init {
-        // 初始化玩家
+        game.playerModule.getOnlinePlayers().forEach {
+            // 初始化玩家
+            game.playerModule.initPlayer(it, true)
+            // 清除游戏玩家的计分板
+            ScoreBoard.removeScore(it)
+            // 发送玩法介绍
+            sendGameIntroduce(it)
+        }
     }
 
     override fun onTick() {
+        // 刷新记分板
+        refreshBoard()
+
         // 胜利者是最后一名玩家 或 时间超出设置的时间 结算游戏
-        if (game.playerModule.onlinePLayers.size <= 1 ||
-            gameTick >= TimeUnit.MINUTES.toSeconds(30)
+        if (game.playerModule.getOnlinePlayers().size <= 1 ||
+            gameTick >= TimeUnit.MINUTES.toSeconds(GAME_MAX_TIME)
         ) {
             // 此阶段结束 进入结算阶段
-            this.Done()
+            this.done()
             return
         }
 
-        // 执行当前流程
-        gameFlow.onTick()
-        // 阶段处理完成跳转下一阶段
-        if (gameFlow.isDone) {
-            nextFlow()
+        // 执行每一个事件 事件内部判断条件是否符合
+        for (event in events) {
+            // 剩余的时间
+            val leftTime = event.finishTick - gameTick
+            // 判断时间是否符合条件
+            if (leftTime < 0L) {
+                continue
+            }
+            event.exec(leftTime)
         }
 
         gameTick++
     }
 
-    // 进行下一流程
-    private fun nextFlow() {
-        val flows = FlowState.values()
-        val nextFlowIndex = flowState.ordinal + 1
-        // 校验流程索引是否正常
-        if (nextFlowIndex >= flows.size) {
-            logger.error("索引越界, nextFlowIndex: $nextFlowIndex, flowsSize: ${flows.size}")
-            return
+    // 获取距离最近的事件
+    private fun getRecentlyEventMsg(): String {
+        var resultLeftTime = -1L
+        var resultEventMsg = ""
+        // 获取每一个事件的时间
+        for (event in events) {
+            // 剩余的时间
+            val leftTime = event.finishTick - gameTick
+            // 判断时间是否符合条件
+            if (leftTime < 0L) {
+                continue
+            }
+            // 初始赋值 或 剩余时间小于则替换
+            if (resultLeftTime == -1L || resultEventMsg == "" || leftTime < resultLeftTime) {
+                resultLeftTime = leftTime
+                resultEventMsg = event.eventMsg
+            }
         }
-        // 设置流程状态
-        flowState = flows[nextFlowIndex]
-        // 根据流程状态设置流程
-        gameFlow = when (flowState) {
-            // 随机传送流程
-            TELEPORT_FLOW -> TeleportFlow(game)
-            // 准备流程
-            READY_FLOW -> ReadyFlow(game)
-            // 收集流程
-            COLLECT_FLOW -> CollectFlow(game)
+
+        // 获取到距离最近的事件则返回
+        if (resultLeftTime != -1L && resultEventMsg != "") {
+            return "§f$resultEventMsg - " + timeToString(resultLeftTime).toGradientColor(listOf(0xdcffcc, 0x9adbb1))
         }
-        logger.info("游戏执行下一流程, gameName: ${game.gameSetting.gameName}, flowState: $flowState")
+        // 默认信息
+        return "§f距离结束时间 - " + timeToString(TimeUnit.MINUTES.toSeconds(GAME_MAX_TIME) - gameTick).toGradientColor(
+            listOf(0xdcffcc, 0x9adbb1)
+        )
+    }
+
+    // 获取距离结束的字符串时间
+    private fun timeToString(time: Long): String {
+        val str = StringBuilder()
+        val minutes = time / 60
+        val seconds = time % 60
+        str.append(minutes).append(":")
+        if (seconds <= 0) {
+            str.append("00")
+        } else {
+            if (seconds <= 9) {
+                str.append("0").append(seconds)
+            } else {
+                str.append(seconds)
+            }
+        }
+        return str.toString()
+    }
+
+    // 刷新或创建计分板
+    private fun refreshBoard() {
+        // 设置日期格式
+        val df = SimpleDateFormat("MM/dd/yy")
+
+        for (p in game.playerModule.getOnlinePlayers()) {
+            val board: ScoreBoard =
+                if (ScoreBoard.hasScore(p)) ScoreBoard.getByPlayer(p)!! else ScoreBoard.createScore(
+                    p,
+                    CN_LOGO_LEGACY_TEXT
+                )
+            board.setSlot(15, "§7${df.format(Date())}  §8${game.setting.gameName}")
+            board.setSlot(14, "")
+            board.setSlot(13, getRecentlyEventMsg())
+            board.setSlot(12, "")
+            board.setSlot(
+                11,
+                "§f1. Null"
+            )
+            board.setSlot(
+                10,
+                "§f2. Null"
+            )
+            board.setSlot(
+                9,
+                "§f3. Null"
+            )
+            board.setSlot(8, "")
+            board.setSlot(
+                7,
+                "§f剩余藏宝点 Null §f个"
+            )
+            board.setSlot(6, "")
+            board.setSlot(5, "§f你的积分: ${"Null".toGradientColor(listOf(0xdcffcc, 0x9adbb1))}")
+            board.setSlot(4, "§f击杀玩家数: ${"Null".toGradientColor(listOf(0xdcffcc, 0x9adbb1))}")
+            board.setSlot(3, "§f找到的宝箱数: ${"Null".toGradientColor(listOf(0xdcffcc, 0x9adbb1))}")
+            board.setSlot(2, "")
+            board.setSlot(1, "mc.ycmt.top".toGradientColor(listOf(0xfff4ba, 0xf4f687)))
+        }
+    }
+
+    // 发送游戏介绍
+    private fun sendGameIntroduce(player: Player) {
+        player.sendMessage(
+            "",
+            DefaultComponent()
+                .append(
+                    "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■".toGradientColor(
+                        listOf(
+                            0xdeffd2,
+                            0xbee8ff
+                        )
+                    )
+                ).bold()
+                .toLegacyText(),
+            "",
+            "                              $CN_LOGO_LEGACY_TEXT",
+            "",
+            DefaultComponent()
+                .append(
+                    "搜寻各种物资，强化自己的战斗能力，最终决战击败其他玩家！".toGradientColor(
+                        listOf(
+                            0xfff4ba,
+                            0xf4f687
+                        )
+                    )
+                ).bold()
+                .toLegacyText(),
+            DefaultComponent()
+                .append(
+                    "争夺唯一的王位，死亡不是唯一的终点，存活到最后迎接胜利。".toGradientColor(
+                        listOf(
+                            0xfff4ba,
+                            0xf4f687
+                        )
+                    )
+                ).bold()
+                .toLegacyText(),
+            "",
+            DefaultComponent()
+                .append(
+                    "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■".toGradientColor(
+                        listOf(
+                            0xdeffd2,
+                            0xbee8ff
+                        )
+                    )
+                ).bold()
+                .toLegacyText(),
+            "",
+        )
     }
 
 }

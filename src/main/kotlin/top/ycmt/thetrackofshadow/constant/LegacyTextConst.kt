@@ -4,27 +4,27 @@ import taboolib.module.chat.impl.DefaultComponent
 import taboolib.module.chat.toGradientColor
 
 // 消息前缀常量
-object MessageConst {
+object LegacyTextConst {
     // 英文标志消息
-    val ENLogoMessage = DefaultComponent()
+    val EN_LOGO_LEGACY_TEXT = DefaultComponent()
         .append("TheTrackOfShadow".toGradientColor(listOf(0xffd89d, 0x76d3c3, 0x8a95f5))).bold()
         .toLegacyText()
 
     // 中文标志消息
-    val CNLogoMessage = DefaultComponent()
+    val CN_LOGO_LEGACY_TEXT = DefaultComponent()
         .append("随影寻踪".toGradientColor(listOf(0xffd89d, 0x76d3c3, 0x8a95f5))).bold()
         .toLegacyText()
 
     // 英文消息前缀
-    val ENPrefixMessage = DefaultComponent()
-        .append(ENLogoMessage)
+    val EN_PREFIX_LEGACY_TEXT = DefaultComponent()
+        .append(EN_LOGO_LEGACY_TEXT)
         .append(">>".toGradientColor(listOf(0xffa3ca, 0xffb5ef))).bold()
         .append(" ")
         .toLegacyText()
 
     // 中文消息前缀
-    val CNPrefixMessage = DefaultComponent()
-        .append(CNLogoMessage)
+    val CN_PREFIX_LEGACY_TEXT = DefaultComponent()
+        .append(CN_LOGO_LEGACY_TEXT)
         .append(">>".toGradientColor(listOf(0xffa3ca, 0xffb5ef))).bold()
         .append(" ")
         .toLegacyText()

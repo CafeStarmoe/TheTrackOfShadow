@@ -1,12 +1,12 @@
-package top.ycmt.thetrackofshadow.pkg.message
+package top.ycmt.thetrackofshadow.pkg.sendmsg
 
 import taboolib.module.chat.toGradientColor
-import top.ycmt.thetrackofshadow.constant.MessageConst
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst.CN_PREFIX_LEGACY_TEXT
 
 // 发送失败格式的消息
 fun org.bukkit.entity.Player.sendMsg(vararg msgList: String) {
     msgList.forEach {
-        this.sendMessage(MessageConst.CNPrefixMessage + it)
+        this.sendMessage(CN_PREFIX_LEGACY_TEXT + it)
     }
 }
 

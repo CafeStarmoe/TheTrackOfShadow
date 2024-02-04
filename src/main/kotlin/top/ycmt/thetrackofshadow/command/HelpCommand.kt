@@ -1,11 +1,11 @@
-package top.ycmt.thetrackofshadow.cmd
+package top.ycmt.thetrackofshadow.command
 
 import taboolib.common.platform.ProxyCommandSender
 import taboolib.common.platform.command.CommandContext
 import taboolib.common.platform.command.subCommand
 import taboolib.module.chat.impl.DefaultComponent
 import taboolib.module.chat.toGradientColor
-import top.ycmt.thetrackofshadow.constant.MessageConst
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst.CN_LOGO_LEGACY_TEXT
 
 // 显示帮助命令
 val helpCommand = subCommand {
@@ -21,7 +21,7 @@ fun sendHelpMsg(sender: ProxyCommandSender, cmd: CommandContext<ProxyCommandSend
         DefaultComponent()
             .append("-----//".toGradientColor(listOf(0x727272, 0xe1e1e1))).bold()
             .append(" ")
-            .append(MessageConst.CNLogoMessage)
+            .append(CN_LOGO_LEGACY_TEXT)
             .append(" §f§l- ")
             .append("HELP".toGradientColor(listOf(0xc4ffff, 0x7493ff))).bold()
             .append(" ")

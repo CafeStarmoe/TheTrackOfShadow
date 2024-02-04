@@ -3,12 +3,12 @@ package top.ycmt.thetrackofshadow.game
 import org.bukkit.entity.Player
 import top.ycmt.thetrackofshadow.config.GameSetting
 import top.ycmt.thetrackofshadow.pkg.logger.logger
-import top.ycmt.thetrackofshadow.pkg.message.sendFailMsg
+import top.ycmt.thetrackofshadow.pkg.sendmsg.sendFailMsg
 
 // 游戏管理器
 object GameManager {
     // 游戏列表
-    val gameMap: MutableMap<String, Game> = mutableMapOf()
+    private val gameMap: MutableMap<String, Game> = mutableMapOf()
 
     // 创建游戏
     fun createGame(gameSetting: GameSetting): Game? {
@@ -49,4 +49,20 @@ object GameManager {
         // 游戏添加玩家
         game.playerModule.addPlayer(player)
     }
+
+    // 获取玩家所在的游戏
+    fun getPlayerGame(player: Player): Game? {
+        for (game in gameMap.values) {
+            if (game.playerModule.containsPlayer(player)) {
+                return game
+            }
+        }
+        return null
+    }
+
+    // 获取游戏名称列表
+    fun getGameNames(): List<String> {
+        return gameMap.keys.toList()
+    }
+
 }

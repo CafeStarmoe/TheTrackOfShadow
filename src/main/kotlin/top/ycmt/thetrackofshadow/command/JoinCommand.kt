@@ -1,4 +1,4 @@
-package top.ycmt.thetrackofshadow.cmd
+package top.ycmt.thetrackofshadow.command
 
 import org.bukkit.entity.Player
 import taboolib.common.platform.command.subCommand
@@ -8,7 +8,7 @@ import top.ycmt.thetrackofshadow.game.GameManager
 val joinCommand = subCommand {
     dynamic(optional = true) {
         suggestion<Player>(uncheck = true) { _, _ ->
-            GameManager.gameMap.map { it.value.gameSetting.gameName }
+            GameManager.getGameNames()
         }
         execute<Player> { player, _, argument ->
             GameManager.joinGame(argument, player)
