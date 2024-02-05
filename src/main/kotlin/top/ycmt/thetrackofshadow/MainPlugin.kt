@@ -1,13 +1,11 @@
 package top.ycmt.thetrackofshadow
 
-import org.bukkit.Bukkit
 import taboolib.common.platform.Plugin
 import taboolib.common.platform.function.pluginVersion
 import taboolib.common.util.Vector
-import taboolib.module.chat.impl.DefaultComponent
-import taboolib.module.chat.toGradientColor
 import top.ycmt.thetrackofshadow.config.GameSetting
-import top.ycmt.thetrackofshadow.constant.LegacyTextConst.EN_LOGO_LEGACY_TEXT
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst.PLUGIN_DISABLE_LEGACY_TEXT
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst.PLUGIN_LOAD_LEGACY_TEXT
 import top.ycmt.thetrackofshadow.game.GameManager
 import top.ycmt.thetrackofshadow.pkg.logger.logger
 
@@ -16,20 +14,7 @@ class MainPlugin : Plugin() {
     // 插件加载时
     override fun onLoad() {
         // 显示载入信息
-        logger.log(
-            "",
-            DefaultComponent()
-                .append("正在加载".toGradientColor(listOf(0xd5d5ff, 0x9e9eee))).bold()
-                .append(" ")
-                .append(EN_LOGO_LEGACY_TEXT)
-                .append(" ")
-                .append("Beta".toGradientColor(listOf(0xffd6d6, 0xe14d4d))).bold()
-                .append("...".toGradientColor(listOf(0xf4f4f4, 0x808080))).bold()
-                .append(" ")
-                .append(Bukkit.getVersion().toGradientColor(listOf(0xadf0e0, 0x8fbdf4))).bold()
-                .toLegacyText(),
-            "",
-        )
+        logger.log("", PLUGIN_LOAD_LEGACY_TEXT, "")
     }
 
     // 插件启用时
@@ -55,20 +40,7 @@ class MainPlugin : Plugin() {
     // 插件卸载时
     override fun onDisable() {
         // 显示卸载信息
-        logger.log(
-            "",
-            DefaultComponent()
-                .append("正在卸载".toGradientColor(listOf(0xfcc3f3, 0xee80b5))).bold()
-                .append(" ")
-                .append(EN_LOGO_LEGACY_TEXT)
-                .append(" ")
-                .append("Beta".toGradientColor(listOf(0xffd6d6, 0xe14d4d))).bold()
-                .append("...".toGradientColor(listOf(0xf4f4f4, 0x808080))).bold()
-                .append(" ")
-                .append(Bukkit.getVersion().toGradientColor(listOf(0xadf0e0, 0x8fbdf4))).bold()
-                .toLegacyText(),
-            "",
-        )
+        logger.log("", PLUGIN_DISABLE_LEGACY_TEXT, "")
     }
 
 }

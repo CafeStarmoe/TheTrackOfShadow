@@ -1,12 +1,12 @@
 package top.ycmt.thetrackofshadow.game.phase.impl
 
 import org.bukkit.Sound
-import taboolib.module.chat.toGradientColor
 import top.ycmt.thetrackofshadow.constant.LegacyTextConst.CN_LOGO_LEGACY_TEXT
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.phase.PhaseAbstract
+import top.ycmt.thetrackofshadow.pkg.chat.sendMsg
+import top.ycmt.thetrackofshadow.pkg.chat.toGradientColor
 import top.ycmt.thetrackofshadow.pkg.scoreboard.ScoreBoard
-import top.ycmt.thetrackofshadow.pkg.sendmsg.sendMsg
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -53,18 +53,8 @@ class LobbyPhase(override val game: Game) : PhaseAbstract() {
     // 提示玩家等待更多玩家
     private fun notifyWaitMorePlayer() {
         game.playerModule.getOnlinePlayers().forEach {
-            it.sendMsg(
-                "玩家数量不足, 等待更多玩家...".toGradientColor(
-                    listOf(0xffcbcb, 0xff7093)
-                )
-            )
-            it.sendTitle(
-                "等待更多玩家加入...".toGradientColor(listOf(0xffcbcb, 0xff7093)),
-                "",
-                5,
-                30,
-                5
-            )
+            it.sendMsg("<#ffcbcb,ff7093>玩家数量不足, 等待更多玩家...</#>".toGradientColor())
+            it.sendTitle("<#ffcbcb,ff7093>等待更多玩家加入...</#>".toGradientColor(), "", 5, 30, 5)
             it.playSound(it, Sound.BLOCK_NOTE_BLOCK_HAT, 1f, 1f)
         }
     }
@@ -73,23 +63,14 @@ class LobbyPhase(override val game: Game) : PhaseAbstract() {
     private fun notifyCountdown() {
         // 倒计时颜色
         val countdownColor = when (waitTick) {
-            10L -> listOf(0xf7c79c, 0xef987d)
-            in 1..5 -> listOf(0xff9c9c, 0xde4949)
-            else -> listOf(0xc1c1ff, 0x7373ff)
+            10L -> "f7c79c,ef987d"
+            in 1..5 -> "ff9c9c,de4949"
+            else -> "c1c1ff,7373ff"
         }
 
         game.playerModule.getOnlinePlayers().forEach {
-            it.sendMsg(
-                "游戏将在".toGradientColor(
-                    listOf(
-                        0xf5ead0,
-                        0xeee6a1
-                    )
-                ) + "${waitTick}秒".toGradientColor(countdownColor) + "后开始哦~".toGradientColor(
-                    listOf(0xf5ead0, 0xeee6a1)
-                )
-            )
-            it.sendTitle("$waitTick".toGradientColor(countdownColor), "", 5, 20, 5)
+            it.sendMsg("<#f5ead0,eee6a1>游戏将在</#><#$countdownColor>${waitTick}秒</#><#f5ead0,eee6a1>后开始哦~</#>".toGradientColor())
+            it.sendTitle("<#$countdownColor>$waitTick</#>".toGradientColor(), "", 5, 20, 5)
             it.playSound(it, Sound.BLOCK_NOTE_BLOCK_HAT, 1f, 1f)
         }
     }
@@ -107,28 +88,21 @@ class LobbyPhase(override val game: Game) : PhaseAbstract() {
                 )
             board.setSlot(11, "§7${df.format(Date())}  §8${game.setting.gameName}")
             board.setSlot(10, "")
-            board.setSlot(9, "§f地图: ${game.setting.mapName.toGradientColor(listOf(0xdcffcc, 0x9adbb1))}")
+            board.setSlot(9, "§f地图: <#dcffcc,9adbb1>${game.setting.mapName}</#>".toGradientColor())
             board.setSlot(
                 8,
-                "§f玩家: " + "${game.playerModule.getOnlinePlayers().size}/${game.setting.maxPlayerCount}".toGradientColor(
-                    listOf(
-                        0xdcffcc,
-                        0x9adbb1
-                    )
-                )
+                "§f玩家: <#dcffcc,9adbb1>${game.playerModule.getOnlinePlayers().size}</#>§f/<#dcffcc,9adbb1>${game.setting.maxPlayerCount}</#>".toGradientColor()
             )
             board.setSlot(7, "")
             board.setSlot(
                 6,
-                if (game.playerModule.getOnlinePlayers().size >= game.setting.minPlayerCount) "§f即将开始: " + "${waitTick}秒".toGradientColor(
-                    listOf(0xdcffcc, 0x9adbb1)
-                ) else "§f等待中..."
+                if (game.playerModule.getOnlinePlayers().size >= game.setting.minPlayerCount) "§f即将开始: " + "<#dcffcc,9adbb1>${waitTick}秒</#>".toGradientColor() else "§f等待中..."
             )
             board.setSlot(5, "")
-            board.setSlot(4, "§f模式: " + "单挑".toGradientColor(listOf(0xdcffcc, 0x9adbb1)))
-            board.setSlot(3, "§f版本: " + "2.0 Beta".toGradientColor(listOf(0xffd6d6, 0xe14d4d)))
+            board.setSlot(4, "§f模式: <#dcffcc,9adbb1>单挑</#>".toGradientColor())
+            board.setSlot(3, "§f版本: <#ffd6d6,e14d4d>2.0 Beta</#>".toGradientColor())
             board.setSlot(2, "")
-            board.setSlot(1, "mc.ycmt.top".toGradientColor(listOf(0xfff4ba, 0xf4f687)))
+            board.setSlot(1, "<#fff4ba,f4f687>mc.ycmt.top</#>".toGradientColor())
         }
     }
 

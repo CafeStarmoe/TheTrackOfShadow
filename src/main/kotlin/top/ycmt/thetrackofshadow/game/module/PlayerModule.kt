@@ -4,9 +4,9 @@ import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import top.ycmt.thetrackofshadow.game.Game
+import top.ycmt.thetrackofshadow.pkg.chat.sendFailMsg
+import top.ycmt.thetrackofshadow.pkg.chat.sendSuccMsg
 import top.ycmt.thetrackofshadow.pkg.logger.logger
-import top.ycmt.thetrackofshadow.pkg.sendmsg.sendFailMsg
-import top.ycmt.thetrackofshadow.pkg.sendmsg.sendSuccMsg
 import java.util.*
 
 // 玩家管理模块

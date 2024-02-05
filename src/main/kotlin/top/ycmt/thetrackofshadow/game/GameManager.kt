@@ -2,8 +2,8 @@ package top.ycmt.thetrackofshadow.game
 
 import org.bukkit.entity.Player
 import top.ycmt.thetrackofshadow.config.GameSetting
+import top.ycmt.thetrackofshadow.pkg.chat.sendFailMsg
 import top.ycmt.thetrackofshadow.pkg.logger.logger
-import top.ycmt.thetrackofshadow.pkg.sendmsg.sendFailMsg
 
 // 游戏管理器
 object GameManager {

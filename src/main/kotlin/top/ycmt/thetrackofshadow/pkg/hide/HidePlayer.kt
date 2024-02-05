@@ -1,4 +1,4 @@
-package top.ycmt.thetrackofshadow.pkg.hideplayer
+package top.ycmt.thetrackofshadow.pkg.hide
 
 import org.bukkit.entity.Player
 import taboolib.platform.util.bukkitPlugin

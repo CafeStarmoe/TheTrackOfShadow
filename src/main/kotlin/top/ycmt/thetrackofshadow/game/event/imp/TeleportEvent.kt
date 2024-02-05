@@ -1,7 +1,6 @@
 package top.ycmt.thetrackofshadow.game.event.imp
 
 import org.bukkit.*
-import taboolib.module.chat.toGradientColor
 import top.ycmt.thetrackofshadow.constant.TeleportAnimationConst.ANIMATION_COUNT
 import top.ycmt.thetrackofshadow.constant.TeleportAnimationConst.ANIMATION_HEIGHT
 import top.ycmt.thetrackofshadow.constant.TeleportAnimationConst.ANIMATION_TICK
@@ -9,15 +8,15 @@ import top.ycmt.thetrackofshadow.constant.TeleportAnimationConst.DEFAULT_HEIGHT
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.event.EventAbstract
 import top.ycmt.thetrackofshadow.game.state.CancelState
-import top.ycmt.thetrackofshadow.pkg.hideplayer.hidePlayers
-import top.ycmt.thetrackofshadow.pkg.hideplayer.showPlayers
+import top.ycmt.thetrackofshadow.pkg.chat.toGradientColor
+import top.ycmt.thetrackofshadow.pkg.hide.hidePlayers
+import top.ycmt.thetrackofshadow.pkg.hide.showPlayers
 import top.ycmt.thetrackofshadow.pkg.logger.logger
 import java.util.*
 
 // 随机传送事件
-class TeleportEvent(override var game: Game) : EventAbstract() {
-    override val finishTick =
-        ANIMATION_TICK * (ANIMATION_COUNT + 1) // 运行完毕的tick数
+class TeleportEvent(override val game: Game) : EventAbstract() {
+    override val finishTick = ANIMATION_TICK * (ANIMATION_COUNT + 1) // 运行完毕的tick数
     override val eventMsg = "等待随机传送" // 事件消息
 
     private var nowCount = 0 // 现在执行传送动画的次数
@@ -54,13 +53,7 @@ class TeleportEvent(override var game: Game) : EventAbstract() {
                     }
                     // 传送玩家
                     p.teleport(loc)
-                    p.sendTitle(
-                        "传送完毕".toGradientColor(listOf(0xdeffd2, 0xbee8ff)),
-                        "",
-                        5,
-                        10,
-                        5
-                    )
+                    p.sendTitle("<#deffd2,bee8ff>传送完毕</#>".toGradientColor(), "", 5, 10, 5)
                     p.playSound(p, Sound.ITEM_CHORUS_FRUIT_TELEPORT, 1f, 1f)
                 }
                 game.playerModule.getOnlinePlayers().forEach {
@@ -100,13 +93,7 @@ class TeleportEvent(override var game: Game) : EventAbstract() {
             // 传送玩家
             p.teleport(animationLoc)
             // 提示玩家传送中
-            p.sendTitle(
-                "传送中...".toGradientColor(listOf(0xffefbb, 0xe3ce82)),
-                "",
-                5,
-                40,
-                5
-            )
+            p.sendTitle("<#ffefbb,e3ce82>传送中...</#>".toGradientColor(), "", 5, 40, 5)
             p.playSound(p, Sound.ITEM_CHORUS_FRUIT_TELEPORT, 1f, 1f)
         }
         nowCount++

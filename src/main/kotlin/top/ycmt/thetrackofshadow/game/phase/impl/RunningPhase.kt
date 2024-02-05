@@ -2,14 +2,15 @@ package top.ycmt.thetrackofshadow.game.phase.impl
 
 import org.bukkit.entity.Player
 import taboolib.module.chat.impl.DefaultComponent
-import taboolib.module.chat.toGradientColor
 import top.ycmt.thetrackofshadow.constant.GameConst.GAME_MAX_TIME
 import top.ycmt.thetrackofshadow.constant.LegacyTextConst.CN_LOGO_LEGACY_TEXT
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.event.EventAbstract
+import top.ycmt.thetrackofshadow.game.event.imp.RandomEvent
 import top.ycmt.thetrackofshadow.game.event.imp.StartEvent
 import top.ycmt.thetrackofshadow.game.event.imp.TeleportEvent
 import top.ycmt.thetrackofshadow.game.phase.PhaseAbstract
+import top.ycmt.thetrackofshadow.pkg.chat.toGradientColor
 import top.ycmt.thetrackofshadow.pkg.scoreboard.ScoreBoard
 import java.text.SimpleDateFormat
 import java.util.*
@@ -23,6 +24,7 @@ class RunningPhase(override val game: Game) : PhaseAbstract() {
     private val events: List<EventAbstract> = listOf(
         TeleportEvent(game), // 随机传送事件
         StartEvent(game), // 开始事件
+        RandomEvent(game), // 随机事件
     )
 
     init {
@@ -84,12 +86,10 @@ class RunningPhase(override val game: Game) : PhaseAbstract() {
 
         // 获取到距离最近的事件则返回
         if (resultLeftTime != -1L && resultEventMsg != "") {
-            return "§f$resultEventMsg - " + timeToString(resultLeftTime).toGradientColor(listOf(0xdcffcc, 0x9adbb1))
+            return "§f$resultEventMsg - <#dcffcc,9adbb1>${timeToString(resultLeftTime)}</#>".toGradientColor()
         }
         // 默认信息
-        return "§f距离结束时间 - " + timeToString(TimeUnit.MINUTES.toSeconds(GAME_MAX_TIME) - gameTick).toGradientColor(
-            listOf(0xdcffcc, 0x9adbb1)
-        )
+        return "§f距离结束时间 - <#dcffcc,9adbb1>${timeToString(TimeUnit.MINUTES.toSeconds(GAME_MAX_TIME) - gameTick)}</#>".toGradientColor()
     }
 
     // 获取距离结束的字符串时间
@@ -143,11 +143,11 @@ class RunningPhase(override val game: Game) : PhaseAbstract() {
                 "§f剩余藏宝点 Null §f个"
             )
             board.setSlot(6, "")
-            board.setSlot(5, "§f你的积分: ${"Null".toGradientColor(listOf(0xdcffcc, 0x9adbb1))}")
-            board.setSlot(4, "§f击杀玩家数: ${"Null".toGradientColor(listOf(0xdcffcc, 0x9adbb1))}")
-            board.setSlot(3, "§f找到的宝箱数: ${"Null".toGradientColor(listOf(0xdcffcc, 0x9adbb1))}")
+            board.setSlot(5, "§f你的积分: <#dcffcc,9adbb1>Null</#>".toGradientColor())
+            board.setSlot(4, "§f击杀玩家数: <#dcffcc,9adbb1>Null</#>".toGradientColor())
+            board.setSlot(3, "§f找到的宝箱数: <#dcffcc,9adbb1>Null</#>".toGradientColor())
             board.setSlot(2, "")
-            board.setSlot(1, "mc.ycmt.top".toGradientColor(listOf(0xfff4ba, 0xf4f687)))
+            board.setSlot(1, "<#fff4ba,f4f687>mc.ycmt.top</#>".toGradientColor())
         }
     }
 
@@ -156,48 +156,24 @@ class RunningPhase(override val game: Game) : PhaseAbstract() {
         player.sendMessage(
             "",
             DefaultComponent()
-                .append(
-                    "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■".toGradientColor(
-                        listOf(
-                            0xdeffd2,
-                            0xbee8ff
-                        )
-                    )
-                ).bold()
+                .append("<#deffd2,bee8ff>■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■</#>".toGradientColor())
+                .bold()
                 .toLegacyText(),
             "",
             "                              $CN_LOGO_LEGACY_TEXT",
             "",
             DefaultComponent()
-                .append(
-                    "搜寻各种物资，强化自己的战斗能力，最终决战击败其他玩家！".toGradientColor(
-                        listOf(
-                            0xfff4ba,
-                            0xf4f687
-                        )
-                    )
-                ).bold()
+                .append("<#fff4ba,f4f687>搜寻各种物资，强化自己的战斗能力，最终决战击败其他玩家！</#>".toGradientColor())
+                .bold()
                 .toLegacyText(),
             DefaultComponent()
-                .append(
-                    "争夺唯一的王位，死亡不是唯一的终点，存活到最后迎接胜利。".toGradientColor(
-                        listOf(
-                            0xfff4ba,
-                            0xf4f687
-                        )
-                    )
-                ).bold()
+                .append("<#fff4ba,f4f687>争夺唯一的王位，死亡不是唯一的终点，存活到最后迎接胜利。</#>".toGradientColor())
+                .bold()
                 .toLegacyText(),
             "",
             DefaultComponent()
-                .append(
-                    "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■".toGradientColor(
-                        listOf(
-                            0xdeffd2,
-                            0xbee8ff
-                        )
-                    )
-                ).bold()
+                .append("<#fff4ba,f4f687>■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■</#>".toGradientColor())
+                .bold()
                 .toLegacyText(),
             "",
         )
