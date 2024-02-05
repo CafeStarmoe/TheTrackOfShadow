@@ -5,9 +5,15 @@ import taboolib.common.platform.event.SubscribeEvent
 import top.ycmt.thetrackofshadow.game.GameManager
 import top.ycmt.thetrackofshadow.game.state.CancelState
 
-object MoveEvent {
-    @SubscribeEvent(ignoreCancelled = true)
-    fun onMove(e: PlayerMoveEvent) {
+// 玩家移动事件
+object PlayerMove {
+    @SubscribeEvent
+    fun onPlayerMove(e: PlayerMoveEvent) {
+        cancelMove(e) // 禁止玩家移动
+    }
+
+    // 禁止玩家移动
+    private fun cancelMove(e: PlayerMoveEvent) {
         val player = e.player
         val game = GameManager.getPlayerGame(player) ?: return
 
@@ -25,6 +31,5 @@ object MoveEvent {
                 e.isCancelled = true
             }
         }
-
     }
 }

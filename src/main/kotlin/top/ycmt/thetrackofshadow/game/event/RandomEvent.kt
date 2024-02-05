@@ -1,27 +1,27 @@
-package top.ycmt.thetrackofshadow.game.event.imp
+package top.ycmt.thetrackofshadow.game.event
 
 import org.bukkit.Sound
 import top.ycmt.thetrackofshadow.game.Game
-import top.ycmt.thetrackofshadow.game.event.EventAbstract
+import top.ycmt.thetrackofshadow.game.event.random.AnvilRandom
 import top.ycmt.thetrackofshadow.pkg.chat.sendMsg
 import top.ycmt.thetrackofshadow.pkg.chat.toGradientColor
 import java.util.concurrent.TimeUnit
 
 // 随机事件
-class RandomEvent(override val game: Game) : EventAbstract() {
-    override var finishTick = TimeUnit.MINUTES.toSeconds(5) // 下一次随机事件
+class RandomEvent(private val game: Game) : EventInterface {
+    override var finishTick = 20L // 下一次随机事件
     override val eventMsg = "距离随机事件" // 提示信息
 
     private val addTick: Long = TimeUnit.MINUTES.toSeconds(1)  // 每次增加的时间
 
-//    private val randomEvents = listOf(
+    private val randomEvents = listOf(
 //        ThunderRandom(game), // 天雷圣裁
 //        MeetRandom(game), // 相遇之缘
 //        RockBlessRandom(game), // 岩之祝福
 //        InsightRandom(game), // 洞察一切
 //        HeavenRandom(game), // 上天去吧
 //        CattailRandom(game), // 猫尾特调
-//        AnvilRandom(game), // 铁砧雨
+        AnvilRandom(game), // 铁砧雨
 //        ConfineRandom(game), // 禁锢器
 //        ReverseRandom(game), // 反向重生
 //        BarbatosRandom(game), // 喝醉的巴巴托斯
@@ -29,7 +29,7 @@ class RandomEvent(override val game: Game) : EventAbstract() {
 //        PotatoRandom(game), // 熟土豆
 //        LeyLineRandom(game), // 地脉喷涌
 //        RottenRandom(game), // 开摆
-//    ) // 随机事件列表
+    ) // 随机事件列表
 
     override fun exec(leftTick: Long) {
         // 根据时间改变颜色
@@ -49,9 +49,10 @@ class RandomEvent(override val game: Game) : EventAbstract() {
             }
 
             0L -> {
-//                randomEvents.shuffled().take(1).forEach {
-//                    it.exec() // 执行随机事件
-//                }
+                // 随机抽取一个事件
+                randomEvents.shuffled().take(1).forEach {
+                    it.exec() // 执行随机事件
+                }
                 finishTick += addTick // 计算出下一次执行时间
             }
         }

@@ -1,15 +1,14 @@
-package top.ycmt.thetrackofshadow.game.phase.impl
+package top.ycmt.thetrackofshadow.game.phase
 
 import org.bukkit.entity.Player
 import taboolib.module.chat.impl.DefaultComponent
 import top.ycmt.thetrackofshadow.constant.GameConst.GAME_MAX_TIME
 import top.ycmt.thetrackofshadow.constant.LegacyTextConst.CN_LOGO_LEGACY_TEXT
 import top.ycmt.thetrackofshadow.game.Game
-import top.ycmt.thetrackofshadow.game.event.EventAbstract
-import top.ycmt.thetrackofshadow.game.event.imp.RandomEvent
-import top.ycmt.thetrackofshadow.game.event.imp.StartEvent
-import top.ycmt.thetrackofshadow.game.event.imp.TeleportEvent
-import top.ycmt.thetrackofshadow.game.phase.PhaseAbstract
+import top.ycmt.thetrackofshadow.game.event.EventInterface
+import top.ycmt.thetrackofshadow.game.event.RandomEvent
+import top.ycmt.thetrackofshadow.game.event.StartEvent
+import top.ycmt.thetrackofshadow.game.event.TeleportEvent
 import top.ycmt.thetrackofshadow.pkg.chat.toGradientColor
 import top.ycmt.thetrackofshadow.pkg.scoreboard.ScoreBoard
 import java.text.SimpleDateFormat
@@ -17,11 +16,11 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 // 游戏运行阶段
-class RunningPhase(override val game: Game) : PhaseAbstract() {
+class RunningPhase(private val game: Game) : PhaseAbstract() {
     private var gameTick = 0L // 游戏tick
 
     // 游戏事件列表
-    private val events: List<EventAbstract> = listOf(
+    private val events: List<EventInterface> = listOf(
         TeleportEvent(game), // 随机传送事件
         StartEvent(game), // 开始事件
         RandomEvent(game), // 随机事件
@@ -172,7 +171,7 @@ class RunningPhase(override val game: Game) : PhaseAbstract() {
                 .toLegacyText(),
             "",
             DefaultComponent()
-                .append("<#fff4ba,f4f687>■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■</#>".toGradientColor())
+                .append("<#deffd2,bee8ff>■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■</#>".toGradientColor())
                 .bold()
                 .toLegacyText(),
             "",

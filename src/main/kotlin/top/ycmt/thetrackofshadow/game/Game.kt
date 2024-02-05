@@ -4,10 +4,11 @@ import taboolib.common.platform.function.submit
 import top.ycmt.thetrackofshadow.config.GameSetting
 import top.ycmt.thetrackofshadow.game.module.CancelModule
 import top.ycmt.thetrackofshadow.game.module.PlayerModule
-import top.ycmt.thetrackofshadow.game.phase.PhaseAbstract
-import top.ycmt.thetrackofshadow.game.phase.impl.InitPhase
-import top.ycmt.thetrackofshadow.game.phase.impl.LobbyPhase
-import top.ycmt.thetrackofshadow.game.phase.impl.RunningPhase
+import top.ycmt.thetrackofshadow.game.module.SubTaskModule
+import top.ycmt.thetrackofshadow.game.phase.InitPhase
+import top.ycmt.thetrackofshadow.game.phase.LobbyPhase
+import top.ycmt.thetrackofshadow.game.phase.PhaseInterface
+import top.ycmt.thetrackofshadow.game.phase.RunningPhase
 import top.ycmt.thetrackofshadow.game.state.PhaseState
 import top.ycmt.thetrackofshadow.game.state.PhaseState.*
 import top.ycmt.thetrackofshadow.pkg.logger.logger
@@ -16,9 +17,10 @@ import top.ycmt.thetrackofshadow.pkg.logger.logger
 class Game(val setting: GameSetting) {
     val playerModule = PlayerModule(this) // 玩家管理模块
     val cancelModule = CancelModule(this) // 玩家状态管理模块
+    val subTaskModule = SubTaskModule(this) // 子任务管理模块
 
     private var phaseState = INIT_PHASE // 游戏阶段状态
-    private var gamePhase: PhaseAbstract = InitPhase(this) // 游戏当前阶段
+    private var gamePhase: PhaseInterface = InitPhase(this) // 游戏当前阶段
 
     init {
         logger.info("游戏初始化, gameName: ${setting.gameName}")
@@ -31,7 +33,7 @@ class Game(val setting: GameSetting) {
     private fun gameMainTask() {
         submit(period = 1 * 20L) {
             // 刷新在线玩家对象列表
-            playerModule.refreshOnlinePlayers()
+            playerModule.refreshPlayers()
 
             // 执行当前阶段
             gamePhase.onTick()
@@ -65,6 +67,13 @@ class Game(val setting: GameSetting) {
         // 切换阶段完执行一次
         gamePhase.onTick()
         logger.info("游戏执行下一阶段, gameName: ${setting.gameName}, phaseState: $phaseState")
+    }
+
+    // 停止游戏
+    fun stopGame() {
+        // TODO 踢出玩家
+        // 取消所有任务
+        subTaskModule.cancelAllTask()
     }
 
 }

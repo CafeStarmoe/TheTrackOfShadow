@@ -13,6 +13,7 @@ import java.util.*
 class PlayerModule(private val game: Game) {
     private val players: MutableList<UUID> = mutableListOf() // 玩家uuid列表 记录uuid
     private var onlinePlayersCache: List<Player> = listOf() // 在线玩家对象列表缓存
+    private var alivePlayersCache: List<Player> = listOf() // 存活且在线玩家对象列表缓存
 
     // 添加玩家
     fun addPlayer(player: Player) {
@@ -38,14 +39,20 @@ class PlayerModule(private val game: Game) {
         return players.contains(player.uniqueId)
     }
 
-    // 刷新在线玩家对象列表
-    fun refreshOnlinePlayers() {
+    // 刷新玩家对象列表
+    fun refreshPlayers() {
         onlinePlayersCache = players.mapNotNull { Bukkit.getPlayer(it) }
+        alivePlayersCache = onlinePlayersCache // TODO 存活判断
     }
 
     // 获取在线玩家列表
     fun getOnlinePlayers(): List<Player> {
         return onlinePlayersCache
+    }
+
+    // 获取存活玩家列表
+    fun getAlivePlayers(): List<Player> {
+        return alivePlayersCache
     }
 
     // 初始化玩家

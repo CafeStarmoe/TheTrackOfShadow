@@ -31,9 +31,10 @@ object GameManager {
             logger.error("游戏不存在, gameName: $gameName")
             return
         }
+        // 停止游戏
+        game.stopGame()
         // 删除记录
         gameMap.remove(gameName)
-        // TODO 停止游戏
     }
 
     // 玩家加入游戏

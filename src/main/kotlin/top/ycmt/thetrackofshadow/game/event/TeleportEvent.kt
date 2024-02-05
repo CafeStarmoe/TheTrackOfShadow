@@ -1,4 +1,4 @@
-package top.ycmt.thetrackofshadow.game.event.imp
+package top.ycmt.thetrackofshadow.game.event
 
 import org.bukkit.*
 import top.ycmt.thetrackofshadow.constant.TeleportAnimationConst.ANIMATION_COUNT
@@ -6,7 +6,6 @@ import top.ycmt.thetrackofshadow.constant.TeleportAnimationConst.ANIMATION_HEIGH
 import top.ycmt.thetrackofshadow.constant.TeleportAnimationConst.ANIMATION_TICK
 import top.ycmt.thetrackofshadow.constant.TeleportAnimationConst.DEFAULT_HEIGHT
 import top.ycmt.thetrackofshadow.game.Game
-import top.ycmt.thetrackofshadow.game.event.EventAbstract
 import top.ycmt.thetrackofshadow.game.state.CancelState
 import top.ycmt.thetrackofshadow.pkg.chat.toGradientColor
 import top.ycmt.thetrackofshadow.pkg.hide.hidePlayers
@@ -15,7 +14,7 @@ import top.ycmt.thetrackofshadow.pkg.logger.logger
 import java.util.*
 
 // 随机传送事件
-class TeleportEvent(override val game: Game) : EventAbstract() {
+class TeleportEvent(private val game: Game) : EventInterface {
     override val finishTick = ANIMATION_TICK * (ANIMATION_COUNT + 1) // 运行完毕的tick数
     override val eventMsg = "等待随机传送" // 事件消息
 

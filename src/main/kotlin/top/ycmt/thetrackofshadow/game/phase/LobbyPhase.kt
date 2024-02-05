@@ -1,9 +1,8 @@
-package top.ycmt.thetrackofshadow.game.phase.impl
+package top.ycmt.thetrackofshadow.game.phase
 
 import org.bukkit.Sound
 import top.ycmt.thetrackofshadow.constant.LegacyTextConst.CN_LOGO_LEGACY_TEXT
 import top.ycmt.thetrackofshadow.game.Game
-import top.ycmt.thetrackofshadow.game.phase.PhaseAbstract
 import top.ycmt.thetrackofshadow.pkg.chat.sendMsg
 import top.ycmt.thetrackofshadow.pkg.chat.toGradientColor
 import top.ycmt.thetrackofshadow.pkg.scoreboard.ScoreBoard
@@ -11,7 +10,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 // 大厅等待阶段
-class LobbyPhase(override val game: Game) : PhaseAbstract() {
+class LobbyPhase(private val game: Game) : PhaseAbstract() {
     // 剩余等待的时间
     private var waitTick = game.setting.lobbyWaitTick
 
