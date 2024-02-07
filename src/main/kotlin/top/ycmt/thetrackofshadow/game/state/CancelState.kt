@@ -7,5 +7,5 @@ enum class CancelState {
     CANCEL_PVP, // 禁止PVP
     CANCEL_DAMAGE, // 禁止受伤
     CANCEL_OPEN_CHEST, // 禁止开箱
-    CANCEL_SPAWN, // 禁止重生
+    CANCEL_RESPAWN, // 禁止重生
 }

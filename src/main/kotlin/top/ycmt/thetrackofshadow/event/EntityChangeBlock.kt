@@ -22,7 +22,11 @@ object EntityChangeBlock {
     private fun cleanFallingAnvil(e: EntityChangeBlockEvent) {
         val entity = e.entity
         // 没有游戏对象的元属性就不清除
-        entity.getMeta("game")[0].value() as Game? ?: return
+        val metadataList = entity.getMeta("game")
+        if (metadataList.isEmpty()) {
+            return
+        }
+        metadataList[0].value() as Game? ?: return
 
         // 判断实体是否为正在掉落的方块
         if (entity !is FallingBlock) {

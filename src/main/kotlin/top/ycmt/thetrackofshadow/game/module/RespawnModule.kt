@@ -1,0 +1,148 @@
+package top.ycmt.thetrackofshadow.game.module
+
+import org.bukkit.Color
+import org.bukkit.FireworkEffect
+import org.bukkit.Location
+import org.bukkit.Sound
+import org.bukkit.entity.Firework
+import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
+import taboolib.platform.util.toBukkitLocation
+import top.ycmt.thetrackofshadow.game.Game
+import top.ycmt.thetrackofshadow.game.state.CancelState
+import top.ycmt.thetrackofshadow.game.task.RespawnProtectTask
+import top.ycmt.thetrackofshadow.game.task.RespawnTask
+import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
+import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendMsg
+import top.ycmt.thetrackofshadow.pkg.hide.HidePlayer.hidePlayers
+import top.ycmt.thetrackofshadow.pkg.hide.HidePlayer.showPlayers
+import top.ycmt.thetrackofshadow.pkg.logger.Logger
+import java.util.*
+
+// 玩家重生管理模块
+class RespawnModule(private val game: Game) {
+    private val respawnPlayers: MutableMap<UUID, RespawnTask> = mutableMapOf() // 正在重生的玩家uuid列表
+    private val playersInv: MutableMap<UUID, Array<ItemStack>> = mutableMapOf() // 正在重生的玩家物品栏
+    private val protectPlayers: MutableList<UUID> = mutableListOf() // 重生后保护状态的玩家uuid列表
+
+    // 添加重生玩家
+    fun respawnPlayer(player: Player) {
+        // 判断玩家是否正在重生状态
+        if (respawnPlayers.contains(player.uniqueId)) {
+            // 取消正在运行的重生任务
+            respawnPlayers[player.uniqueId]?.cancel()
+            respawnPlayers.remove(player.uniqueId)
+        }
+        // 如果玩家的物品栏存在代表玩家上次的重生未完成 不覆盖
+        if (!playersInv.contains(player.uniqueId)) {
+            // 保存重生前的物品栏
+            playersInv[player.uniqueId] = player.inventory.contents
+        }
+        // 初始化玩家
+        game.playerModule.initPlayer(player)
+        // 暂时允许飞行
+        player.allowFlight = true
+        player.isFlying = true
+        // 给予玩家隐身效果
+        player.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, 60 * 20, 0))
+        // 设置玩家隐身
+        player.hidePlayers(game.playerModule.getOnlineUsers())
+        // 将玩家传送到重生点
+        player.teleport(player.world.spawnLocation)
+        // 重生任务
+        val task = RespawnTask(game, player, 5L)
+        // 添加正在重生玩家
+        respawnPlayers[player.uniqueId] = task
+        // 提交重生任务
+        game.subTaskModule.submitTask(period = 1 * 20L, task = task)
+    }
+
+    // 重生倒计时结束
+    fun respawnFinish(player: Player) {
+        // 判断玩家是否正在重生状态
+        if (!respawnPlayers.contains(player.uniqueId)) {
+            return
+        }
+        // 初始化玩家 且清空物品栏
+        game.playerModule.initPlayer(player)
+        // 取消允许飞行
+        player.allowFlight = false
+        player.isFlying = false
+        // 设置玩家显示
+        player.showPlayers(game.playerModule.getOnlineUsers())
+        // 还原玩家物品栏
+        val playerInv = playersInv[player.uniqueId]
+        // 确保物品栏获取成功
+        if (playerInv == null) {
+            Logger.error("记录的玩家物品栏为空, uuid: ${player.uniqueId}, name: ${player.name}")
+            return
+        }
+        player.inventory.contents = playerInv
+        // 删除物品栏记录
+        playersInv.remove(player.uniqueId)
+        // 重生点坐标
+        val respawnLoc = game.setting.gameMapRespawnVector.toLocation(game.setting.gameMapWorld).toBukkitLocation()
+        // 将玩家传送至重生点
+        player.teleport(respawnLoc)
+        // 发射烟花示意有人重生了
+        spawnFireWorks(respawnLoc)
+        // 复活后给其他玩家提示消息
+        game.playerModule.getOnlineUsers().forEach {
+            it.sendMessage(
+                "",
+                "§f§l玩家重生 > <#deffd2,bee8ff>${player.name}</#>§f已经重生在出生点了!".toGradientColor(),
+                ""
+            )
+            it.playSound(it, Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f)
+        }
+        // 复活后给此玩家提示消息
+        player.sendTitle(
+            "<#deffd2,bee8ff>已重生!</#>".toGradientColor(),
+            "<#ffefbb,e3ce82>重生后将获得</#><#ff9c9c,de4949>10秒</#><#ffefbb,e3ce82>保护!</#>".toGradientColor(),
+            10,
+            20,
+            10
+        )
+        player.sendMsg("<#ffefbb,e3ce82>重生后将获得</#><#ff9c9c,de4949>10秒</#><#ffefbb,e3ce82>保护!</#>".toGradientColor())
+        // 删除正在重生玩家
+        respawnPlayers.remove(player.uniqueId)
+        // 提交重生后保护任务
+        game.subTaskModule.submitTask(period = 1 * 20L, task = RespawnProtectTask(game, player, 10L))
+    }
+
+    // 取消重生 如玩家退出游戏
+    fun cancelRespawn(player: Player) {
+        respawnPlayers.remove(player.uniqueId)
+    }
+
+    // 取消重生后保护
+    fun cancelProtect(player: Player) {
+        protectPlayers.remove(player.uniqueId)
+    }
+
+    // 玩家是否正在重生
+    fun containsRespawnPlayer(player: Player): Boolean = respawnPlayers.contains(player.uniqueId)
+
+    // 是否可以重生
+    fun isRespawnable(): Boolean {
+        return !game.cancelModule.containsGlobalCancelState(CancelState.CANCEL_RESPAWN)
+    }
+
+    // 生成重生烟花
+    private fun spawnFireWorks(loc: Location) {
+        // 创建一个烟花
+        val firework = loc.world?.spawn(loc, Firework::class.java) ?: return
+        val meta = firework.fireworkMeta // 烟花的meta
+        // 烟花的效果
+        meta.addEffects(
+            FireworkEffect.builder().withColor(Color.fromRGB(193, 255, 193)).withFade(Color.fromRGB(155, 205, 155))
+                .with(FireworkEffect.Type.STAR).withFlicker().withTrail().build()
+        )
+        meta.power = 0
+        // 应用效果
+        firework.fireworkMeta = meta
+    }
+
+}

@@ -35,6 +35,12 @@ taboolib {
         install(BUKKIT_UTIL, BUKKIT_XSERIES)
         // 安装Raw 信息构建工具与 1.16 RGB 颜色转换
         install(CHAT)
+        // 全平台配置文件解决方案 (Yaml & Toml & Hocon & Json)
+        install(CONFIGURATION)
+        // 全平台粒子绘制工具, 提供了大量基本函数
+        install(EFFECT)
+        // Bukkit 平台箱子菜单构建工具, 提供了数种不同类型的结构
+        install(UI)
     }
     // 版本配置
     // 此处列出所有可用选项，除 "TabooLib 版本" 外均省略
@@ -62,7 +68,7 @@ taboolib {
         }
         // 项目链接
         links {
-            name("website").url("https://thetrackofshadow.ycmt.top")
+            name("website").url("https://github.com/YuCraft/TheTrackOfShadow")
         }
         // 项目前缀
         prefix("TheTrackOfShadow")
@@ -72,11 +78,19 @@ taboolib {
         load("POSTWORLD")
         // api版本
         bukkitApi("1.20")
+        dependencies {
+            // 全息投影
+            name("HolographicDisplays").with("bukkit")
+            // 协议库
+            name("ProtocolLib").with("bukkit")
+        }
     }
 }
 
 repositories {
     mavenCentral()
+    maven("https://repo.codemc.io/repository/maven-public/")
+    maven("https://repo.dmulloy2.net/repository/public/")
 }
 
 dependencies {
@@ -84,6 +98,8 @@ dependencies {
     compileOnly("ink.ptms.core:v12004:v12004:universal")
     compileOnly(kotlin("stdlib"))
     compileOnly(fileTree("libs"))
+    compileOnly("me.filoghost.holographicdisplays:holographicdisplays-api:3.0.0")
+    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
 }
 
 tasks.withType<JavaCompile> {

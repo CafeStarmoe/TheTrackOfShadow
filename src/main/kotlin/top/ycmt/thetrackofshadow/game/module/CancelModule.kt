@@ -11,6 +11,9 @@ class CancelModule(private val game: Game) {
     // 玩家禁止状态集合
     private val playerCancelStates: MutableMap<UUID, MutableList<CancelState>> = mutableMapOf()
 
+    // 全局禁止状态列表
+    private val globalCancelState: MutableList<CancelState> = mutableListOf()
+
     // 获取玩家禁止状态列表
     private fun getPlayerStates(player: Player): MutableList<CancelState>? {
         // 列表不存在则创建列表
@@ -48,8 +51,28 @@ class CancelModule(private val game: Game) {
         }
     }
 
+    // 添加全局禁止状态
+    fun addGlobalCancelState(vararg cancelStates: CancelState) {
+        for (state in cancelStates) {
+            // 添加禁止状态
+            globalCancelState.add(state)
+        }
+    }
+
+    // 删除全局禁止状态
+    fun removeGlobalCancelState(vararg cancelStates: CancelState) {
+        for (state in cancelStates) {
+            // 添加禁止状态
+            globalCancelState.remove(state)
+        }
+    }
+
     // 玩家是否拥有该禁止状态
-    fun containsPlayerCancelState(player: Player, cancelState: CancelState): Boolean {
+    fun containsCancelState(player: Player, cancelState: CancelState): Boolean {
+        // 优先判断全局禁止状态
+        if (globalCancelState.contains(cancelState)) {
+            return true
+        }
         // 玩家禁止状态列表
         val stateList = getPlayerStates(player)
         if (stateList == null) {
@@ -58,5 +81,8 @@ class CancelModule(private val game: Game) {
         }
         return stateList.contains(cancelState)
     }
+
+    // 是否拥有全局禁止状态
+    fun containsGlobalCancelState(cancelState: CancelState) = globalCancelState.contains(cancelState)
 
 }

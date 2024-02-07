@@ -19,7 +19,7 @@ class LobbyPhase(private val game: Game) : PhaseAbstract() {
         refreshBoard()
 
         // 校验玩家人数是否符合开始游戏所需最小玩家数
-        if (game.playerModule.getOnlinePlayers().size < game.setting.minPlayerCount) {
+        if (game.playerModule.getOnlineUsers().size < game.setting.minPlayerCount) {
             // 重置剩余等待时间并提示玩家
             if (waitTick != game.setting.lobbyWaitTick) {
                 waitTick = game.setting.lobbyWaitTick
@@ -51,9 +51,9 @@ class LobbyPhase(private val game: Game) : PhaseAbstract() {
 
     // 提示玩家等待更多玩家
     private fun notifyWaitMorePlayer() {
-        game.playerModule.getOnlinePlayers().forEach {
+        game.playerModule.getOnlineUsers().forEach {
             it.sendMsg("<#ffcbcb,ff7093>玩家数量不足, 等待更多玩家...</#>".toGradientColor())
-            it.sendTitle("<#ffcbcb,ff7093>等待更多玩家加入...</#>".toGradientColor(), "", 5, 30, 5)
+            it.sendTitle("", "<#ffcbcb,ff7093>等待更多玩家加入...</#>".toGradientColor(), 5, 30, 5)
             it.playSound(it, Sound.BLOCK_NOTE_BLOCK_HAT, 1f, 1f)
         }
     }
@@ -67,7 +67,7 @@ class LobbyPhase(private val game: Game) : PhaseAbstract() {
             else -> "c1c1ff,7373ff"
         }
 
-        game.playerModule.getOnlinePlayers().forEach {
+        game.playerModule.getOnlineUsers().forEach {
             it.sendMsg("<#f5ead0,eee6a1>游戏将在</#><#$countdownColor>${waitTick}秒</#><#f5ead0,eee6a1>后开始哦~</#>".toGradientColor())
             it.sendTitle("<#$countdownColor>$waitTick</#>".toGradientColor(), "", 5, 20, 5)
             it.playSound(it, Sound.BLOCK_NOTE_BLOCK_HAT, 1f, 1f)
@@ -79,7 +79,7 @@ class LobbyPhase(private val game: Game) : PhaseAbstract() {
         // 设置日期格式
         val df = SimpleDateFormat("MM/dd/yy")
 
-        for (p in game.playerModule.getOnlinePlayers()) {
+        for (p in game.playerModule.getOnlineUsers()) {
             val board: ScoreBoard =
                 if (ScoreBoard.hasScore(p)) ScoreBoard.getByPlayer(p)!! else ScoreBoard.createScore(
                     p,
@@ -90,12 +90,12 @@ class LobbyPhase(private val game: Game) : PhaseAbstract() {
             board.setSlot(9, "§f地图: <#dcffcc,9adbb1>${game.setting.mapName}</#>".toGradientColor())
             board.setSlot(
                 8,
-                "§f玩家: <#dcffcc,9adbb1>${game.playerModule.getOnlinePlayers().size}</#>§f/<#dcffcc,9adbb1>${game.setting.maxPlayerCount}</#>".toGradientColor()
+                "§f玩家: <#dcffcc,9adbb1>${game.playerModule.getOnlineUsers().size}</#>§f/<#dcffcc,9adbb1>${game.setting.maxPlayerCount}</#>".toGradientColor()
             )
             board.setSlot(7, "")
             board.setSlot(
                 6,
-                if (game.playerModule.getOnlinePlayers().size >= game.setting.minPlayerCount) "§f即将开始: " + "<#dcffcc,9adbb1>${waitTick}秒</#>".toGradientColor() else "§f等待中..."
+                if (game.playerModule.getOnlineUsers().size >= game.setting.minPlayerCount) "§f即将开始: " + "<#dcffcc,9adbb1>${waitTick}秒</#>".toGradientColor() else "§f等待中..."
             )
             board.setSlot(5, "")
             board.setSlot(4, "§f模式: <#dcffcc,9adbb1>单挑</#>".toGradientColor())

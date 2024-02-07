@@ -17,17 +17,17 @@ class StartEvent(private val game: Game) : EventInterface {
         // 输出提示通知玩家
         when (leftTick) {
             6L -> {
-                game.playerModule.getOnlinePlayers().forEach {
+                game.playerModule.getAlivePlayers().forEach {
                     // 暂时允许飞行
                     it.allowFlight = true
                     it.isFlying = true
-                    // 禁止移动
-                    game.cancelModule.addPlayerCancelState(it, CancelState.CANCEL_MOVE)
                 }
+                // 全局禁止移动
+                game.cancelModule.addGlobalCancelState(CancelState.CANCEL_MOVE)
             }
 
             in 1L..5L -> {
-                game.playerModule.getOnlinePlayers().forEach {
+                game.playerModule.getOnlineUsers().forEach {
                     it.sendMsg("<#f5ead0,eee6a1>游戏将在</#><#f7c79c,ef987d>${leftTick}秒</#><#f5ead0,eee6a1>后开局!</#>".toGradientColor())
                     it.sendTitle(
                         "<#ff9c9c,de4949>$leftTick</#>".toGradientColor(),
@@ -41,12 +41,14 @@ class StartEvent(private val game: Game) : EventInterface {
             }
 
             0L -> {
-                game.playerModule.getOnlinePlayers().forEach {
-                    // 允许移动
-                    game.cancelModule.removePlayerCancelState(it, CancelState.CANCEL_MOVE)
+                // 全局允许移动
+                game.cancelModule.removeGlobalCancelState(CancelState.CANCEL_MOVE)
+                game.playerModule.getAlivePlayers().forEach {
                     // 不允许飞行
                     it.allowFlight = false
                     it.isFlying = false
+                }
+                game.playerModule.getOnlineUsers().forEach {
                     // 提示玩家
                     it.sendMsg("<#f5ead0,eee6a1>游戏正式开始,</#> <#c1c1ff,7373ff>下蹲+副手键</#> <#f5ead0,eee6a1>打开菜单~</#>".toGradientColor())
                     it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)

@@ -5,15 +5,15 @@ import taboolib.common.platform.command.subCommand
 import top.ycmt.thetrackofshadow.game.GameManager
 import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendMsg
 
-// 加入游戏命令
-object JoinCommand {
+// 观看游戏命令
+object WatchCommand {
     val command = subCommand {
         dynamic(optional = true) {
             suggestion<Player>(uncheck = true) { _, _ ->
                 GameManager.getGameNames()
             }
             execute<Player> { player, _, argument ->
-                GameManager.joinGame(argument, player)
+                GameManager.watchGame(argument, player)
             }
         }
         execute<Player> { player, context, argument ->

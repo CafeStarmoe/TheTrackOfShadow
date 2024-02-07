@@ -4,6 +4,7 @@ import org.bukkit.Sound
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.event.random.AnvilRandom
 import top.ycmt.thetrackofshadow.game.event.random.BarbadosRandom
+import top.ycmt.thetrackofshadow.game.event.random.BloodyRandom
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendMsg
 import java.util.concurrent.TimeUnit
@@ -26,7 +27,7 @@ class RandomEvent(private val game: Game) : EventInterface {
 //        ConfineRandom(game), // 禁锢器
 //        ReverseRandom(game), // 反向重生
         BarbadosRandom(game), // 喝醉的巴巴托斯
-//        BloodyRandom(game), // 血色之夜
+        BloodyRandom(game), // 血色之夜
 //        PotatoRandom(game), // 熟土豆
 //        LeyLineRandom(game), // 地脉喷涌
 //        RottenRandom(game), // 开摆
@@ -43,7 +44,7 @@ class RandomEvent(private val game: Game) : EventInterface {
         // 输出提示通知玩家
         when (leftTick) {
             in 1L..5L -> {
-                game.playerModule.getOnlinePlayers().forEach {
+                game.playerModule.getOnlineUsers().forEach {
                     it.sendMsg("<#b3ddfa,90bdff>随机事件将在</#><#$leftTickColor>${leftTick}秒</#><#b3ddfa,90bdff>后发生!</#>".toGradientColor())
                     it.playSound(it, Sound.BLOCK_NOTE_BLOCK_HAT, 1f, 1f)
                 }

@@ -7,10 +7,8 @@ import taboolib.module.chat.impl.DefaultComponent
 import top.ycmt.thetrackofshadow.constant.LegacyTextConst.CN_LOGO_LEGACY_TEXT
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 
-// 帮助命令
+// 插件帮助命令
 object HelpCommand {
-
-    // 显示帮助命令
     val command = subCommand {
         execute<ProxyCommandSender> { sender, cmd, _ ->
             sendHelpMsg(sender, cmd) // 发送帮助信息

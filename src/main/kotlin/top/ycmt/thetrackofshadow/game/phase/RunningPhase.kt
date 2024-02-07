@@ -9,6 +9,7 @@ import top.ycmt.thetrackofshadow.game.event.EventInterface
 import top.ycmt.thetrackofshadow.game.event.RandomEvent
 import top.ycmt.thetrackofshadow.game.event.StartEvent
 import top.ycmt.thetrackofshadow.game.event.TeleportEvent
+import top.ycmt.thetrackofshadow.game.task.SpawnWorldTask
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 import top.ycmt.thetrackofshadow.pkg.scoreboard.ScoreBoard
 import java.text.SimpleDateFormat
@@ -27,14 +28,21 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
     )
 
     init {
-        game.playerModule.getOnlinePlayers().forEach {
+        // 初始化子任务
+        initTask()
+        game.playerModule.getAlivePlayers().forEach {
             // 初始化玩家
-            game.playerModule.initPlayer(it, true)
+            game.playerModule.initPlayer(it)
             // 清除游戏玩家的计分板
             ScoreBoard.removeScore(it)
             // 发送玩法介绍
             sendGameIntroduce(it)
         }
+    }
+
+    // 初始化子任务
+    private fun initTask() {
+        game.subTaskModule.submitTask(period = 1 * 20L, task = SpawnWorldTask(game))
     }
 
     override fun onTick() {
@@ -145,6 +153,44 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
             board.setSlot(5, "§f你的积分: <#dcffcc,9adbb1>Null</#>".toGradientColor())
             board.setSlot(4, "§f击杀玩家数: <#dcffcc,9adbb1>Null</#>".toGradientColor())
             board.setSlot(3, "§f找到的宝箱数: <#dcffcc,9adbb1>Null</#>".toGradientColor())
+            board.setSlot(2, "")
+            board.setSlot(1, "<#fff4ba,f4f687>mc.ycmt.top</#>".toGradientColor())
+        }
+        for (p in game.playerModule.getOnlineWatchers()) {
+            val board: ScoreBoard =
+                if (ScoreBoard.hasScore(p)) ScoreBoard.getByPlayer(p)!! else ScoreBoard.createScore(
+                    p,
+                    CN_LOGO_LEGACY_TEXT
+                )
+            board.setSlot(13, "§7${df.format(Date())}  §8${game.setting.gameName}")
+            board.setSlot(12, "")
+            board.setSlot(11, getRecentlyEventMsg())
+            board.setSlot(10, "")
+            board.setSlot(
+                9,
+                "§f1. Null"
+            )
+            board.setSlot(
+                8,
+                "§f2. Null"
+            )
+            board.setSlot(
+                7,
+                "§f3. Null"
+            )
+            board.setSlot(
+                6,
+                "§f4. Null"
+            )
+            board.setSlot(
+                5,
+                "§f5. Null"
+            )
+            board.setSlot(4, "")
+            board.setSlot(
+                3,
+                "§f剩余藏宝点 Null §f个"
+            )
             board.setSlot(2, "")
             board.setSlot(1, "<#fff4ba,f4f687>mc.ycmt.top</#>".toGradientColor())
         }

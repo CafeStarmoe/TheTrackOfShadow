@@ -14,8 +14,18 @@ data class GameSetting(
     val maxPlayerCount: Int,
     // 大厅等待时间 单位秒
     val lobbyWaitTick: Long,
+    // 大厅地图坐标
+    val lobbyMapWorld: String,
+    val lobbyMapVector: Vector,
     // 游戏地图坐标
     val gameMapWorld: String,
     val gameMapVector1: Vector,
     val gameMapVector2: Vector,
+    // 游戏地图重生点坐标
+    val gameMapRespawnVector: Vector,
+    // 游戏地图重生点范围
+    val gameMapRespawnRange: Double,
+    // 退出游戏地图坐标
+    val quitMapWorld: String,
+    val quitMapVector: Vector,
 )

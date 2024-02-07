@@ -12,7 +12,7 @@ class AnvilRandom(private val game: Game) : RandomInterface {
         // 开启铁砧雨事件
         game.subTaskModule.submitTask(period = 5L, task = AnvilRandomTask(game, 40))
         // 提示玩家
-        game.playerModule.getOnlinePlayers().forEach {
+        game.playerModule.getOnlineUsers().forEach {
             it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)
             it.sendMessage(
                 "",

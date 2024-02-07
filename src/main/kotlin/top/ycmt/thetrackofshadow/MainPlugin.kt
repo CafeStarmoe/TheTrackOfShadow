@@ -30,8 +30,14 @@ class MainPlugin : Plugin() {
                 10,
                 5,
                 "world",
+                Vector(-279.5, 182.0, -91.5),
+                "world",
                 Vector(-191, 40, -191),
-                Vector(-639, 80, 191)
+                Vector(-639, 80, 191),
+                Vector(-388.5, 51.0, -6.5),
+                10.0,
+                "world",
+                Vector(-388.5, 182.0, -91.5),
             )
             GameManager.createGame(gameSetting)
         }

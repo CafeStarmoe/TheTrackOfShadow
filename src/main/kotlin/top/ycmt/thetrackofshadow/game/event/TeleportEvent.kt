@@ -25,15 +25,15 @@ class TeleportEvent(private val game: Game) : EventInterface {
         when (leftTick) {
             ANIMATION_TICK * (ANIMATION_COUNT + 1) -> {
                 // 设置玩家为传送动画状态
-                game.playerModule.getOnlinePlayers().forEach {
-                    it.hidePlayers(game.playerModule.getOnlinePlayers())
+                game.playerModule.getAlivePlayers().forEach {
+                    it.hidePlayers(game.playerModule.getAlivePlayers())
                     // 暂时允许飞行
                     it.allowFlight = true
                     it.isFlying = true
                     it.gameMode = GameMode.SPECTATOR
-                    // 禁止移动位置和视角
-                    game.cancelModule.addPlayerCancelState(it, CancelState.CANCEL_MOVE, CancelState.CANCEL_MOVE_ANGLE)
                 }
+                // 全局禁止移动位置和视角
+                game.cancelModule.addGlobalCancelState(CancelState.CANCEL_MOVE, CancelState.CANCEL_MOVE_ANGLE)
                 teleportPlayerAnimation()
             }
 
@@ -43,7 +43,7 @@ class TeleportEvent(private val game: Game) : EventInterface {
 
             0L -> {
                 // 取消玩家传送动画状态
-                for (p in game.playerModule.getOnlinePlayers()) {
+                for (p in game.playerModule.getAlivePlayers()) {
                     // 获取将要传送到的位置
                     val loc = playerTeleportLocations[p.uniqueId]
                     if (loc == null) {
@@ -55,19 +55,15 @@ class TeleportEvent(private val game: Game) : EventInterface {
                     p.sendTitle("<#deffd2,bee8ff>传送完毕</#>".toGradientColor(), "", 5, 10, 5)
                     p.playSound(p, Sound.ITEM_CHORUS_FRUIT_TELEPORT, 1f, 1f)
                 }
-                game.playerModule.getOnlinePlayers().forEach {
-                    // 允许移动位置和视角
-                    game.cancelModule.removePlayerCancelState(
-                        it,
-                        CancelState.CANCEL_MOVE,
-                        CancelState.CANCEL_MOVE_ANGLE
-                    )
+                // 全局允许移动位置和视角
+                game.cancelModule.removeGlobalCancelState(CancelState.CANCEL_MOVE, CancelState.CANCEL_MOVE_ANGLE)
+                game.playerModule.getAlivePlayers().forEach {
                     // 不允许飞行
                     it.allowFlight = false
                     it.isFlying = false
                     // 设置为冒险模式
                     it.gameMode = GameMode.ADVENTURE
-                    it.showPlayers(game.playerModule.getOnlinePlayers())
+                    it.showPlayers(game.playerModule.getAlivePlayers())
                 }
             }
         }
@@ -75,7 +71,7 @@ class TeleportEvent(private val game: Game) : EventInterface {
 
     // 传送玩家动画
     private fun teleportPlayerAnimation() {
-        for (p in game.playerModule.getOnlinePlayers()) {
+        for (p in game.playerModule.getAlivePlayers()) {
             // 获取将要传送到的位置
             val loc = playerTeleportLocations[p.uniqueId]
             if (loc == null) {
@@ -101,7 +97,7 @@ class TeleportEvent(private val game: Game) : EventInterface {
     // 获取在线玩家传送的位置
     private fun getPlayerTeleportLocations(): Map<UUID, Location> {
         val playerTeleportLocations: MutableMap<UUID, Location> = mutableMapOf()
-        for (p in game.playerModule.getOnlinePlayers()) {
+        for (p in game.playerModule.getAlivePlayers()) {
             val loc = randomTeleportLocation()
             if (loc == null) {
                 Logger.error("玩家安全位置随机失败, uuid: ${p.uniqueId}, name: ${p.name}")

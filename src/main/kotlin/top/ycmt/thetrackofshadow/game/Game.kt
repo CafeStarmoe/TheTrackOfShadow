@@ -2,13 +2,8 @@ package top.ycmt.thetrackofshadow.game
 
 import taboolib.common.platform.function.submit
 import top.ycmt.thetrackofshadow.config.GameSetting
-import top.ycmt.thetrackofshadow.game.module.CancelModule
-import top.ycmt.thetrackofshadow.game.module.PlayerModule
-import top.ycmt.thetrackofshadow.game.module.SubTaskModule
-import top.ycmt.thetrackofshadow.game.phase.InitPhase
-import top.ycmt.thetrackofshadow.game.phase.LobbyPhase
-import top.ycmt.thetrackofshadow.game.phase.PhaseInterface
-import top.ycmt.thetrackofshadow.game.phase.RunningPhase
+import top.ycmt.thetrackofshadow.game.module.*
+import top.ycmt.thetrackofshadow.game.phase.*
 import top.ycmt.thetrackofshadow.game.state.PhaseState
 import top.ycmt.thetrackofshadow.game.state.PhaseState.*
 import top.ycmt.thetrackofshadow.pkg.logger.Logger
@@ -18,8 +13,14 @@ class Game(val setting: GameSetting) {
     val playerModule = PlayerModule(this) // 玩家管理模块
     val cancelModule = CancelModule(this) // 玩家状态管理模块
     val subTaskModule = SubTaskModule(this) // 子任务管理模块
+    val damageModule = DamageModule(this) // 玩家伤害管理模块
+    val respawnModule = RespawnModule(this) // 玩家重生管理模块
+    val spawnModule = SpawnModule(this) // 出生点管理模块
+    val reconnectModule = ReconnectModule(this) // 玩家重连管理模块
 
-    private var phaseState = INIT_PHASE // 游戏阶段状态
+    var phaseState = INIT_PHASE // 游戏阶段状态
+        private set
+
     private var gamePhase: PhaseInterface = InitPhase(this) // 游戏当前阶段
 
     init {
@@ -63,6 +64,8 @@ class Game(val setting: GameSetting) {
             LOBBY_PHASE -> LobbyPhase(this)
             // 游戏运行阶段
             RUNNING_PHASE -> RunningPhase(this)
+            // 游戏结算阶段
+            SETTLE_PHASE -> SettlePhase(this)
         }
         // 切换阶段完执行一次
         gamePhase.onTick()
@@ -72,7 +75,7 @@ class Game(val setting: GameSetting) {
     // 停止游戏
     fun stopGame() {
         // TODO 踢出玩家
-        // 取消所有任务
+        // 取消所有子任务
         subTaskModule.cancelAllTask()
     }
 

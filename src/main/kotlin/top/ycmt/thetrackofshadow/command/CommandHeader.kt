@@ -14,7 +14,6 @@ import taboolib.common.platform.command.mainCommand
     permissionDefault = PermissionDefault.TRUE
 )
 object CommandHeader {
-
     // 加入游戏命令
     @CommandBody(
         permission = "thetrackofshadow.command.join",
@@ -22,6 +21,22 @@ object CommandHeader {
         permissionDefault = PermissionDefault.TRUE
     )
     val join = JoinCommand.command
+
+    // 观看游戏命令
+    @CommandBody(
+        permission = "thetrackofshadow.command.watch",
+        optional = true,
+        permissionDefault = PermissionDefault.TRUE
+    )
+    val watch = WatchCommand.command
+
+    // 离开游戏命令
+    @CommandBody(
+        permission = "thetrackofshadow.command.quit",
+        optional = true,
+        permissionDefault = PermissionDefault.TRUE
+    )
+    val quit = QuitCommand.command
 
     // 显示帮助命令
     @CommandBody(

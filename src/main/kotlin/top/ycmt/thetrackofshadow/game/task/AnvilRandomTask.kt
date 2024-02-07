@@ -9,11 +9,11 @@ import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 
 // 铁砧雨随机事件任务
-class AnvilRandomTask(private val game: Game, private var count: Int) : TaskAbstract() {
+class AnvilRandomTask(private val game: Game, private var tick: Int) : TaskAbstract() {
     override fun run() {
         // 事件结束
-        if (count <= 0) {
-            game.playerModule.getOnlinePlayers().forEach {
+        if (tick <= 0) {
+            game.playerModule.getOnlineUsers().forEach {
                 it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)
                 it.sendMessage(
                     "",
@@ -41,7 +41,7 @@ class AnvilRandomTask(private val game: Game, private var count: Int) : TaskAbst
                 fallingBlock.setMeta("game", game) // 设置游戏属性
             }
         }
-        count-- // 剩余次数-1
+        tick-- // 剩余次数-1
     }
 
 }

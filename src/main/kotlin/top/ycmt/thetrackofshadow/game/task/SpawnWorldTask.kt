@@ -1,0 +1,96 @@
+package top.ycmt.thetrackofshadow.game.task
+
+import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI
+import me.filoghost.holographicdisplays.api.hologram.line.TextHologramLine
+import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.inventory.ItemStack
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
+import taboolib.module.effect.shape.Circle
+import taboolib.platform.util.bukkitPlugin
+import taboolib.platform.util.toBukkitLocation
+import taboolib.platform.util.toProxyLocation
+import top.ycmt.thetrackofshadow.game.Game
+import top.ycmt.thetrackofshadow.game.particle.SpawnParticle
+
+
+// 出生点效果显示以及治疗任务
+class SpawnWorldTask(private val game: Game) : TaskAbstract() {
+    var tick: Long = 0 // tick数
+    private val spawnLoc =
+        game.setting.gameMapRespawnVector.toLocation(game.setting.gameMapWorld).toBukkitLocation() // 出生点位置
+    private var particle: Circle = Circle(
+        spawnLoc.toProxyLocation(),
+        game.setting.gameMapRespawnRange,
+        5.0,
+        1 * 20L,
+        SpawnParticle(game, this)
+    ) // 粒子效果
+    private var holoLine: TextHologramLine // 全息投影内容
+
+    init {
+        // 全息投影位置
+        val loc = Location(spawnLoc.world, spawnLoc.x, spawnLoc.y + 3, spawnLoc.z)
+        // 创建全息投影
+        val hologram = HolographicDisplaysAPI.get(bukkitPlugin).createHologram(loc)
+        hologram.lines.appendItem(ItemStack(Material.CLOCK))
+        holoLine = hologram.lines.appendText("§e§l载入中...")
+    }
+
+    override fun run() {
+        // 判断游戏是否进入了决赛阶段 不能重生就是决赛
+        if (!game.respawnModule.isRespawnable()) {
+            this.cancel()
+            return
+        }
+        // 判断出生点保护是否启用
+        if (game.spawnModule.enableProtect) {
+            changeHologramLine() // 修改全息投影
+            potionDistance() // 范围药水效果
+            particle.show() // 渲染粒子特效
+        }
+        tick++
+    }
+
+    override fun cancel() {
+        super.cancel()
+        // 关闭粒子效果任务
+        particle.turnOffTask()
+    }
+
+    // 修改全息投影内容
+    private fun changeHologramLine() {
+        // 判断出生点是否反转
+        if (!game.spawnModule.reverse) {
+            // 每30s给予1次
+            if (tick % 30 == 0L) {
+                holoLine.text = "§a§l已治疗✔"
+            } else {
+                holoLine.text = "§f§l下次治疗: §c§l${30 - tick % 30}s"
+            }
+        } else {
+            holoLine.text = "§c§l已反转✘"
+        }
+    }
+
+    // 给予范围内的玩家药水效果
+    private fun potionDistance() {
+        game.playerModule.getAlivePlayers().forEach {
+            if (spawnLoc.distance(it.location) <= game.setting.gameMapRespawnRange) {
+                // 判断出生点是否反转
+                if (!game.spawnModule.reverse) {
+                    // 每30s给予1次
+                    if (tick % 30 == 0L) {
+                        // 给予玩家瞬间治疗药水效果
+                        it.addPotionEffect(PotionEffect(PotionEffectType.HEAL, 30, 0))
+                    }
+                } else {
+                    // 给予玩家瞬间伤害药水效果
+                    it.addPotionEffect(PotionEffect(PotionEffectType.HARM, 30, 0))
+                }
+            }
+        }
+    }
+
+}
