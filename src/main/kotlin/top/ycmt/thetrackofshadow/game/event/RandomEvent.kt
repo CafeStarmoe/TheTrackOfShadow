@@ -3,8 +3,9 @@ package top.ycmt.thetrackofshadow.game.event
 import org.bukkit.Sound
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.event.random.AnvilRandom
-import top.ycmt.thetrackofshadow.pkg.chat.sendMsg
-import top.ycmt.thetrackofshadow.pkg.chat.toGradientColor
+import top.ycmt.thetrackofshadow.game.event.random.BarbadosRandom
+import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
+import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendMsg
 import java.util.concurrent.TimeUnit
 
 // 随机事件
@@ -24,7 +25,7 @@ class RandomEvent(private val game: Game) : EventInterface {
         AnvilRandom(game), // 铁砧雨
 //        ConfineRandom(game), // 禁锢器
 //        ReverseRandom(game), // 反向重生
-//        BarbatosRandom(game), // 喝醉的巴巴托斯
+        BarbadosRandom(game), // 喝醉的巴巴托斯
 //        BloodyRandom(game), // 血色之夜
 //        PotatoRandom(game), // 熟土豆
 //        LeyLineRandom(game), // 地脉喷涌

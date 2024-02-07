@@ -5,8 +5,8 @@ import top.ycmt.thetrackofshadow.constant.TeleportAnimationConst.ANIMATION_COUNT
 import top.ycmt.thetrackofshadow.constant.TeleportAnimationConst.ANIMATION_TICK
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.state.CancelState
-import top.ycmt.thetrackofshadow.pkg.chat.sendMsg
-import top.ycmt.thetrackofshadow.pkg.chat.toGradientColor
+import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
+import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendMsg
 
 // 开始游戏事件
 class StartEvent(private val game: Game) : EventInterface {

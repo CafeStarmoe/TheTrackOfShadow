@@ -7,18 +7,22 @@ import org.bukkit.SoundCategory
 import org.bukkit.entity.FallingBlock
 import org.bukkit.event.entity.EntityChangeBlockEvent
 import taboolib.common.platform.event.SubscribeEvent
+import taboolib.platform.util.getMeta
+import top.ycmt.thetrackofshadow.game.Game
 
 
 // 实体改变方块事件
 object EntityChangeBlock {
     @SubscribeEvent
     fun onEntityChangeBlock(e: EntityChangeBlockEvent) {
-        cleanAnvil(e) // 清理铁砧
+        cleanFallingAnvil(e) // 清理下落到地上的铁砧
     }
 
     // 清理下落到地上的铁砧
-    private fun cleanAnvil(e: EntityChangeBlockEvent) {
+    private fun cleanFallingAnvil(e: EntityChangeBlockEvent) {
         val entity = e.entity
+        // 没有游戏对象的元属性就不清除
+        entity.getMeta("game")[0].value() as Game? ?: return
 
         // 判断实体是否为正在掉落的方块
         if (entity !is FallingBlock) {

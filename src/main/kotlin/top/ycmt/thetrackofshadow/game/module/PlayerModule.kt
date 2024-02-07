@@ -4,9 +4,9 @@ import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import top.ycmt.thetrackofshadow.game.Game
-import top.ycmt.thetrackofshadow.pkg.chat.sendFailMsg
-import top.ycmt.thetrackofshadow.pkg.chat.sendSuccMsg
-import top.ycmt.thetrackofshadow.pkg.logger.logger
+import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendFailMsg
+import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendSuccMsg
+import top.ycmt.thetrackofshadow.pkg.logger.Logger
 import java.util.*
 
 // 玩家管理模块
@@ -19,13 +19,13 @@ class PlayerModule(private val game: Game) {
     fun addPlayer(player: Player) {
         // 校验玩家是否已经加入游戏
         if (players.contains(player.uniqueId)) {
-            logger.error("玩家列表已存在该玩家, uuid: ${player.uniqueId}, name: ${player.name}, gameName: ${game.setting.gameName}")
+            Logger.error("玩家列表已存在该玩家, uuid: ${player.uniqueId}, name: ${player.name}, gameName: ${game.setting.gameName}")
             player.sendFailMsg("你已经加入了游戏${game.setting.gameName}")
             return
         }
         // 校验是否已满人
         if (players.size >= game.setting.maxPlayerCount) {
-            logger.error("玩家列表已满人, size: ${players.size}, gameName: ${game.setting.gameName}")
+            Logger.error("玩家列表已满人, size: ${players.size}, gameName: ${game.setting.gameName}")
             player.sendFailMsg("游戏${game.setting.gameName}已满人")
             return
         }

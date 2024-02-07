@@ -3,8 +3,8 @@ package top.ycmt.thetrackofshadow.game.phase
 import org.bukkit.Sound
 import top.ycmt.thetrackofshadow.constant.LegacyTextConst.CN_LOGO_LEGACY_TEXT
 import top.ycmt.thetrackofshadow.game.Game
-import top.ycmt.thetrackofshadow.pkg.chat.sendMsg
-import top.ycmt.thetrackofshadow.pkg.chat.toGradientColor
+import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
+import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendMsg
 import top.ycmt.thetrackofshadow.pkg.scoreboard.ScoreBoard
 import java.text.SimpleDateFormat
 import java.util.*
@@ -99,7 +99,7 @@ class LobbyPhase(private val game: Game) : PhaseAbstract() {
             )
             board.setSlot(5, "")
             board.setSlot(4, "§f模式: <#dcffcc,9adbb1>单挑</#>".toGradientColor())
-            board.setSlot(3, "§f版本: <#ffd6d6,e14d4d>2.0 Beta</#>".toGradientColor())
+            board.setSlot(3, "§f版本: <#ffd6d6,e14d4d>1.4 Beta</#>".toGradientColor())
             board.setSlot(2, "")
             board.setSlot(1, "<#fff4ba,f4f687>mc.ycmt.top</#>".toGradientColor())
         }

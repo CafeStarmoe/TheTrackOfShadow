@@ -2,8 +2,8 @@ package top.ycmt.thetrackofshadow.game
 
 import org.bukkit.entity.Player
 import top.ycmt.thetrackofshadow.config.GameSetting
-import top.ycmt.thetrackofshadow.pkg.chat.sendFailMsg
-import top.ycmt.thetrackofshadow.pkg.logger.logger
+import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendFailMsg
+import top.ycmt.thetrackofshadow.pkg.logger.Logger
 
 // 游戏管理器
 object GameManager {
@@ -14,7 +14,7 @@ object GameManager {
     fun createGame(gameSetting: GameSetting): Game? {
         // 校验游戏是否已经创建
         if (gameMap.contains(gameSetting.gameName)) {
-            logger.error("游戏已经创建, gameName: ${gameSetting.gameName}")
+            Logger.error("游戏已经创建, gameName: ${gameSetting.gameName}")
             return null
         }
         val game = Game(gameSetting)
@@ -28,7 +28,7 @@ object GameManager {
         // 校验游戏是否存在
         val game = gameMap[gameName]
         if (game == null) {
-            logger.error("游戏不存在, gameName: $gameName")
+            Logger.error("游戏不存在, gameName: $gameName")
             return
         }
         // 停止游戏
@@ -42,7 +42,7 @@ object GameManager {
         // 校验游戏是否存在
         val game = gameMap[gameName]
         if (game == null) {
-            logger.error("游戏不存在, gameName: $gameName")
+            Logger.error("游戏不存在, gameName: $gameName")
             player.sendFailMsg("游戏${gameName}不存在。")
             return
         }

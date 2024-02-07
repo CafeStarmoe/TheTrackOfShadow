@@ -17,15 +17,16 @@ class SubTaskModule(private val game: Game) {
         period: Long = 0,
         task: TaskInterface
     ) {
-        val platformTask = submit(now, async, delay, period) {
+        platformTasks.add(submit(now, async, delay, period) {
             // 运行任务
             task.run()
             // 如果任务取消了平台任务也取消
             if (task.isCancelled) {
                 this.cancel()
+                // 清除任务记录
+                platformTasks.remove(this)
             }
-        }
-        platformTasks.add(platformTask)
+        })
     }
 
     // 取消所有任务

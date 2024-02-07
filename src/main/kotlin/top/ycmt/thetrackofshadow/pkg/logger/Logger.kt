@@ -4,12 +4,10 @@ import taboolib.common.platform.function.console
 import taboolib.common.platform.function.severe
 import taboolib.common.platform.function.warning
 import top.ycmt.thetrackofshadow.constant.LegacyTextConst.EN_PREFIX_LEGACY_TEXT
-import top.ycmt.thetrackofshadow.pkg.chat.toGradientColor
-
-val logger: Logger = Logger()
+import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 
 // 格式打印输出
-class Logger {
+object Logger {
 
     // 标准日志
     fun info(vararg msgList: String) {

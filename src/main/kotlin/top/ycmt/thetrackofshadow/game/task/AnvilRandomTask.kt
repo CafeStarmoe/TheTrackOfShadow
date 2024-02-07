@@ -3,7 +3,10 @@ package top.ycmt.thetrackofshadow.game.task
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
+import taboolib.platform.util.setMeta
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst.RANDOM_EVENT_PREFIX_LEGACY_TEXT
 import top.ycmt.thetrackofshadow.game.Game
+import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 
 // 铁砧雨随机事件任务
 class AnvilRandomTask(private val game: Game, private var count: Int) : TaskAbstract() {
@@ -12,7 +15,11 @@ class AnvilRandomTask(private val game: Game, private var count: Int) : TaskAbst
         if (count <= 0) {
             game.playerModule.getOnlinePlayers().forEach {
                 it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)
-                it.sendMessage("", "§f§l随机事件 > §8铁砧雨§7现已结束在所有玩家上空§c落铁§7.", "")
+                it.sendMessage(
+                    "",
+                    "$RANDOM_EVENT_PREFIX_LEGACY_TEXT<#989898,777777>铁砧雨</#>§f现已结束在所有玩家上空<#ff9c9c,de4949>落铁</#>§f!".toGradientColor(),
+                    ""
+                )
             }
             this.cancel()
             return
@@ -27,7 +34,11 @@ class AnvilRandomTask(private val game: Game, private var count: Int) : TaskAbst
             val block = it.world.getBlockAt(loc)
             // 确保要更改的方块为空气
             if (block.type == Material.AIR) {
-                block.type = Material.ANVIL // 生成铁砧
+                // 生成铁砧下落方块
+                val fallingBlock = it.world.spawnFallingBlock(loc, Material.ANVIL.createBlockData())
+                fallingBlock.dropItem = false // 不掉落物品
+                fallingBlock.setHurtEntities(true) // 允许伤害实体
+                fallingBlock.setMeta("game", game) // 设置游戏属性
             }
         }
         count-- // 剩余次数-1

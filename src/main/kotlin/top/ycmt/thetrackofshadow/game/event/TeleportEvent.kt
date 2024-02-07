@@ -7,10 +7,10 @@ import top.ycmt.thetrackofshadow.constant.TeleportAnimationConst.ANIMATION_TICK
 import top.ycmt.thetrackofshadow.constant.TeleportAnimationConst.DEFAULT_HEIGHT
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.state.CancelState
-import top.ycmt.thetrackofshadow.pkg.chat.toGradientColor
-import top.ycmt.thetrackofshadow.pkg.hide.hidePlayers
-import top.ycmt.thetrackofshadow.pkg.hide.showPlayers
-import top.ycmt.thetrackofshadow.pkg.logger.logger
+import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
+import top.ycmt.thetrackofshadow.pkg.hide.HidePlayer.hidePlayers
+import top.ycmt.thetrackofshadow.pkg.hide.HidePlayer.showPlayers
+import top.ycmt.thetrackofshadow.pkg.logger.Logger
 import java.util.*
 
 // 随机传送事件
@@ -47,7 +47,7 @@ class TeleportEvent(private val game: Game) : EventInterface {
                     // 获取将要传送到的位置
                     val loc = playerTeleportLocations[p.uniqueId]
                     if (loc == null) {
-                        logger.error("目标位置为空, uuid: ${p.uniqueId}, name: ${p.name}")
+                        Logger.error("目标位置为空, uuid: ${p.uniqueId}, name: ${p.name}")
                         continue
                     }
                     // 传送玩家
@@ -79,7 +79,7 @@ class TeleportEvent(private val game: Game) : EventInterface {
             // 获取将要传送到的位置
             val loc = playerTeleportLocations[p.uniqueId]
             if (loc == null) {
-                logger.error("目标位置为空, uuid: ${p.uniqueId}, name: ${p.name}")
+                Logger.error("目标位置为空, uuid: ${p.uniqueId}, name: ${p.name}")
                 continue
             }
             // 动画高度
@@ -104,7 +104,7 @@ class TeleportEvent(private val game: Game) : EventInterface {
         for (p in game.playerModule.getOnlinePlayers()) {
             val loc = randomTeleportLocation()
             if (loc == null) {
-                logger.error("玩家安全位置随机失败, uuid: ${p.uniqueId}, name: ${p.name}")
+                Logger.error("玩家安全位置随机失败, uuid: ${p.uniqueId}, name: ${p.name}")
                 continue
             }
             playerTeleportLocations[p.uniqueId] = loc
@@ -121,7 +121,7 @@ class TeleportEvent(private val game: Game) : EventInterface {
         // 获取世界
         val world = Bukkit.getWorld(worldName)
         if (world == null) {
-            logger.error("世界为空, worldName: $worldName")
+            Logger.error("世界为空, worldName: $worldName")
             return null
         }
 
@@ -142,7 +142,7 @@ class TeleportEvent(private val game: Game) : EventInterface {
             when (highestBlock.type) {
                 Material.AIR, Material.VOID_AIR, Material.WATER, Material.LAVA -> {
                     if (i >= maxRandomCount - 1) {
-                        logger.error("随机传送位置不安全, count: $i, x: $x, y: $y, z: $z")
+                        Logger.error("随机传送位置不安全, count: $i, x: $x, y: $y, z: $z")
                         return null
                     }
                     continue
@@ -154,7 +154,7 @@ class TeleportEvent(private val game: Game) : EventInterface {
             // 确保高度符合
             if (y > vector1.y.coerceAtLeast(vector2.y)) {
                 if (i >= maxRandomCount - 1) {
-                    logger.error("随机传送高度不符合, count: $i, x: $x, y: $y, z: $z")
+                    Logger.error("随机传送高度不符合, count: $i, x: $x, y: $y, z: $z")
                     return null
                 }
             } else {

@@ -11,7 +11,7 @@ import top.ycmt.thetrackofshadow.game.phase.PhaseInterface
 import top.ycmt.thetrackofshadow.game.phase.RunningPhase
 import top.ycmt.thetrackofshadow.game.state.PhaseState
 import top.ycmt.thetrackofshadow.game.state.PhaseState.*
-import top.ycmt.thetrackofshadow.pkg.logger.logger
+import top.ycmt.thetrackofshadow.pkg.logger.Logger
 
 // 游戏对象
 class Game(val setting: GameSetting) {
@@ -23,7 +23,7 @@ class Game(val setting: GameSetting) {
     private var gamePhase: PhaseInterface = InitPhase(this) // 游戏当前阶段
 
     init {
-        logger.info("游戏初始化, gameName: ${setting.gameName}")
+        Logger.info("游戏初始化, gameName: ${setting.gameName}")
 
         // 运行游戏主调度器
         gameMainTask()
@@ -50,7 +50,7 @@ class Game(val setting: GameSetting) {
         val nextPhaseIndex = phaseState.ordinal + 1
         // 校验阶段索引是否正常
         if (nextPhaseIndex >= phases.size) {
-            logger.error("索引越界, nextPhaseIndex: $nextPhaseIndex, phasesSize: ${phases.size}")
+            Logger.error("索引越界, nextPhaseIndex: $nextPhaseIndex, phasesSize: ${phases.size}")
             return
         }
         // 设置阶段状态
@@ -66,7 +66,7 @@ class Game(val setting: GameSetting) {
         }
         // 切换阶段完执行一次
         gamePhase.onTick()
-        logger.info("游戏执行下一阶段, gameName: ${setting.gameName}, phaseState: $phaseState")
+        Logger.info("游戏执行下一阶段, gameName: ${setting.gameName}, phaseState: $phaseState")
     }
 
     // 停止游戏

@@ -1,8 +1,10 @@
 package top.ycmt.thetrackofshadow.game.event.random
 
 import org.bukkit.Sound
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst.RANDOM_EVENT_PREFIX_LEGACY_TEXT
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.task.AnvilRandomTask
+import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 
 // 铁砧雨随机事件
 class AnvilRandom(private val game: Game) : RandomInterface {
@@ -12,7 +14,11 @@ class AnvilRandom(private val game: Game) : RandomInterface {
         // 提示玩家
         game.playerModule.getOnlinePlayers().forEach {
             it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)
-            it.sendMessage("", "§f§l随机事件 > §8铁砧雨§7已开始在所有玩家上空落铁, 持续§c10s§7.", "")
+            it.sendMessage(
+                "",
+                "$RANDOM_EVENT_PREFIX_LEGACY_TEXT<#989898,777777>铁砧雨</#>§f已开始在所有玩家上空落铁, 持续<#ff9c9c,de4949>10秒</#>§f!".toGradientColor(),
+                ""
+            )
         }
     }
 }

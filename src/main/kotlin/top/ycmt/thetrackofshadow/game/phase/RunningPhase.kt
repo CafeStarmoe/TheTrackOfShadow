@@ -9,7 +9,7 @@ import top.ycmt.thetrackofshadow.game.event.EventInterface
 import top.ycmt.thetrackofshadow.game.event.RandomEvent
 import top.ycmt.thetrackofshadow.game.event.StartEvent
 import top.ycmt.thetrackofshadow.game.event.TeleportEvent
-import top.ycmt.thetrackofshadow.pkg.chat.toGradientColor
+import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 import top.ycmt.thetrackofshadow.pkg.scoreboard.ScoreBoard
 import java.text.SimpleDateFormat
 import java.util.*

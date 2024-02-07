@@ -21,7 +21,7 @@ object CommandHeader {
         optional = true,
         permissionDefault = PermissionDefault.TRUE
     )
-    val join = joinCommand
+    val join = JoinCommand.command
 
     // 显示帮助命令
     @CommandBody(
@@ -29,13 +29,13 @@ object CommandHeader {
         optional = true,
         permissionDefault = PermissionDefault.TRUE
     )
-    val help = helpCommand
+    val help = HelpCommand.command
 
     // 不填写子命令时显示
     @CommandBody
     val main = mainCommand {
         execute<ProxyCommandSender> { sender, cmd, _ ->
-            sendHelpMsg(sender, cmd) // 发送帮助信息
+            HelpCommand.sendHelpMsg(sender, cmd) // 发送帮助信息
         }
     }
 }
