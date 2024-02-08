@@ -1,4 +1,4 @@
-package top.ycmt.thetrackofshadow.game.event
+package top.ycmt.thetrackofshadow.game.flow
 
 import org.bukkit.Sound
 import top.ycmt.thetrackofshadow.constant.TeleportAnimationConst.ANIMATION_COUNT
@@ -9,7 +9,7 @@ import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendMsg
 
 // 开始游戏事件
-class StartEvent(private val game: Game) : EventInterface {
+class StartFlow(private val game: Game) : FlowInterface {
     override val finishTick = ANIMATION_TICK * (ANIMATION_COUNT + 1) + 6 // 运行完毕的tick数
     override val eventMsg = "等待游戏开局" // 事件消息
 
@@ -22,13 +22,16 @@ class StartEvent(private val game: Game) : EventInterface {
                     it.allowFlight = true
                     it.isFlying = true
                 }
-                // 全局禁止移动
-                game.cancelModule.addGlobalCancelState(CancelState.CANCEL_MOVE)
+                // 全局禁止移动以及不允许受伤
+                game.cancelModule.addGlobalCancelState(
+                    CancelState.CANCEL_MOVE,
+                    CancelState.CANCEL_DAMAGE,
+                )
             }
 
             in 1L..5L -> {
                 game.playerModule.getOnlineUsers().forEach {
-                    it.sendMsg("<#f5ead0,eee6a1>游戏将在</#><#f7c79c,ef987d>${leftTick}秒</#><#f5ead0,eee6a1>后开局!</#>".toGradientColor())
+                    it.sendMsg("<#f5ead0,eee6a1>游戏将在</#><#ff9c9c,de4949>${leftTick}秒</#><#f5ead0,eee6a1>后开局!</#>".toGradientColor())
                     it.sendTitle(
                         "<#ff9c9c,de4949>$leftTick</#>".toGradientColor(),
                         "<#f5ead0,eee6a1>准备好战斗!</#>".toGradientColor(),
@@ -41,8 +44,11 @@ class StartEvent(private val game: Game) : EventInterface {
             }
 
             0L -> {
-                // 全局允许移动
-                game.cancelModule.removeGlobalCancelState(CancelState.CANCEL_MOVE)
+                // 全局允许移动以及不允许受伤
+                game.cancelModule.removeGlobalCancelState(
+                    CancelState.CANCEL_MOVE,
+                    CancelState.CANCEL_DAMAGE,
+                )
                 game.playerModule.getAlivePlayers().forEach {
                     // 不允许飞行
                     it.allowFlight = false

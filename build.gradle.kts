@@ -91,6 +91,7 @@ repositories {
     mavenCentral()
     maven("https://repo.codemc.io/repository/maven-public/")
     maven("https://repo.dmulloy2.net/repository/public/")
+    maven("https://oss.sonatype.org/content/repositories/snapshots")
 }
 
 dependencies {
@@ -100,6 +101,7 @@ dependencies {
     compileOnly(fileTree("libs"))
     compileOnly("me.filoghost.holographicdisplays:holographicdisplays-api:3.0.0")
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
+    compileOnly("net.md-5:bungeecord-api:1.20-R0.3-SNAPSHOT")
 }
 
 tasks.withType<JavaCompile> {

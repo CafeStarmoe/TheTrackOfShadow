@@ -24,7 +24,7 @@ class BloodyRandomTask(private val game: Game, private var tick: Long) : TaskAbs
             it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)
             it.sendMessage(
                 "",
-                "§4§l血色之夜 > §7所有玩家§c伤害翻倍§7, 持续§f高亮§7, 重生点§a保护禁用§7, 宝箱§e无法打开§7!",
+                "§4§l血色之夜 > §f所有玩家<#ff9c9c,de4949>伤害翻倍</#>§f, 持续<#ffffd6>高亮</#>§f, 重生点<#deffd2,bee8ff>保护禁用</#>§f, 宝箱<#f7c79c,ef987d>无法打开</#>§f!".toGradientColor(),
                 ""
             )
         }

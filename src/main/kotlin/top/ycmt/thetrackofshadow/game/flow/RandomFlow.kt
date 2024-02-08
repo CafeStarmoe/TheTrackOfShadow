@@ -1,16 +1,16 @@
-package top.ycmt.thetrackofshadow.game.event
+package top.ycmt.thetrackofshadow.game.flow
 
 import org.bukkit.Sound
 import top.ycmt.thetrackofshadow.game.Game
-import top.ycmt.thetrackofshadow.game.event.random.AnvilRandom
-import top.ycmt.thetrackofshadow.game.event.random.BarbadosRandom
-import top.ycmt.thetrackofshadow.game.event.random.BloodyRandom
+import top.ycmt.thetrackofshadow.game.flow.random.AnvilRandom
+import top.ycmt.thetrackofshadow.game.flow.random.BarbadosRandom
+import top.ycmt.thetrackofshadow.game.flow.random.BloodyRandom
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendMsg
 import java.util.concurrent.TimeUnit
 
 // 随机事件
-class RandomEvent(private val game: Game) : EventInterface {
+class RandomFlow(private val game: Game) : FlowInterface {
     override var finishTick = 20L // 下一次随机事件
     override val eventMsg = "距离随机事件" // 提示信息
 

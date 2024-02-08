@@ -17,6 +17,9 @@ class Game(val setting: GameSetting) {
     val respawnModule = RespawnModule(this) // 玩家重生管理模块
     val spawnModule = SpawnModule(this) // 出生点管理模块
     val reconnectModule = ReconnectModule(this) // 玩家重连管理模块
+    val scoreModule = ScoreModule(this) // 玩家积分管理模块
+    val statsModule = StatsModule(this) // 玩家操作统计管理模块
+    val chestModule = ChestModule(this) // 宝箱管理模块
 
     var phaseState = INIT_PHASE // 游戏阶段状态
         private set

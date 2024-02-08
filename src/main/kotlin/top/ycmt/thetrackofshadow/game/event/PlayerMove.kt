@@ -1,7 +1,9 @@
-package top.ycmt.thetrackofshadow.event
+package top.ycmt.thetrackofshadow.game.event
 
+import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerMoveEvent
 import taboolib.common.platform.event.SubscribeEvent
+import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.GameManager
 import top.ycmt.thetrackofshadow.game.state.CancelState
 
@@ -9,11 +11,6 @@ import top.ycmt.thetrackofshadow.game.state.CancelState
 object PlayerMove {
     @SubscribeEvent
     fun onPlayerMove(e: PlayerMoveEvent) {
-        cancelMove(e) // 禁止玩家移动
-    }
-
-    // 禁止玩家移动
-    private fun cancelMove(e: PlayerMoveEvent) {
         val player = e.player
         // 获取玩家所在的游戏
         val playerGamePair = GameManager.getPlayerGame(player) ?: return
@@ -23,7 +20,16 @@ object PlayerMove {
         if (playerType != GameManager.PlayerType.PLAYER) {
             return
         }
+        // 事件流程
+        cancelMove(e, game, player) // 禁止玩家移动
+    }
 
+    // 禁止玩家移动
+    private fun cancelMove(e: PlayerMoveEvent, game: Game, player: Player) {
+        // 事件已取消则跳出
+        if (e.isCancelled) {
+            return
+        }
         // 禁止移动状态
         if (game.cancelModule.containsCancelState(player, CancelState.CANCEL_MOVE)) {
             // 移动的是位置就取消事件

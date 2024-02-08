@@ -5,10 +5,8 @@ import taboolib.module.chat.impl.DefaultComponent
 import top.ycmt.thetrackofshadow.constant.GameConst.GAME_MAX_TIME
 import top.ycmt.thetrackofshadow.constant.LegacyTextConst.CN_LOGO_LEGACY_TEXT
 import top.ycmt.thetrackofshadow.game.Game
-import top.ycmt.thetrackofshadow.game.event.EventInterface
-import top.ycmt.thetrackofshadow.game.event.RandomEvent
-import top.ycmt.thetrackofshadow.game.event.StartEvent
-import top.ycmt.thetrackofshadow.game.event.TeleportEvent
+import top.ycmt.thetrackofshadow.game.flow.*
+import top.ycmt.thetrackofshadow.game.state.CancelState
 import top.ycmt.thetrackofshadow.game.task.SpawnWorldTask
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 import top.ycmt.thetrackofshadow.pkg.scoreboard.ScoreBoard
@@ -20,16 +18,31 @@ import java.util.concurrent.TimeUnit
 class RunningPhase(private val game: Game) : PhaseAbstract() {
     private var gameTick = 0L // 游戏tick
 
-    // 游戏事件列表
-    private val events: List<EventInterface> = listOf(
-        TeleportEvent(game), // 随机传送事件
-        StartEvent(game), // 开始事件
-        RandomEvent(game), // 随机事件
+    // 游戏流程事件列表
+    private val flowEvents: List<FlowInterface> = listOf(
+        TeleportFlow(game), // 随机传送流程
+        StartFlow(game), // 开始游戏流程
+        RandomFlow(game), // 随机事件流程
+        PVPFlow(game), // PVP开启流程
     )
 
     init {
+        initGame()
+    }
+
+    // 初始化游戏
+    private fun initGame() {
+        // 初始化玩家积分
+        game.scoreModule.initPlayersScore(game.playerModule.getAlivePlayers())
+        // 初始化玩家统计信息
+        game.statsModule.initPlayersStats(game.playerModule.getAlivePlayers())
         // 初始化子任务
         initTask()
+        // 初始化玩家禁止状态
+        game.cancelModule.addGlobalCancelState(
+            CancelState.CANCEL_PVP, // 禁止PVP
+            CancelState.CANCEL_OPEN_CHEST, // 禁止打开宝箱
+        )
         game.playerModule.getAlivePlayers().forEach {
             // 初始化玩家
             game.playerModule.initPlayer(it)
@@ -59,7 +72,7 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
         }
 
         // 执行每一个事件 事件内部判断条件是否符合
-        for (event in events) {
+        for (event in flowEvents) {
             // 剩余的时间
             val leftTime = event.finishTick - gameTick
             // 判断时间是否符合条件
@@ -77,7 +90,7 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
         var resultLeftTime = -1L
         var resultEventMsg = ""
         // 获取每一个事件的时间
-        for (event in events) {
+        for (event in flowEvents) {
             // 剩余的时间
             val leftTime = event.finishTick - gameTick
             // 判断时间是否符合条件

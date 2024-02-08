@@ -2,17 +2,19 @@ package top.ycmt.thetrackofshadow.game.task
 
 import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI
 import me.filoghost.holographicdisplays.api.hologram.line.TextHologramLine
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.Particle
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import taboolib.module.effect.ParticleSpawner
 import taboolib.module.effect.shape.Circle
 import taboolib.platform.util.bukkitPlugin
 import taboolib.platform.util.toBukkitLocation
 import taboolib.platform.util.toProxyLocation
 import top.ycmt.thetrackofshadow.game.Game
-import top.ycmt.thetrackofshadow.game.particle.SpawnParticle
 
 
 // 出生点效果显示以及治疗任务
@@ -91,6 +93,32 @@ class SpawnWorldTask(private val game: Game) : TaskAbstract() {
                 }
             }
         }
+    }
+
+    // 出生点粒子效果
+    class SpawnParticle(private val game: Game, private val spawnWorldTask: SpawnWorldTask) : ParticleSpawner {
+        override fun spawn(location: taboolib.common.util.Location) {
+            val world = Bukkit.getWorld(game.setting.gameMapWorld) ?: return
+
+            // 判断出生点保护是否启用
+            if (!game.spawnModule.enableProtect) {
+                return
+            }
+
+            // 判断出生点是否反转
+            if (!game.spawnModule.reverse) {
+                // 每30s显示一次回血效果
+                if (spawnWorldTask.tick % 30 == 0L) {
+                    world.spawnParticle(Particle.GLOW_SQUID_INK, location.x, location.y, location.z, 3)
+                }
+            } else {
+                // 每3s显示一次反转效果
+                if (spawnWorldTask.tick % 3 == 0L) {
+                    world.spawnParticle(Particle.SMOKE_LARGE, location.x, location.y, location.z, 3)
+                }
+            }
+        }
+
     }
 
 }

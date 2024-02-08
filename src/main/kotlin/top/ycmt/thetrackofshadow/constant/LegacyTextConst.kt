@@ -40,8 +40,19 @@ object LegacyTextConst {
         .bold()
         .toLegacyText()
 
-    // 随机事件
+    // 随机事件前缀
     val RANDOM_EVENT_PREFIX_LEGACY_TEXT = DefaultComponent()
-        .append("§f§l随机事件 > ").bold()
+        .append("<#b4f1ff,8ab7e1>随机事件 > </#>".toGradientColor()).bold()
         .toLegacyText()
+
+    // 玩家重生前缀
+    val PLAYER_RESPAWN_PREFIX_LEGACY_TEXT = DefaultComponent()
+        .append("<#a9f1b4,78e0a2>玩家重生 > </#>".toGradientColor()).bold()
+        .toLegacyText()
+
+    // PVP开启前缀
+    val PLAYER_PVP_PREFIX_LEGACY_TEXT = DefaultComponent()
+        .append("<#d6a1ff,ba6df8>PVP开启 > </#>".toGradientColor()).bold()
+        .toLegacyText()
+
 }

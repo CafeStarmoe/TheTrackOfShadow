@@ -1,4 +1,4 @@
-package top.ycmt.thetrackofshadow.game.event.random
+package top.ycmt.thetrackofshadow.game.flow.random
 
 import org.bukkit.Sound
 import top.ycmt.thetrackofshadow.constant.LegacyTextConst.RANDOM_EVENT_PREFIX_LEGACY_TEXT

@@ -1,4 +1,4 @@
-package top.ycmt.thetrackofshadow.event
+package top.ycmt.thetrackofshadow.game.event
 
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -15,11 +15,23 @@ import top.ycmt.thetrackofshadow.game.Game
 object EntityChangeBlock {
     @SubscribeEvent
     fun onEntityChangeBlock(e: EntityChangeBlockEvent) {
+        val entity = e.entity
+        // 没有游戏对象的元属性就不清除
+        val metadataList = entity.getMeta("game")
+        if (metadataList.isEmpty()) {
+            return
+        }
+        metadataList[0].value() as Game? ?: return
+        // 事件流程
         cleanFallingAnvil(e) // 清理下落到地上的铁砧
     }
 
     // 清理下落到地上的铁砧
     private fun cleanFallingAnvil(e: EntityChangeBlockEvent) {
+        // 事件已取消则跳出
+        if (e.isCancelled) {
+            return
+        }
         val entity = e.entity
         // 没有游戏对象的元属性就不清除
         val metadataList = entity.getMeta("game")

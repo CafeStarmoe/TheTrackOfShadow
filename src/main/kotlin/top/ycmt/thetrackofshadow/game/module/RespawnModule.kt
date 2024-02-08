@@ -10,9 +10,10 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import taboolib.platform.util.toBukkitLocation
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst.PLAYER_RESPAWN_PREFIX_LEGACY_TEXT
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.state.CancelState
-import top.ycmt.thetrackofshadow.game.task.RespawnProtectTask
+import top.ycmt.thetrackofshadow.game.task.RespawnProtectCleanTask
 import top.ycmt.thetrackofshadow.game.task.RespawnTask
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendMsg
@@ -25,7 +26,7 @@ import java.util.*
 class RespawnModule(private val game: Game) {
     private val respawnPlayers: MutableMap<UUID, RespawnTask> = mutableMapOf() // 正在重生的玩家uuid列表
     private val playersInv: MutableMap<UUID, Array<ItemStack>> = mutableMapOf() // 正在重生的玩家物品栏
-    private val protectPlayers: MutableList<UUID> = mutableListOf() // 重生后保护状态的玩家uuid列表
+    private val protectPlayers: MutableMap<UUID, RespawnProtectCleanTask> = mutableMapOf() // 重生后保护状态的玩家uuid列表
 
     // 添加重生玩家
     fun respawnPlayer(player: Player) {
@@ -65,6 +66,14 @@ class RespawnModule(private val game: Game) {
         if (!respawnPlayers.contains(player.uniqueId)) {
             return
         }
+        // 判断玩家是否正在重生保护状态
+        if (protectPlayers.contains(player.uniqueId)) {
+            // 取消正在运行的重生保护清除任务
+            protectPlayers[player.uniqueId]?.cancel()
+            protectPlayers.remove(player.uniqueId)
+        }
+        // 删除正在重生玩家
+        respawnPlayers.remove(player.uniqueId)
         // 初始化玩家 且清空物品栏
         game.playerModule.initPlayer(player)
         // 取消允许飞行
@@ -72,6 +81,8 @@ class RespawnModule(private val game: Game) {
         player.isFlying = false
         // 设置玩家显示
         player.showPlayers(game.playerModule.getOnlineUsers())
+        // 清除摔落伤害
+        player.fallDistance = 0F
         // 还原玩家物品栏
         val playerInv = playersInv[player.uniqueId]
         // 确保物品栏获取成功
@@ -87,12 +98,12 @@ class RespawnModule(private val game: Game) {
         // 将玩家传送至重生点
         player.teleport(respawnLoc)
         // 发射烟花示意有人重生了
-        spawnFireWorks(respawnLoc)
+        spawnFireworks(respawnLoc)
         // 复活后给其他玩家提示消息
         game.playerModule.getOnlineUsers().forEach {
             it.sendMessage(
                 "",
-                "§f§l玩家重生 > <#deffd2,bee8ff>${player.name}</#>§f已经重生在出生点了!".toGradientColor(),
+                "$PLAYER_RESPAWN_PREFIX_LEGACY_TEXT<#deffd2,bee8ff>${player.name}</#>§f已经重生在出生点了!".toGradientColor(),
                 ""
             )
             it.playSound(it, Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f)
@@ -106,10 +117,14 @@ class RespawnModule(private val game: Game) {
             10
         )
         player.sendMsg("<#ffefbb,e3ce82>重生后将获得</#><#ff9c9c,de4949>10秒</#><#ffefbb,e3ce82>保护!</#>".toGradientColor())
-        // 删除正在重生玩家
-        respawnPlayers.remove(player.uniqueId)
-        // 提交重生后保护任务
-        game.subTaskModule.submitTask(period = 1 * 20L, task = RespawnProtectTask(game, player, 10L))
+        // 添加重生保护状态
+        game.cancelModule.addPlayerCancelState(player, CancelState.CANCEL_PVP_RESPAWN_PROTECT)
+        // 重生保护清除任务
+        val task = RespawnProtectCleanTask(game, player, 10L)
+        // 添加重生后玩家
+        protectPlayers[player.uniqueId] = task
+        // 提交重生后保护清除任务
+        game.subTaskModule.submitTask(period = 1 * 20L, task = task)
     }
 
     // 取消重生 如玩家退出游戏
@@ -118,7 +133,8 @@ class RespawnModule(private val game: Game) {
     }
 
     // 取消重生后保护
-    fun cancelProtect(player: Player) {
+    fun removeProtect(player: Player) {
+        game.cancelModule.removePlayerCancelState(player, CancelState.CANCEL_PVP_RESPAWN_PROTECT)
         protectPlayers.remove(player.uniqueId)
     }
 
@@ -131,17 +147,23 @@ class RespawnModule(private val game: Game) {
     }
 
     // 生成重生烟花
-    private fun spawnFireWorks(loc: Location) {
+    private fun spawnFireworks(loc: Location) {
         // 创建一个烟花
         val firework = loc.world?.spawn(loc, Firework::class.java) ?: return
-        val meta = firework.fireworkMeta // 烟花的meta
+        val meta = firework.fireworkMeta // 烟花的Meta
         // 烟花的效果
         meta.addEffects(
-            FireworkEffect.builder().withColor(Color.fromRGB(193, 255, 193)).withFade(Color.fromRGB(155, 205, 155))
-                .with(FireworkEffect.Type.STAR).withFlicker().withTrail().build()
+            FireworkEffect.builder()
+                .withColor(Color.fromRGB(193, 255, 193))
+                .withFade(Color.fromRGB(155, 205, 155))
+                .with(FireworkEffect.Type.STAR).withFlicker().withTrail()
+                .build()
         )
+        // 设置烟花强度（可以调整强度以控制烟花的升空高度）
         meta.power = 0
-        // 应用效果
+        // 设置烟花实体不会发光，也不会对周围的实体造成伤害
+        firework.isGlowing = false
+        // 应用设置好的烟花元数据
         firework.fireworkMeta = meta
     }
 

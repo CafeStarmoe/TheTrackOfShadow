@@ -1,4 +1,4 @@
-package top.ycmt.thetrackofshadow.game.event
+package top.ycmt.thetrackofshadow.game.flow
 
 import org.bukkit.*
 import top.ycmt.thetrackofshadow.constant.TeleportAnimationConst.ANIMATION_COUNT
@@ -14,7 +14,7 @@ import top.ycmt.thetrackofshadow.pkg.logger.Logger
 import java.util.*
 
 // 随机传送事件
-class TeleportEvent(private val game: Game) : EventInterface {
+class TeleportFlow(private val game: Game) : FlowInterface {
     override val finishTick = ANIMATION_TICK * (ANIMATION_COUNT + 1) // 运行完毕的tick数
     override val eventMsg = "等待随机传送" // 事件消息
 
@@ -32,8 +32,12 @@ class TeleportEvent(private val game: Game) : EventInterface {
                     it.isFlying = true
                     it.gameMode = GameMode.SPECTATOR
                 }
-                // 全局禁止移动位置和视角
-                game.cancelModule.addGlobalCancelState(CancelState.CANCEL_MOVE, CancelState.CANCEL_MOVE_ANGLE)
+                // 全局禁止移动位置和视角以及不允许受伤
+                game.cancelModule.addGlobalCancelState(
+                    CancelState.CANCEL_MOVE,
+                    CancelState.CANCEL_MOVE_ANGLE,
+                    CancelState.CANCEL_DAMAGE,
+                )
                 teleportPlayerAnimation()
             }
 
@@ -55,8 +59,12 @@ class TeleportEvent(private val game: Game) : EventInterface {
                     p.sendTitle("<#deffd2,bee8ff>传送完毕</#>".toGradientColor(), "", 5, 10, 5)
                     p.playSound(p, Sound.ITEM_CHORUS_FRUIT_TELEPORT, 1f, 1f)
                 }
-                // 全局允许移动位置和视角
-                game.cancelModule.removeGlobalCancelState(CancelState.CANCEL_MOVE, CancelState.CANCEL_MOVE_ANGLE)
+                // 全局允许移动位置和视角以及允许受伤
+                game.cancelModule.removeGlobalCancelState(
+                    CancelState.CANCEL_MOVE,
+                    CancelState.CANCEL_MOVE_ANGLE,
+                    CancelState.CANCEL_DAMAGE,
+                )
                 game.playerModule.getAlivePlayers().forEach {
                     // 不允许飞行
                     it.allowFlight = false
