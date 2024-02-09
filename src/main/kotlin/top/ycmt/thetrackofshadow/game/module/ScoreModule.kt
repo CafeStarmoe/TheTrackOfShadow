@@ -2,6 +2,8 @@ package top.ycmt.thetrackofshadow.game.module
 
 import org.bukkit.entity.Player
 import top.ycmt.thetrackofshadow.game.Game
+import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
+import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendMsg
 import top.ycmt.thetrackofshadow.pkg.logger.Logger
 import java.util.*
 
@@ -32,6 +34,7 @@ class ScoreModule(private val game: Game) {
         }
         // 修改积分
         playerScores[player.uniqueId] = (playerScore + score).coerceAtLeast(0)
+        player.sendMsg("<#deffd2,bee8ff>+${score}积分✫</#>".toGradientColor())
     }
 
     // 减少玩家积分
@@ -48,6 +51,8 @@ class ScoreModule(private val game: Game) {
         }
         // 修改积分
         playerScores[player.uniqueId] = (playerScore - score).coerceAtLeast(0)
+        // 提示玩家
+        player.sendMsg("<#ffcbcb,ff7093>-${score}积分✫</#>".toGradientColor())
     }
 
     // 获取玩家积分
@@ -60,6 +65,19 @@ class ScoreModule(private val game: Game) {
         }
         // 修改积分
         return playerScores[player.uniqueId] ?: 0
+    }
+
+    // 获取积分排行
+    fun getScoreRank(): List<Pair<UUID, Int>> {
+        val scoreRank: MutableList<Pair<UUID, Int>> = mutableListOf()
+
+        // 排序玩家积分
+        playerScores.forEach {
+            scoreRank.add(Pair(it.key, it.value))
+        }
+        scoreRank.sortByDescending { it.second }
+
+        return scoreRank
     }
 
 }

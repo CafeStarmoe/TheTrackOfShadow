@@ -116,7 +116,7 @@ object PlayerDeath {
             return
         }
         // 判断是否扣除积分 如是则惩罚玩家
-        if (game.scoreModule.deductScore) {
+        if (!game.scoreModule.deductScore) {
             return
         }
         // 被击杀者的积分
@@ -127,10 +127,8 @@ object PlayerDeath {
         val rewardScore = (reduceScore * game.scoreModule.scoreMultiple).toInt()
         // 给予被击杀者惩罚
         game.scoreModule.cutPlayerScore(player, reduceScore)
-        player.sendMessage("<#deffd2,bee8ff>扣除${reduceScore}积分✫, 你的积分已被掠夺!</#>".toGradientColor())
         // 给予击杀者奖励
         game.scoreModule.addPlayerScore(killer, rewardScore)
-        killer.sendMessage("<#ffcbcb,ff7093>增加${rewardScore}积分✫, §e你成功掠夺积分!</#>".toGradientColor())
     }
 
 
@@ -140,10 +138,8 @@ object PlayerDeath {
         if (killer == null || killer == player) {
             return
         }
-        // 全图高亮击杀者5s 并且 不能覆盖已有的效果
-        if (!killer.hasPotionEffect(PotionEffectType.GLOWING)) {
-            killer.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 5 * 20, 0))
-        }
+        // 高亮击杀者
+        killer.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 5 * 20, 0))
     }
 
     // 死亡统计信息

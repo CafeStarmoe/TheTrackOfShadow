@@ -26,25 +26,34 @@ object EntityDamage {
             return
         }
         // 事件流程
-        when (game.phaseState) {
-            // 游戏处于大厅等待阶段
-            PhaseState.LOBBY_PHASE -> {
-                lobbyCancelDamage(e) // 大厅取消受伤
-            }
-            // 游戏处于游戏运行阶段
-            PhaseState.RUNNING_PHASE -> {
-                cancelDamageState(e, game, player) // 游戏取消伤害状态
-                protectNoPVPExplosion(e, game, player) // 游戏禁止PVP时爆炸保护
-            }
-
-            else -> {}
-        }
+        lobbyCancelDamage(e, game) // 大厅取消受伤
+        settleCancelDamage(e, game) // 结算阶段取消受伤
+        cancelDamageState(e, game, player) // 游戏取消伤害状态
+        protectNoPVPExplosion(e, game, player) // 游戏禁止PVP时爆炸保护
     }
 
     // 大厅取消受伤
-    private fun lobbyCancelDamage(e: EntityDamageEvent) {
+    private fun lobbyCancelDamage(e: EntityDamageEvent, game: Game) {
         // 事件已取消则跳出
         if (e.isCancelled) {
+            return
+        }
+        // 确保游戏处于大厅等待阶段
+        if (game.phaseState != PhaseState.LOBBY_PHASE) {
+            return
+        }
+        // 取消受伤事件
+        e.isCancelled = true
+    }
+
+    // 结算阶段取消受伤
+    private fun settleCancelDamage(e: EntityDamageEvent, game: Game) {
+        // 事件已取消则跳出
+        if (e.isCancelled) {
+            return
+        }
+        // 确保游戏处于结算阶段
+        if (game.phaseState != PhaseState.SETTLE_PHASE) {
             return
         }
         // 取消受伤事件
@@ -55,6 +64,10 @@ object EntityDamage {
     private fun cancelDamageState(e: EntityDamageEvent, game: Game, player: Player) {
         // 事件已取消则跳出
         if (e.isCancelled) {
+            return
+        }
+        // 确保游戏处于结算阶段
+        if (game.phaseState != PhaseState.SETTLE_PHASE) {
             return
         }
         // 确保玩家存在取消伤害状态

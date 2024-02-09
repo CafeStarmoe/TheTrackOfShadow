@@ -4,7 +4,15 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     java
     id("io.izzel.taboolib") version "2.0.2"
-    id("org.jetbrains.kotlin.jvm") version "1.8.22"
+    id("org.jetbrains.kotlin.jvm") version "1.9.22"
+}
+
+kotlin {
+    sourceSets.all {
+        languageSettings {
+            languageVersion = "2.0"
+        }
+    }
 }
 
 taboolib {
@@ -81,8 +89,6 @@ taboolib {
         dependencies {
             // 全息投影
             name("HolographicDisplays").with("bukkit")
-            // 协议库
-            name("ProtocolLib").with("bukkit")
         }
     }
 }
@@ -90,7 +96,6 @@ taboolib {
 repositories {
     mavenCentral()
     maven("https://repo.codemc.io/repository/maven-public/")
-    maven("https://repo.dmulloy2.net/repository/public/")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
 }
 
@@ -100,7 +105,6 @@ dependencies {
     compileOnly(kotlin("stdlib"))
     compileOnly(fileTree("libs"))
     compileOnly("me.filoghost.holographicdisplays:holographicdisplays-api:3.0.0")
-    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
     compileOnly("net.md-5:bungeecord-api:1.20-R0.3-SNAPSHOT")
 }
 

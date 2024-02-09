@@ -16,15 +16,15 @@ class BloodyRandomTask(private val game: Game, private var tick: Long) : TaskAbs
     init {
         // 双倍伤害倍率
         game.damageModule.damageMultiple = 2.0
-        // 关闭出生点保护
-        game.spawnModule.enableProtect = false
+        // 关闭重生点回复血量
+        game.spawnModule.enableRegain = false
 //        game.modGame.playerState.add(PlayerState.CANCEL_CHEST) // 禁止开箱
         world?.time = 18000L // 修改世界时间为夜晚
         game.playerModule.getOnlineUsers().forEach {
             it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)
             it.sendMessage(
                 "",
-                "§4§l血色之夜 > §f所有玩家<#ff9c9c,de4949>伤害翻倍</#>§f, 持续<#ffffd6>高亮</#>§f, 重生点<#deffd2,bee8ff>保护禁用</#>§f, 宝箱<#f7c79c,ef987d>无法打开</#>§f!".toGradientColor(),
+                "§4§l血色之夜 > §f所有玩家<#ff9c9c,de4949>伤害翻倍</#>§f, 持续<#ffffd6>高亮</#>§f, 重生点<#deffd2,bee8ff>回复血量禁用</#>§f, 宝箱<#f7c79c,ef987d>无法打开</#>§f!".toGradientColor(),
                 ""
             )
         }
@@ -37,8 +37,8 @@ class BloodyRandomTask(private val game: Game, private var tick: Long) : TaskAbs
             game.damageModule.damageMultiple = 1.0
             // 还原世界时间
             world?.time = worldTime
-            // 开启出生点保护
-            game.spawnModule.enableProtect = true
+            // 开启重生点回复血量
+            game.spawnModule.enableRegain = true
 //            game.modGame.playerState.remove(PlayerState.CANCEL_CHEST) // 允许开箱
             game.playerModule.getOnlineUsers().forEach {
                 it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)

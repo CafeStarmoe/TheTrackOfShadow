@@ -1,5 +1,6 @@
 package top.ycmt.thetrackofshadow.game.phase
 
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import taboolib.module.chat.impl.DefaultComponent
 import top.ycmt.thetrackofshadow.constant.GameConst.GAME_MAX_TIME
@@ -40,7 +41,7 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
         initTask()
         // 初始化玩家禁止状态
         game.cancelModule.addGlobalCancelState(
-            CancelState.CANCEL_PVP, // 禁止PVP
+            //CancelState.CANCEL_PVP, // 禁止PVP
             CancelState.CANCEL_OPEN_CHEST, // 禁止打开宝箱
         )
         game.playerModule.getAlivePlayers().forEach {
@@ -130,32 +131,70 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
         return str.toString()
     }
 
+    // 获取积分排行文本列表
+    private fun getScoreRankTexts(scoreRank: List<Pair<UUID, Int>>, player: Player): List<String> {
+        val nullText = "§7无"
+        // 玩家积分展示的文本
+        val scoreRankTexts: MutableList<String> = MutableList(5) { nullText }
+        for ((index) in scoreRankTexts.withIndex()) {
+            // 玩家排名颜色
+            val playerRankColor = when (index + 1) {
+                1 -> "f7c79c,ef987d"
+                2 -> "d3faff,aaf2fd"
+                3 -> "deffd2,bee8ff"
+                else -> "afafaf,a0a0a0"
+            }
+            // 玩家积分排行文本
+            var playerScoreRankText: String
+            // 不存在该名次的积分排行显示无
+            if (index >= scoreRank.size) {
+                continue
+            }
+            // 获取对应名次的玩家与积分
+            val playerScoreRank = scoreRank[index]
+            // 获取玩家名称
+            val playerName = Bukkit.getPlayer(playerScoreRank.first)?.name ?: continue
+            // 如果玩家uuid相同显示你
+            val bothPlayerName = if (playerScoreRank.first == player.uniqueId) "§7你" else ""
+            // 积分展示格式
+            playerScoreRankText =
+                "<#${playerRankColor}>${playerName}</#>§f[${playerScoreRank.second}✫] $bothPlayerName".toGradientColor()
+            scoreRankTexts[index] = playerScoreRankText
+        }
+        return scoreRankTexts
+    }
+
     // 刷新或创建计分板
     private fun refreshBoard() {
         // 设置日期格式
         val df = SimpleDateFormat("MM/dd/yy")
 
-        for (p in game.playerModule.getOnlinePlayers()) {
+        // 玩家积分排行
+        val scoreRank = game.scoreModule.getScoreRank()
+
+        // 刷新所有玩家的记分板
+        game.playerModule.getOnlinePlayers().forEach {
+            // 玩家积分排行文本列表
+            val scoreRankTexts = getScoreRankTexts(scoreRank, it)
+
             val board: ScoreBoard =
-                if (ScoreBoard.hasScore(p)) ScoreBoard.getByPlayer(p)!! else ScoreBoard.createScore(
-                    p,
-                    CN_LOGO_LEGACY_TEXT
-                )
+                if (ScoreBoard.hasScore(it)) ScoreBoard.getByPlayer(it)!!
+                else ScoreBoard.createScore(it, CN_LOGO_LEGACY_TEXT)
             board.setSlot(15, "§7${df.format(Date())}  §8${game.setting.gameName}")
             board.setSlot(14, "")
             board.setSlot(13, getRecentlyEventMsg())
             board.setSlot(12, "")
             board.setSlot(
                 11,
-                "§f1. Null"
+                "§f① ${scoreRankTexts[0]}"
             )
             board.setSlot(
                 10,
-                "§f2. Null"
+                "§f② ${scoreRankTexts[1]}"
             )
             board.setSlot(
                 9,
-                "§f3. Null"
+                "§f③ ${scoreRankTexts[2]}"
             )
             board.setSlot(8, "")
             board.setSlot(
@@ -169,35 +208,37 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
             board.setSlot(2, "")
             board.setSlot(1, "<#fff4ba,f4f687>mc.ycmt.top</#>".toGradientColor())
         }
-        for (p in game.playerModule.getOnlineWatchers()) {
+        // 刷新所有观察者的记分板
+        game.playerModule.getOnlineWatchers().forEach {
+            // 玩家积分排行文本列表
+            val scoreRankTexts = getScoreRankTexts(scoreRank, it)
+
             val board: ScoreBoard =
-                if (ScoreBoard.hasScore(p)) ScoreBoard.getByPlayer(p)!! else ScoreBoard.createScore(
-                    p,
-                    CN_LOGO_LEGACY_TEXT
-                )
+                if (ScoreBoard.hasScore(it)) ScoreBoard.getByPlayer(it)!!
+                else ScoreBoard.createScore(it, CN_LOGO_LEGACY_TEXT)
             board.setSlot(13, "§7${df.format(Date())}  §8${game.setting.gameName}")
             board.setSlot(12, "")
             board.setSlot(11, getRecentlyEventMsg())
             board.setSlot(10, "")
             board.setSlot(
                 9,
-                "§f1. Null"
+                "§f① ${scoreRankTexts[0]}"
             )
             board.setSlot(
                 8,
-                "§f2. Null"
+                "§f② ${scoreRankTexts[1]}"
             )
             board.setSlot(
                 7,
-                "§f3. Null"
+                "§f③ ${scoreRankTexts[2]}"
             )
             board.setSlot(
                 6,
-                "§f4. Null"
+                "§f④ ${scoreRankTexts[3]}"
             )
             board.setSlot(
                 5,
-                "§f5. Null"
+                "§f⑤ ${scoreRankTexts[4]}"
             )
             board.setSlot(4, "")
             board.setSlot(

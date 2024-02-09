@@ -37,6 +37,13 @@ object GameManager {
         gameMap.remove(gameName)
     }
 
+    // 删除所有游戏
+    fun removeGames() {
+        gameMap.forEach {
+            removeGame(it.value.setting.gameName)
+        }
+    }
+
     // 玩家加入游戏
     fun joinGame(gameName: String, player: Player) {
         // 校验游戏是否存在

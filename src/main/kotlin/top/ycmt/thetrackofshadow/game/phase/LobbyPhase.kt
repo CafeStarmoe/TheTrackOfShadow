@@ -79,12 +79,10 @@ class LobbyPhase(private val game: Game) : PhaseAbstract() {
         // 设置日期格式
         val df = SimpleDateFormat("MM/dd/yy")
 
-        for (p in game.playerModule.getOnlineUsers()) {
+        game.playerModule.getOnlineUsers().forEach {
             val board: ScoreBoard =
-                if (ScoreBoard.hasScore(p)) ScoreBoard.getByPlayer(p)!! else ScoreBoard.createScore(
-                    p,
-                    CN_LOGO_LEGACY_TEXT
-                )
+                if (ScoreBoard.hasScore(it)) ScoreBoard.getByPlayer(it)!!
+                else ScoreBoard.createScore(it, CN_LOGO_LEGACY_TEXT)
             board.setSlot(11, "§7${df.format(Date())}  §8${game.setting.gameName}")
             board.setSlot(10, "")
             board.setSlot(9, "§f地图: <#dcffcc,9adbb1>${game.setting.mapName}</#>".toGradientColor())

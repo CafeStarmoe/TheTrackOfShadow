@@ -1,10 +1,10 @@
 package top.ycmt.thetrackofshadow.game
 
 import taboolib.common.platform.function.submit
+import taboolib.common.platform.service.PlatformExecutor
 import top.ycmt.thetrackofshadow.config.GameSetting
 import top.ycmt.thetrackofshadow.game.module.*
 import top.ycmt.thetrackofshadow.game.phase.*
-import top.ycmt.thetrackofshadow.game.state.PhaseState
 import top.ycmt.thetrackofshadow.game.state.PhaseState.*
 import top.ycmt.thetrackofshadow.pkg.logger.Logger
 
@@ -15,27 +15,27 @@ class Game(val setting: GameSetting) {
     val subTaskModule = SubTaskModule(this) // 子任务管理模块
     val damageModule = DamageModule(this) // 玩家伤害管理模块
     val respawnModule = RespawnModule(this) // 玩家重生管理模块
-    val spawnModule = SpawnModule(this) // 出生点管理模块
+    val spawnModule = SpawnModule(this) // 重生点管理模块
     val reconnectModule = ReconnectModule(this) // 玩家重连管理模块
     val scoreModule = ScoreModule(this) // 玩家积分管理模块
     val statsModule = StatsModule(this) // 玩家操作统计管理模块
     val chestModule = ChestModule(this) // 宝箱管理模块
+    val hologramModule = HologramModule(this) // 全息投影管理模块
 
     var phaseState = INIT_PHASE // 游戏阶段状态
         private set
 
     private var gamePhase: PhaseInterface = InitPhase(this) // 游戏当前阶段
+    private lateinit var gameMainTask: PlatformExecutor.PlatformTask // 游戏主调度器
 
     init {
-        Logger.info("游戏初始化, gameName: ${setting.gameName}")
-
         // 运行游戏主调度器
         gameMainTask()
     }
 
     // 游戏主调度器
     private fun gameMainTask() {
-        submit(period = 1 * 20L) {
+        gameMainTask = submit(period = 1 * 20L) {
             // 刷新在线玩家对象列表
             playerModule.refreshPlayers()
 
@@ -50,7 +50,7 @@ class Game(val setting: GameSetting) {
 
     // 进行下一阶段
     private fun nextPhase() {
-        val phases = PhaseState.values()
+        val phases = entries.toTypedArray()
         val nextPhaseIndex = phaseState.ordinal + 1
         // 校验阶段索引是否正常
         if (nextPhaseIndex >= phases.size) {
@@ -72,14 +72,24 @@ class Game(val setting: GameSetting) {
         }
         // 切换阶段完执行一次
         gamePhase.onTick()
-        Logger.info("游戏执行下一阶段, gameName: ${setting.gameName}, phaseState: $phaseState")
     }
 
     // 停止游戏
     fun stopGame() {
-        // TODO 踢出玩家
+        // 取消游戏主调度器
+        gameMainTask.cancel()
         // 取消所有子任务
         subTaskModule.cancelAllTask()
+        // 清除所有全息投影
+        hologramModule.deleteHolograms()
+        // 踢出所有玩家
+        playerModule.getOnlinePlayers().forEach {
+            playerModule.removePlayer(it)
+        }
+        // 踢出所有观察者
+        playerModule.getOnlineWatchers().forEach {
+            playerModule.removeWatcher(it)
+        }
     }
 
 }

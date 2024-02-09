@@ -1,6 +1,5 @@
 package top.ycmt.thetrackofshadow.game.task
 
-import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI
 import me.filoghost.holographicdisplays.api.hologram.line.TextHologramLine
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -11,7 +10,6 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import taboolib.module.effect.ParticleSpawner
 import taboolib.module.effect.shape.Circle
-import taboolib.platform.util.bukkitPlugin
 import taboolib.platform.util.toBukkitLocation
 import taboolib.platform.util.toProxyLocation
 import top.ycmt.thetrackofshadow.game.Game
@@ -35,7 +33,7 @@ class SpawnWorldTask(private val game: Game) : TaskAbstract() {
         // 全息投影位置
         val loc = Location(spawnLoc.world, spawnLoc.x, spawnLoc.y + 3, spawnLoc.z)
         // 创建全息投影
-        val hologram = HolographicDisplaysAPI.get(bukkitPlugin).createHologram(loc)
+        val hologram = game.hologramModule.createHologram(loc)
         hologram.lines.appendItem(ItemStack(Material.CLOCK))
         holoLine = hologram.lines.appendText("§e§l载入中...")
     }
@@ -47,7 +45,7 @@ class SpawnWorldTask(private val game: Game) : TaskAbstract() {
             return
         }
         // 判断出生点保护是否启用
-        if (game.spawnModule.enableProtect) {
+        if (game.spawnModule.enableRegain) {
             changeHologramLine() // 修改全息投影
             potionDistance() // 范围药水效果
             particle.show() // 渲染粒子特效
@@ -100,8 +98,8 @@ class SpawnWorldTask(private val game: Game) : TaskAbstract() {
         override fun spawn(location: taboolib.common.util.Location) {
             val world = Bukkit.getWorld(game.setting.gameMapWorld) ?: return
 
-            // 判断出生点保护是否启用
-            if (!game.spawnModule.enableProtect) {
+            // 判断重生点回复血量是否启用
+            if (!game.spawnModule.enableRegain) {
                 return
             }
 
