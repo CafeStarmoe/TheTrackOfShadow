@@ -52,7 +52,7 @@ object MainPlugin {
         // 显示卸载信息
         Logger.log("", PLUGIN_DISABLE_LEGACY_TEXT, "")
         // 停止所有游戏
-        GameManager.removeGames()
+        GameManager.stopGames()
     }
 
 }

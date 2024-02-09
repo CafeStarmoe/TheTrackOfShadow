@@ -38,9 +38,9 @@ object GameManager {
     }
 
     // 删除所有游戏
-    fun removeGames() {
+    fun stopGames() {
         gameMap.forEach {
-            removeGame(it.value.setting.gameName)
+            it.value.stopGame()
         }
     }
 

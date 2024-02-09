@@ -6,4 +6,5 @@ enum class PhaseState {
     LOBBY_PHASE,// 大厅等待阶段
     RUNNING_PHASE, // 游戏运行阶段
     SETTLE_PHASE, // 结算阶段
+    RESET_PHASE, // // 还原地图阶段
 }

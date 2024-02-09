@@ -5,30 +5,52 @@ import taboolib.common.platform.service.PlatformExecutor
 import top.ycmt.thetrackofshadow.config.GameSetting
 import top.ycmt.thetrackofshadow.game.module.*
 import top.ycmt.thetrackofshadow.game.phase.*
+import top.ycmt.thetrackofshadow.game.state.PhaseState
 import top.ycmt.thetrackofshadow.game.state.PhaseState.*
-import top.ycmt.thetrackofshadow.pkg.logger.Logger
 
 // 游戏对象
 class Game(val setting: GameSetting) {
-    val playerModule = PlayerModule(this) // 玩家管理模块
-    val cancelModule = CancelModule(this) // 玩家状态管理模块
-    val subTaskModule = SubTaskModule(this) // 子任务管理模块
-    val damageModule = DamageModule(this) // 玩家伤害管理模块
-    val respawnModule = RespawnModule(this) // 玩家重生管理模块
-    val spawnModule = SpawnModule(this) // 重生点管理模块
-    val reconnectModule = ReconnectModule(this) // 玩家重连管理模块
-    val scoreModule = ScoreModule(this) // 玩家积分管理模块
-    val statsModule = StatsModule(this) // 玩家操作统计管理模块
-    val chestModule = ChestModule(this) // 宝箱管理模块
-    val hologramModule = HologramModule(this) // 全息投影管理模块
+    lateinit var playerModule: PlayerModule // 玩家管理模块
+    lateinit var cancelModule: CancelModule // 玩家状态管理模块
+    lateinit var subTaskModule: SubTaskModule // 子任务管理模块
+    lateinit var damageModule: DamageModule // 玩家伤害管理模块
+    lateinit var respawnModule: RespawnModule // 玩家重生管理模块
+    lateinit var spawnModule: SpawnModule // 重生点管理模块
+    lateinit var reconnectModule: ReconnectModule // 玩家重连管理模块
+    lateinit var scoreModule: ScoreModule // 玩家积分管理模块
+    lateinit var statsModule: StatsModule // 玩家操作统计管理模块
+    lateinit var chestModule: ChestModule // 宝箱管理模块
+    lateinit var hologramModule: HologramModule // 全息投影管理模块
 
-    var phaseState = INIT_PHASE // 游戏阶段状态
+    // 游戏阶段状态
+    lateinit var phaseState: PhaseState
         private set
 
-    private var gamePhase: PhaseInterface = InitPhase(this) // 游戏当前阶段
+    private lateinit var gamePhase: PhaseInterface // 游戏当前阶段
     private lateinit var gameMainTask: PlatformExecutor.PlatformTask // 游戏主调度器
 
     init {
+        // 初始化游戏
+        initGame()
+    }
+
+    // 初始化游戏
+    private fun initGame() {
+        // 初始化模块
+        playerModule = PlayerModule(this) // 玩家管理模块
+        cancelModule = CancelModule(this) // 玩家状态管理模块
+        subTaskModule = SubTaskModule(this) // 子任务管理模块
+        damageModule = DamageModule(this) // 玩家伤害管理模块
+        respawnModule = RespawnModule(this) // 玩家重生管理模块
+        spawnModule = SpawnModule(this) // 重生点管理模块
+        reconnectModule = ReconnectModule(this) // 玩家重连管理模块
+        scoreModule = ScoreModule(this) // 玩家积分管理模块
+        statsModule = StatsModule(this) // 玩家操作统计管理模块
+        chestModule = ChestModule(this) // 宝箱管理模块
+        hologramModule = HologramModule(this) // 全息投影管理模块
+        // 初始化阶段
+        phaseState = INIT_PHASE
+        gamePhase = InitPhase(this)
         // 运行游戏主调度器
         gameMainTask()
     }
@@ -54,14 +76,15 @@ class Game(val setting: GameSetting) {
         val nextPhaseIndex = phaseState.ordinal + 1
         // 校验阶段索引是否正常
         if (nextPhaseIndex >= phases.size) {
-            Logger.error("索引越界, nextPhaseIndex: $nextPhaseIndex, phasesSize: ${phases.size}")
+            // 阶段都执行完毕了重启游戏
+            restartGame()
             return
         }
         // 设置阶段状态
         phaseState = phases[nextPhaseIndex]
         // 根据阶段状态设置阶段
         gamePhase = when (phaseState) {
-            // 初始化游戏阶段
+            // 初始化阶段
             INIT_PHASE -> InitPhase(this)
             // 大厅等待阶段
             LOBBY_PHASE -> LobbyPhase(this)
@@ -69,9 +92,18 @@ class Game(val setting: GameSetting) {
             RUNNING_PHASE -> RunningPhase(this)
             // 游戏结算阶段
             SETTLE_PHASE -> SettlePhase(this)
+            // 还原地图阶段
+            RESET_PHASE -> ResetPhase(this)
         }
         // 切换阶段完执行一次
         gamePhase.onTick()
+    }
+
+    // 重启游戏
+    private fun restartGame() {
+        // 关闭游戏后再初始化游戏
+        stopGame()
+        initGame()
     }
 
     // 停止游戏

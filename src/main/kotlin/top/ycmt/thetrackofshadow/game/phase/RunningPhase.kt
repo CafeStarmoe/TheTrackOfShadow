@@ -28,11 +28,11 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
     )
 
     init {
-        initGame()
+        initRunningPhase()
     }
 
-    // 初始化游戏
-    private fun initGame() {
+    // 初始化运行阶段
+    private fun initRunningPhase() {
         // 初始化玩家积分
         game.scoreModule.initPlayersScore(game.playerModule.getAlivePlayers())
         // 初始化玩家统计信息
@@ -41,7 +41,7 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
         initTask()
         // 初始化玩家禁止状态
         game.cancelModule.addGlobalCancelState(
-            //CancelState.CANCEL_PVP, // 禁止PVP
+            CancelState.CANCEL_PVP, // 禁止PVP
             CancelState.CANCEL_OPEN_CHEST, // 禁止打开宝箱
         )
         game.playerModule.getAlivePlayers().forEach {
