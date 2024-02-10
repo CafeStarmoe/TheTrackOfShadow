@@ -6,6 +6,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.event.SubscribeEvent
 import taboolib.common.platform.function.submit
+import taboolib.platform.util.takeItem
 import top.ycmt.thetrackofshadow.game.GameManager
 import top.ycmt.thetrackofshadow.game.state.PhaseState
 
@@ -43,11 +44,10 @@ object PlayerItemConsume {
             return
         }
         submit(delay = 1L) {
-            // 将被删除的物品
-            val toRemove = ItemStack(Material.GLASS_BOTTLE)
-            toRemove.amount = 1 // 设置数量
-            // 删除这个物品
-            player.inventory.removeItem(toRemove)
+            // 删除药水瓶子
+            player.inventory.takeItem(1) {
+                it.type == Material.GLASS_BOTTLE
+            }
         }
     }
 

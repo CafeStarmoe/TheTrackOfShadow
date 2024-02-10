@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    id("io.izzel.taboolib") version "2.0.2"
+    id("io.izzel.taboolib") version "2.0.5"
     id("org.jetbrains.kotlin.jvm") version "1.9.22"
 }
 
@@ -16,31 +16,10 @@ kotlin {
 }
 
 taboolib {
-    // 环境配置（例如模块、仓库地址等）
-    // 此处列出所有可用选项，但通常均可省略
+    // 环境配置
     env {
-        // 调试模式
-        debug = false
-        // 是否在开发模式下强制下载依赖
-        forceDownloadInDev = true
-        // 中央仓库地址
-        repoCentral = "https://maven.aliyun.com/repository/central"
-        // TabooLib 仓库地址
-        repoTabooLib = "http://ptms.ink:8081/repository/releases"
-        // 依赖下载目录
-        fileLibs = "libraries"
-        // 资源下载目录
-        fileAssets = "assets"
-        // 是否启用隔离加载器（即完全隔离模式）
-        enableIsolatedClassloader = false
-        // 安装模块
-        install(UNIVERSAL)
-        // 安装配置文件
-        install(CONFIGURATION)
-        // 安装 Bukkit 平台实现
-        install(BUKKIT)
-        // 安装 Bukkit 拓展工具
-        install(BUKKIT_UTIL, BUKKIT_XSERIES)
+        // 安装平台模块
+        install(UNIVERSAL, BUKKIT_ALL)
         // 安装Raw 信息构建工具与 1.16 RGB 颜色转换
         install(CHAT)
         // 全平台配置文件解决方案 (Yaml & Toml & Hocon & Json)
@@ -51,19 +30,11 @@ taboolib {
         install(UI)
     }
     // 版本配置
-    // 此处列出所有可用选项，除 "TabooLib 版本" 外均省略
     version {
         // TabooLib 版本
         taboolib = "6.1.0"
-        // Kotlinx Coroutines 版本（设为 null 表示禁用）
-        coroutines = "1.7.3"
-        // 跳过 Kotlin 加载
-        skipKotlin = false
-        // 跳过 Kotlin 重定向
-        skipKotlinRelocate = false
-        // 跳过 TabooLib 重定向
-        skipTabooLibRelocate = false
     }
+    // 描述配置
     description {
         // 项目名称
         name("TheTrackOfShadow")
@@ -78,17 +49,14 @@ taboolib {
         links {
             name("website").url("https://github.com/YuCraft/TheTrackOfShadow")
         }
-        // 项目前缀
-        prefix("TheTrackOfShadow")
-        // 插件加载阶段
-        // START 表示这个插件在服务器启动时就开始加载。
-        // POSTWORLD 表示这个插件在第一个世界加载完成后开始加载。
-        load("POSTWORLD")
         // api版本
         bukkitApi("1.20")
+        // 插件依赖
         dependencies {
             // 全息投影
             name("HolographicDisplays").with("bukkit")
+            // 协议库
+            name("ProtocolLib").with("bukkit")
         }
     }
 }
@@ -97,6 +65,7 @@ repositories {
     mavenCentral()
     maven("https://repo.codemc.io/repository/maven-public/")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
+    maven("https://repo.dmulloy2.net/repository/public/")
 }
 
 dependencies {
@@ -104,8 +73,9 @@ dependencies {
     compileOnly("ink.ptms.core:v12004:v12004:universal")
     compileOnly(kotlin("stdlib"))
     compileOnly(fileTree("libs"))
-    compileOnly("me.filoghost.holographicdisplays:holographicdisplays-api:3.0.0")
     compileOnly("net.md-5:bungeecord-api:1.20-R0.3-SNAPSHOT")
+    compileOnly("me.filoghost.holographicdisplays:holographicdisplays-api:3.0.0")
+    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
 }
 
 tasks.withType<JavaCompile> {
@@ -119,7 +89,7 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-configure<JavaPluginConvention> {
+java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
