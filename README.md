@@ -22,7 +22,7 @@ The development version contains the TabooLib SDK for developers, **it is not ru
 
 > The -PDeleteCode parameter use to remove all logic code to reduce the size.
 
-## Postscript
-**THE VERSION IS NOT THE FINAL VERSION**
-**DO NOT RUN THIS PLUGIN ON ANY STABLE SERVER**
-**WE TRY TO COMPLETE IT**
+## Postscript  
+**THE VERSION IS NOT THE FINAL VERSION**  
+**DO NOT RUN THIS PLUGIN ON ANY STABLE SERVER**  
+**WE TRY TO COMPLETE IT**  
