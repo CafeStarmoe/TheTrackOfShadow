@@ -1,19 +1,28 @@
-# TabooLib SDK
-
-## 构建发行版本
-
-发行版本用于正常使用, 不含 TabooLib 本体。
+# Build 
+## Build Release Version 
+ 
+Clone this repository 
+ 
+```
+git clone --depth=1 https://github.com/YuCraft/TheTrackOfShadow.git
+```
+Then build with gradle 
 
 ```
 ./gradlew clean build
 ```
-
-## 构建开发版本
-
-开发版本包含 TabooLib 本体, 用于开发者使用, 但不可运行。
-
+ 
+## Build Dev Version 
+ 
+The development version contains the TabooLib SDK for developers, **it is not runnable on server**.
+ 
 ```
 ./gradlew clean taboolibBuildApi -PDeleteCode
 ```
 
-> 参数 -PDeleteCode 表示移除所有逻辑代码以减少体积。
+> The -PDeleteCode parameter use to remove all logic code to reduce the size.
+
+## Postscript
+**THE VERSION IS NOT THE FINAL VERSION**
+**DO NOT RUN THIS PLUGIN ON ANY STABLE SERVER**
+**WE TRY TO COMPLETE IT**
