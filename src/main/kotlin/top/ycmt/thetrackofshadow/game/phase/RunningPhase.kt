@@ -42,7 +42,7 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
         // 初始化玩家禁止状态
         game.cancelModule.addGlobalCancelState(
             CancelState.CANCEL_PVP, // 禁止PVP
-            CancelState.CANCEL_OPEN_CHEST, // 禁止打开宝箱
+            CancelState.CANCEL_FIND_CHEST, // 禁止打开宝箱
         )
         game.playerModule.getAlivePlayers().forEach {
             // 初始化玩家

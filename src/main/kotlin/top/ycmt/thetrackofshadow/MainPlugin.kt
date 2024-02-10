@@ -39,6 +39,7 @@ object MainPlugin {
                 10.0,
                 "world",
                 Vector(-388.5, 182.0, -91.5),
+                100,
             )
             GameManager.createGame(gameSetting)
         }

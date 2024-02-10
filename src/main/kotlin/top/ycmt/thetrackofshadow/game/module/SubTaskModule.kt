@@ -30,7 +30,7 @@ class SubTaskModule(private val game: Game) {
     }
 
     // 取消所有任务
-    fun cancelAllTask() {
+    fun cancelTasks() {
         platformTasks.forEach {
             it.cancel()
         }

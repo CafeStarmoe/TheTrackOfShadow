@@ -13,6 +13,7 @@ import taboolib.module.effect.shape.Circle
 import taboolib.platform.util.toBukkitLocation
 import taboolib.platform.util.toProxyLocation
 import top.ycmt.thetrackofshadow.game.Game
+import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 
 
 // 出生点效果显示以及治疗任务
@@ -65,9 +66,9 @@ class SpawnWorldTask(private val game: Game) : TaskAbstract() {
         if (!game.spawnModule.reverse) {
             // 每30s给予1次
             if (tick % 30 == 0L) {
-                holoLine.text = "§a§l已治疗✔"
+                holoLine.text = "<#deffd2,bee8ff>已治疗✔</#>".toGradientColor()
             } else {
-                holoLine.text = "§f§l下次治疗: §c§l${30 - tick % 30}s"
+                holoLine.text = "§f下次治疗: <#ffcbcb,ff7093>${30 - tick % 30}秒</#>".toGradientColor()
             }
         } else {
             holoLine.text = "§c§l已反转✘"

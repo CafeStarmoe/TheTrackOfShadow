@@ -1,7 +1,7 @@
 package top.ycmt.thetrackofshadow.game.flow
 
 import org.bukkit.Sound
-import top.ycmt.thetrackofshadow.constant.LegacyTextConst
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst.PLAYER_PVP_PREFIX_LEGACY_TEXT
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.state.CancelState
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
@@ -38,7 +38,7 @@ class PVPFlow(private val game: Game) : FlowInterface {
                     it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)
                     it.sendMessage(
                         "",
-                        "${LegacyTextConst.PLAYER_PVP_PREFIX_LEGACY_TEXT}§fPVP已开启, 准备好迎接挑战了吗?".toGradientColor(),
+                        "${PLAYER_PVP_PREFIX_LEGACY_TEXT}§fPVP已开启, 准备好迎接挑战了吗?".toGradientColor(),
                         ""
                     )
                 }

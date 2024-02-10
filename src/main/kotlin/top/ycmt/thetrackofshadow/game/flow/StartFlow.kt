@@ -22,7 +22,7 @@ class StartFlow(private val game: Game) : FlowInterface {
                     it.allowFlight = true
                     it.isFlying = true
                 }
-                // 全局禁止移动以及不允许受伤
+                // 全局禁止移动不允许受伤
                 game.cancelModule.addGlobalCancelState(
                     CancelState.CANCEL_MOVE,
                     CancelState.CANCEL_DAMAGE,
@@ -44,10 +44,11 @@ class StartFlow(private val game: Game) : FlowInterface {
             }
 
             0L -> {
-                // 全局允许移动以及不允许受伤
+                // 全局允许移动 受伤 开箱
                 game.cancelModule.removeGlobalCancelState(
                     CancelState.CANCEL_MOVE,
                     CancelState.CANCEL_DAMAGE,
+                    CancelState.CANCEL_FIND_CHEST,
                 )
                 game.playerModule.getAlivePlayers().forEach {
                     // 不允许飞行

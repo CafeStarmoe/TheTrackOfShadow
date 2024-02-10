@@ -28,4 +28,6 @@ data class GameSetting(
     // 退出游戏地图坐标
     val quitMapWorld: String,
     val quitMapVector: Vector,
+    // 宝箱数量
+    val chestCount: Int,
 )

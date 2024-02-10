@@ -123,12 +123,10 @@ object PlayerDeath {
         val playerScore = game.scoreModule.getPlayerScore(player)
         // 扣除的积分
         val reduceScore = (playerScore / 2).coerceAtLeast(10)
-        // 根据倍率奖励的积分
-        val rewardScore = (reduceScore * game.scoreModule.scoreMultiple).toInt()
         // 给予被击杀者惩罚
         game.scoreModule.cutPlayerScore(player, reduceScore)
         // 给予击杀者奖励
-        game.scoreModule.addPlayerScore(killer, rewardScore)
+        game.scoreModule.addPlayerScore(killer, reduceScore)
     }
 
 

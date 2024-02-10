@@ -55,4 +55,9 @@ object LegacyTextConst {
         .append("<#d6a1ff,ba6df8>PVP开启 > </#>".toGradientColor()).bold()
         .toLegacyText()
 
+    // 宝箱被发现前缀
+    val CHEST_FOUND_PREFIX_LEGACY_TEXT = DefaultComponent()
+        .append("<#ffe0a2,f5c66a>藏宝点被发现 > </#>".toGradientColor()).bold()
+        .toLegacyText()
+
 }

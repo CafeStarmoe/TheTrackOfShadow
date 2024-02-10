@@ -92,8 +92,6 @@ class Game(val setting: GameSetting) {
             RUNNING_PHASE -> RunningPhase(this)
             // 游戏结算阶段
             SETTLE_PHASE -> SettlePhase(this)
-            // 还原地图阶段
-            RESET_PHASE -> ResetPhase(this)
         }
         // 切换阶段完执行一次
         gamePhase.onTick()
@@ -106,14 +104,22 @@ class Game(val setting: GameSetting) {
         initGame()
     }
 
+    // 还原地图
+    private fun resetGame() {
+        // 重置宝箱
+        chestModule.resetChests()
+    }
+
     // 停止游戏
     fun stopGame() {
         // 取消游戏主调度器
         gameMainTask.cancel()
         // 取消所有子任务
-        subTaskModule.cancelAllTask()
+        subTaskModule.cancelTasks()
         // 清除所有全息投影
         hologramModule.deleteHolograms()
+        // 还原地图
+        resetGame()
         // 踢出所有玩家
         playerModule.getOnlinePlayers().forEach {
             playerModule.removePlayer(it)

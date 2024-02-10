@@ -21,9 +21,9 @@ class ScoreModule(private val game: Game) {
     }
 
     // 增加玩家积分
-    fun addPlayerScore(player: Player, score: Int) {
+    fun addPlayerScore(player: Player, addScore: Int) {
         // 不能增加负数
-        if (score < 0) {
+        if (addScore < 0) {
             return
         }
         val playerScore = playerScores[player.uniqueId]
@@ -32,15 +32,17 @@ class ScoreModule(private val game: Game) {
             Logger.error("玩家积分未初始化, uuid: ${player.uniqueId}, name: ${player.name}")
             return
         }
+        // 积分 计算积分倍率
+        val score = (addScore * scoreMultiple).toInt()
         // 修改积分
         playerScores[player.uniqueId] = (playerScore + score).coerceAtLeast(0)
         player.sendMsg("<#deffd2,bee8ff>+${score}积分✫</#>".toGradientColor())
     }
 
     // 减少玩家积分
-    fun cutPlayerScore(player: Player, score: Int) {
+    fun cutPlayerScore(player: Player, cutScore: Int) {
         // 不能减少负数
-        if (score < 0) {
+        if (cutScore < 0) {
             return
         }
         val playerScore = playerScores[player.uniqueId]
@@ -50,9 +52,9 @@ class ScoreModule(private val game: Game) {
             return
         }
         // 修改积分
-        playerScores[player.uniqueId] = (playerScore - score).coerceAtLeast(0)
+        playerScores[player.uniqueId] = (playerScore - cutScore).coerceAtLeast(0)
         // 提示玩家
-        player.sendMsg("<#ffcbcb,ff7093>-${score}积分✫</#>".toGradientColor())
+        player.sendMsg("<#ffcbcb,ff7093>-${cutScore}积分✫</#>".toGradientColor())
     }
 
     // 获取玩家积分
