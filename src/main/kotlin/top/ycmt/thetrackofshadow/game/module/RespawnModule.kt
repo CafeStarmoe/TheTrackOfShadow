@@ -47,7 +47,7 @@ class RespawnModule(private val game: Game) {
         player.allowFlight = true
         player.isFlying = true
         // 给予玩家隐身效果
-        player.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, 60 * 20, 0))
+        player.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, -1, 0, true, false))
         // 设置玩家隐身
         player.hidePlayers(game.playerModule.getOnlineUsers())
         // 将玩家传送到重生点

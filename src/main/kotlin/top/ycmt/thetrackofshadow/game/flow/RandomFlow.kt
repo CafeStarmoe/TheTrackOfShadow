@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 
 // 随机事件
 class RandomFlow(private val game: Game) : FlowInterface {
-    override var finishTick = 20L // 下一次随机事件
+    override var finishTick = TimeUnit.MINUTES.toSeconds(5) // 下一次随机事件
     override val eventMsg = "距离随机事件" // 提示信息
 
     private val addTick: Long = TimeUnit.MINUTES.toSeconds(1)  // 每次增加的时间
