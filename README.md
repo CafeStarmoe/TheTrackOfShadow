@@ -1,4 +1,4 @@
-[简体中文](https://github.com/YuCraft/TheTrackOfShadow/edit/develop/README_CN.md)  
+[简体中文](https://github.com/YuCraft/TheTrackOfShadow/blob/develop/README%20_CN.md)  
 # Build 
 ## Build Release Version 
  
