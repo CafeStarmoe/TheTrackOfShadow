@@ -144,7 +144,7 @@ object PlayerDeath {
     private fun statsDeath(game: Game, player: Player, killer: Player?) {
         val playerStatsInfo = game.statsModule.getPlayerStats(player) ?: return
         // 增加死亡次数
-        playerStatsInfo.deathCount += 1
+        playerStatsInfo.deathCount++
 
         // 击杀者为空就跳出
         if (killer == null) {
@@ -153,7 +153,7 @@ object PlayerDeath {
         // 获取击杀者的统计信息
         val killerStatsInfo = game.statsModule.getPlayerStats(killer) ?: return
         // 增加击杀玩家次数
-        killerStatsInfo.killPlayerCount += 1
+        killerStatsInfo.killPlayerCount++
     }
 
     // 玩家死亡重生

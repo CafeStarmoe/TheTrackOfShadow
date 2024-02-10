@@ -32,6 +32,9 @@ class ChestModule(private val game: Game) {
         game.scoreModule.addPlayerScore(player, score)
         // 高亮玩家5s
         player.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 5 * 20, 0))
+        // 增加找到的宝箱次数
+        val playerStatsInfo = game.statsModule.getPlayerStats(player) ?: return
+        playerStatsInfo.findChestCount++
         // 宝箱位置文本
         val locationText = "§f位于<#b4f1ff,8ab7e1>${loc.blockX}, ${loc.blockY}, ${loc.blockZ}</#>".toGradientColor()
         // 提示宝箱已被找到

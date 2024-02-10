@@ -172,10 +172,24 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
         // 玩家积分排行
         val scoreRank = game.scoreModule.getScoreRank()
 
+        // 剩余宝箱数
+        val remainChestCount = game.chestModule.getRemainChestCount()
+        // 剩余宝箱数颜色
+        val remainChestRatio = remainChestCount / game.setting.chestCount
+        val remainChestCountColor = when {
+            remainChestRatio < 0.1 -> "ffcbcb,ff7093"
+            remainChestRatio < 0.3 -> "f7c79c,ef987d"
+            else -> "deffd2,bee8ff"
+        }
+        // 剩余宝箱数文本
+        val remainChestCountText = "<#$remainChestCountColor>$remainChestCount</#>".toGradientColor()
+
         // 刷新所有玩家的记分板
         game.playerModule.getOnlinePlayers().forEach {
             // 玩家积分排行文本列表
             val scoreRankTexts = getScoreRankTexts(scoreRank, it)
+            // 玩家统计信息
+            val playerStats = game.statsModule.getPlayerStats(it)
 
             val board: ScoreBoard =
                 if (ScoreBoard.hasScore(it)) ScoreBoard.getByPlayer(it)!!
@@ -199,12 +213,18 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
             board.setSlot(8, "")
             board.setSlot(
                 7,
-                "§f剩余藏宝点 Null §f个"
+                "§f剩余藏宝点 $remainChestCountText §f个"
             )
             board.setSlot(6, "")
-            board.setSlot(5, "§f你的积分: <#dcffcc,9adbb1>Null</#>".toGradientColor())
-            board.setSlot(4, "§f击杀玩家数: <#dcffcc,9adbb1>Null</#>".toGradientColor())
-            board.setSlot(3, "§f找到的宝箱数: <#dcffcc,9adbb1>Null</#>".toGradientColor())
+            board.setSlot(5, "§f你的积分: <#dcffcc,9adbb1>${game.scoreModule.getPlayerScore(it)}</#>".toGradientColor())
+            board.setSlot(
+                4,
+                "§f击杀玩家数: <#dcffcc,9adbb1>${playerStats?.killPlayerCount ?: "0"}</#>".toGradientColor()
+            )
+            board.setSlot(
+                3,
+                "§f找到的宝箱数: <#dcffcc,9adbb1>${playerStats?.findChestCount ?: "0"}</#>".toGradientColor()
+            )
             board.setSlot(2, "")
             board.setSlot(1, "<#fff4ba,f4f687>mc.ycmt.top</#>".toGradientColor())
         }
@@ -243,7 +263,7 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
             board.setSlot(4, "")
             board.setSlot(
                 3,
-                "§f剩余藏宝点 Null §f个"
+                "§f剩余藏宝点 $remainChestCountText §f个"
             )
             board.setSlot(2, "")
             board.setSlot(1, "<#fff4ba,f4f687>mc.ycmt.top</#>".toGradientColor())
