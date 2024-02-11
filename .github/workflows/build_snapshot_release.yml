@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   # 每天晚上7点半自动构建快照版
   schedule:
-    - cron: "30 19 * * *"
+    - cron: "30 11 * * *"
 jobs:
   build:
     runs-on: ubuntu-latest
