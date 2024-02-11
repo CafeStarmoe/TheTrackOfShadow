@@ -9,7 +9,7 @@ import top.ycmt.thetrackofshadow.game.Game
 // 全息投影管理模块
 class HologramModule(private val game: Game) {
     private val hologramAPI = HolographicDisplaysAPI.get(bukkitPlugin) // 全息投影api
-    private val holograms: MutableList<Hologram> = mutableListOf() // 游戏创建的全息投影列表
+    private val holograms = mutableListOf<Hologram>() // 游戏创建的全息投影列表
 
     // 创建全息投影
     fun createHologram(loc: Location): Hologram {

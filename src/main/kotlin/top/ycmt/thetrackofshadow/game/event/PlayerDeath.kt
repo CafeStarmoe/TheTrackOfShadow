@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import taboolib.common.platform.event.SubscribeEvent
+import taboolib.common.platform.function.adaptCommandSender
 import taboolib.module.chat.impl.DefaultComponent
 import taboolib.platform.util.hoverItem
 import taboolib.platform.util.isNotAir
@@ -17,7 +18,6 @@ import top.ycmt.thetrackofshadow.game.GameManager
 import top.ycmt.thetrackofshadow.game.state.PhaseState
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendMsg
-import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendSpigotMsg
 
 
 // 玩家死亡事件
@@ -98,14 +98,14 @@ object PlayerDeath {
         val deathLocationText =
             "§f位于<#b4f1ff,8ab7e1>${loc.blockX}, ${loc.blockY}, ${loc.blockZ}</#>".toGradientColor()
         // 提示死亡信息
-        val deathMessage = DefaultComponent()
-            .append("<#dcffcc,9adbb1>${player.name}</#>§f被<#ff9c9c,de4949>${killer.name}</#>".toGradientColor())
-            .append(killerUseItemText)
-            .append(deathLocationText)
-            .append("§f击败!")
-            .append(finalKillText)
         game.playerModule.getOnlineUsers().forEach {
-            it.sendSpigotMsg(deathMessage)
+            DefaultComponent()
+                .append("<#dcffcc,9adbb1>${player.name}</#>§f被<#ff9c9c,de4949>${killer.name}</#>".toGradientColor())
+                .append(killerUseItemText)
+                .append(deathLocationText)
+                .append("§f击败!")
+                .append(finalKillText)
+                .sendTo(adaptCommandSender(it))
         }
     }
 

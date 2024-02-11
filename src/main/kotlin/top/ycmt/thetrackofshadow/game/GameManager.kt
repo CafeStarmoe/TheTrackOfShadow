@@ -1,25 +1,26 @@
 package top.ycmt.thetrackofshadow.game
 
 import org.bukkit.entity.Player
-import top.ycmt.thetrackofshadow.config.GameSetting
+import top.ycmt.thetrackofshadow.config.GameData
 import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendFailMsg
 import top.ycmt.thetrackofshadow.pkg.logger.Logger
 
 // 游戏管理器
 object GameManager {
     // 游戏列表
-    private val gameMap: MutableMap<String, Game> = mutableMapOf()
+    private val gameMap = mutableMapOf<String, Game>()
 
     // 创建游戏
-    fun createGame(gameSetting: GameSetting): Game? {
+    fun createGame(gameData: GameData): Game? {
         // 校验游戏是否已经创建
-        if (gameMap.contains(gameSetting.gameName)) {
-            Logger.error("游戏已存在, gameName: ${gameSetting.gameName}")
+        if (gameMap.contains(gameData.gameName)) {
+            Logger.error("游戏已存在, gameName: ${gameData.gameName}")
             return null
         }
-        val game = Game(gameSetting)
+        val game = Game(gameData)
         // 记录创建的游戏
-        gameMap[gameSetting.gameName] = game
+        gameMap[gameData.gameName] = game
+        Logger.info("游戏${gameData.gameName}创建完毕")
         return game
     }
 

@@ -55,7 +55,7 @@ class ScoreBoard(player: Player, name: String, showHealth: Boolean) {
     }
 
     companion object {
-        private val playerScoreBoards: MutableMap<UUID, ScoreBoard> = HashMap()
+        private val playerScoreBoards = mutableMapOf<UUID, ScoreBoard>()
         fun hasScore(player: Player): Boolean {
             return playerScoreBoards.containsKey(player.uniqueId)
         }

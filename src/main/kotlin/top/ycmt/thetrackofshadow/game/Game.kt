@@ -2,14 +2,14 @@ package top.ycmt.thetrackofshadow.game
 
 import taboolib.common.platform.function.submit
 import taboolib.common.platform.service.PlatformExecutor
-import top.ycmt.thetrackofshadow.config.GameSetting
+import top.ycmt.thetrackofshadow.config.GameData
 import top.ycmt.thetrackofshadow.game.module.*
 import top.ycmt.thetrackofshadow.game.phase.*
 import top.ycmt.thetrackofshadow.game.state.PhaseState
 import top.ycmt.thetrackofshadow.game.state.PhaseState.*
 
 // 游戏对象
-class Game(val setting: GameSetting) {
+class Game(val setting: GameData) {
     lateinit var playerModule: PlayerModule // 玩家管理模块
     lateinit var cancelModule: CancelModule // 玩家状态管理模块
     lateinit var subTaskModule: SubTaskModule // 子任务管理模块
@@ -21,6 +21,7 @@ class Game(val setting: GameSetting) {
     lateinit var statsModule: StatsModule // 玩家操作统计管理模块
     lateinit var chestModule: ChestModule // 宝箱管理模块
     lateinit var hologramModule: HologramModule // 全息投影管理模块
+    lateinit var itemModule: ItemModule // 游戏物品管理模块
 
     // 游戏阶段状态
     lateinit var phaseState: PhaseState
@@ -48,6 +49,7 @@ class Game(val setting: GameSetting) {
         statsModule = StatsModule(this) // 玩家操作统计管理模块
         chestModule = ChestModule(this) // 宝箱管理模块
         hologramModule = HologramModule(this) // 全息投影管理模块
+        itemModule = ItemModule(this) // 游戏物品管理模块
         // 初始化阶段
         phaseState = INIT_PHASE
         gamePhase = InitPhase(this)

@@ -104,7 +104,7 @@ class TeleportFlow(private val game: Game) : FlowInterface {
 
     // 获取在线玩家传送的位置
     private fun getPlayerTeleportLocations(): Map<UUID, Location> {
-        val playerTeleportLocations: MutableMap<UUID, Location> = mutableMapOf()
+        val playerTeleportLocations = mutableMapOf<UUID, Location>()
         for (p in game.playerModule.getAlivePlayers()) {
             val loc = randomTeleportLocation()
             if (loc == null) {
@@ -118,14 +118,14 @@ class TeleportFlow(private val game: Game) : FlowInterface {
 
     // 获取随机传送到游戏地图的位置
     private fun randomTeleportLocation(): Location? {
-        val worldName = game.setting.gameMapWorld
-        val vector1 = game.setting.gameMapVector1
-        val vector2 = game.setting.gameMapVector2
+        // 两点确定游戏地图范围
+        val loc1 = game.setting.getGameMapLocation1()
+        val loc2 = game.setting.getGameMapLocation2()
 
-        // 获取世界
-        val world = Bukkit.getWorld(worldName)
+        // 获取游戏地图世界
+        val world = Bukkit.getWorld(game.setting.gameWorldName)
         if (world == null) {
-            Logger.error("世界为空, worldName: $worldName")
+            Logger.error("游戏地图世界为空, gameWorldName: ${game.setting.gameWorldName}")
             return null
         }
 
@@ -137,8 +137,8 @@ class TeleportFlow(private val game: Game) : FlowInterface {
         val maxRandomCount = 64
         for (i in 0 until maxRandomCount) {
             // 随机取地图内的坐标
-            x = (vector1.x.coerceAtMost(vector2.x).toInt()..vector1.x.coerceAtLeast(vector2.x).toInt()).random()
-            z = (vector1.z.coerceAtMost(vector2.z).toInt()..vector1.z.coerceAtLeast(vector2.z).toInt()).random()
+            x = (loc1.x.coerceAtMost(loc2.x).toInt()..loc1.x.coerceAtLeast(loc2.x).toInt()).random()
+            z = (loc1.z.coerceAtMost(loc2.z).toInt()..loc1.z.coerceAtLeast(loc2.z).toInt()).random()
 
             // 获取坐标最高的方块
             val highestBlock = world.getHighestBlockAt(x, z)
@@ -156,7 +156,7 @@ class TeleportFlow(private val game: Game) : FlowInterface {
             }
             y = highestBlock.y
             // 确保高度符合
-            if (y > vector1.y.coerceAtLeast(vector2.y)) {
+            if (y > loc1.y.coerceAtLeast(loc2.y)) {
                 if (i >= maxRandomCount - 1) {
                     Logger.error("随机传送高度不符合, count: $i, x: $x, y: $y, z: $z")
                     return null

@@ -14,7 +14,7 @@ import java.util.*
 
 // 宝箱管理模块
 class ChestModule(private val game: Game) {
-    private val findChests: MutableMap<Location, UUID> = mutableMapOf() // 被找到的宝箱
+    private val findChests = mutableMapOf<Location, UUID>() // 被找到的宝箱
 
     // 玩家找到宝箱
     fun playerFindChest(player: Player, chest: Chest) {

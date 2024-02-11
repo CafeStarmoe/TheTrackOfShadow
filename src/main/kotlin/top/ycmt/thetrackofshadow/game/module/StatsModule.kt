@@ -7,7 +7,7 @@ import java.util.*
 
 // 玩家统计信息管理模块
 class StatsModule(private val game: Game) {
-    private val playerStatsInfos: MutableMap<UUID, StatsInfo> = mutableMapOf() // 玩家统计信息uuid列表
+    private val playerStatsInfos = mutableMapOf<UUID, StatsInfo>() // 玩家统计信息uuid列表
 
     // 初始化玩家统计信息
     fun initPlayersStats(players: List<Player>) {

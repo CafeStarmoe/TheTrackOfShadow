@@ -8,11 +8,8 @@ import java.util.*
 
 // 玩家禁止状态管理模块
 class CancelModule(private val game: Game) {
-    // 玩家禁止状态集合
-    private val playerCancelStates: MutableMap<UUID, MutableList<CancelState>> = mutableMapOf()
-
-    // 全局禁止状态列表
-    private val globalCancelState: MutableList<CancelState> = mutableListOf()
+    private val playerCancelStates = mutableMapOf<UUID, MutableList<CancelState>>() // 玩家禁止状态集合
+    private val globalCancelState = mutableListOf<CancelState>() // 全局禁止状态列表
 
     // 获取玩家禁止状态列表
     private fun getPlayerStates(player: Player): MutableList<CancelState>? {

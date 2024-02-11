@@ -3,7 +3,6 @@ package top.ycmt.thetrackofshadow.game.module
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import taboolib.platform.util.toBukkitLocation
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.task.ReconnectKickTask
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
@@ -16,8 +15,8 @@ import java.util.concurrent.TimeUnit
 
 // 玩家重连管理模块
 class ReconnectModule(private val game: Game) {
-    private val reconnectKickPlayers: MutableMap<UUID, ReconnectKickTask> = mutableMapOf() // 等待重连踢出的玩家uuid列表
-    private val playersInv: MutableMap<UUID, Array<ItemStack>> = mutableMapOf() // 玩家退出时的物品栏
+    private val reconnectKickPlayers = mutableMapOf<UUID, ReconnectKickTask>() // 等待重连踢出的玩家uuid列表
+    private val playersInv = mutableMapOf<UUID, Array<ItemStack>>() // 玩家退出时的物品栏
 
     // 玩家断开连接
     fun disconnectPlayer(player: Player) {
@@ -83,7 +82,7 @@ class ReconnectModule(private val game: Game) {
         // 初始化玩家属性
         game.playerModule.initPlayer(player, gameMode = GameMode.SPECTATOR)
         // 传送至游戏地图重生点
-        player.teleport(game.setting.gameMapRespawnVector.toLocation(game.setting.gameMapWorld).toBukkitLocation())
+        player.teleport(game.setting.getRespawnLocation())
         player.sendSuccMsg("你已观察者的身份重连游戏!")
     }
 

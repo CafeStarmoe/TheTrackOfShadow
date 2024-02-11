@@ -3,7 +3,6 @@ package top.ycmt.thetrackofshadow.game.module
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
-import taboolib.platform.util.toBukkitLocation
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.state.PhaseState
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
@@ -15,18 +14,18 @@ import java.util.*
 
 // 玩家管理模块
 class PlayerModule(private val game: Game) {
-    private val players: MutableList<UUID> = mutableListOf() // 玩家uuid列表 记录uuid
-    private val watchers: MutableList<UUID> = mutableListOf() // 观察者uuid列表 记录uuid
-    private var onlinePlayersCache: List<Player> = listOf() // 在线玩家对象列表缓存
-    private var alivePlayersCache: List<Player> = listOf() // 存活且在线玩家对象列表缓存
-    private var onlineWatchersCache: List<Player> = listOf() // 在线观察者对象列表缓存
+    private val players = mutableListOf<UUID>() // 玩家uuid列表 记录uuid
+    private val watchers = mutableListOf<UUID>() // 观察者uuid列表 记录uuid
+    private var onlinePlayersCache = listOf<Player>() // 在线玩家对象列表缓存
+    private var alivePlayersCache = listOf<Player>() // 存活且在线玩家对象列表缓存
+    private var onlineWatchersCache = listOf<Player>() // 在线观察者对象列表缓存
 
     // 玩家加入游戏
     private fun playerJoin(player: Player) {
         // 初始化玩家属性
         initPlayer(player)
         // 传送至等待大厅
-        player.teleport(game.setting.lobbyMapVector.toLocation(game.setting.lobbyMapWorld).toBukkitLocation())
+        player.teleport(game.setting.getLobbyLocation())
         // 刷新玩家列表
         refreshPlayers()
         // 进入提示
@@ -42,7 +41,7 @@ class PlayerModule(private val game: Game) {
         // 清空玩家的计分板
         ScoreBoard.removeScore(player)
         // 传送至离开游戏的位置
-        player.teleport(game.setting.quitMapVector.toLocation(game.setting.quitMapWorld).toBukkitLocation())
+        player.teleport(game.setting.getQuitLocation())
         // 刷新玩家列表
         refreshPlayers()
         // 给其他玩家看的退出提示
@@ -58,7 +57,7 @@ class PlayerModule(private val game: Game) {
         // 清空玩家的计分板
         ScoreBoard.removeScore(player)
         // 传送至离开游戏的位置
-        player.teleport(game.setting.quitMapVector.toLocation(game.setting.quitMapWorld).toBukkitLocation())
+        player.teleport(game.setting.getQuitLocation())
     }
 
     // 观察者加入游戏
@@ -66,7 +65,7 @@ class PlayerModule(private val game: Game) {
         // 初始化玩家属性
         initPlayer(player, gameMode = GameMode.SPECTATOR)
         // 传送至游戏地图重生点
-        player.teleport(game.setting.gameMapRespawnVector.toLocation(game.setting.gameMapWorld).toBukkitLocation())
+        player.teleport(game.setting.getRespawnLocation())
     }
 
     // 添加玩家

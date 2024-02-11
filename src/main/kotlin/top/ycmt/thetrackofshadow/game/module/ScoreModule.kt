@@ -9,7 +9,7 @@ import java.util.*
 
 // 玩家积分管理模块
 class ScoreModule(private val game: Game) {
-    private val playerScores: MutableMap<UUID, Int> = HashMap() // 玩家积分uuid列表
+    private val playerScores = HashMap<UUID, Int>() // 玩家积分uuid列表
     var scoreMultiple = 1.0 // 积分倍率
     var deductScore = true // 是否扣除积分
 
@@ -71,7 +71,7 @@ class ScoreModule(private val game: Game) {
 
     // 获取积分排行
     fun getScoreRank(): List<Pair<UUID, Int>> {
-        val scoreRank: MutableList<Pair<UUID, Int>> = mutableListOf()
+        val scoreRank = mutableListOf<Pair<UUID, Int>>()
 
         // 排序玩家积分
         playerScores.forEach {

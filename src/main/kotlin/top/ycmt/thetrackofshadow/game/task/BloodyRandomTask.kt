@@ -11,7 +11,7 @@ import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 
 // 血色之夜随机事件任务
 class BloodyRandomTask(private val game: Game, private var tick: Long) : TaskAbstract() {
-    private val world = Bukkit.getWorld(game.setting.gameMapWorld) // 世界
+    private val world = Bukkit.getWorld(game.setting.gameWorldName) // 世界
     private var worldTime: Long = world?.time ?: 0L // 保存修改之前的时间
 
     init {

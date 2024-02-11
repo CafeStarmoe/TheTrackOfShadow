@@ -9,7 +9,6 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import taboolib.platform.util.toBukkitLocation
 import top.ycmt.thetrackofshadow.constant.LegacyTextConst.PLAYER_RESPAWN_PREFIX_LEGACY_TEXT
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.state.CancelState
@@ -24,9 +23,9 @@ import java.util.*
 
 // 玩家重生管理模块
 class RespawnModule(private val game: Game) {
-    private val respawnPlayers: MutableMap<UUID, RespawnTask> = mutableMapOf() // 正在重生的玩家uuid列表
-    private val playersInv: MutableMap<UUID, Array<ItemStack>> = mutableMapOf() // 正在重生的玩家物品栏
-    private val protectPlayers: MutableMap<UUID, RespawnProtectCleanTask> = mutableMapOf() // 重生后保护状态的玩家uuid列表
+    private val respawnPlayers = mutableMapOf<UUID, RespawnTask>() // 正在重生的玩家uuid列表
+    private val playersInv = mutableMapOf<UUID, Array<ItemStack>>() // 正在重生的玩家物品栏
+    private val protectPlayers = mutableMapOf<UUID, RespawnProtectCleanTask>() // 重生后保护状态的玩家uuid列表
 
     // 添加重生玩家
     fun respawnPlayer(player: Player) {
@@ -94,7 +93,7 @@ class RespawnModule(private val game: Game) {
         // 删除物品栏记录
         playersInv.remove(player.uniqueId)
         // 重生点坐标
-        val respawnLoc = game.setting.gameMapRespawnVector.toLocation(game.setting.gameMapWorld).toBukkitLocation()
+        val respawnLoc = game.setting.getRespawnLocation()
         // 将玩家传送至重生点
         player.teleport(respawnLoc)
         // 发射烟花示意有人重生了

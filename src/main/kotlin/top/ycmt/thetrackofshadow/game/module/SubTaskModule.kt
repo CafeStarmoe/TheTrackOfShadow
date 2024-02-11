@@ -7,7 +7,7 @@ import top.ycmt.thetrackofshadow.game.task.TaskInterface
 
 // 子任务管理模块
 class SubTaskModule(private val game: Game) {
-    private val platformTasks: MutableList<PlatformExecutor.PlatformTask> = mutableListOf() // 平台任务列表
+    private val platformTasks = mutableListOf<PlatformExecutor.PlatformTask>() // 平台任务列表
 
     // 提交任务
     fun submitTask(

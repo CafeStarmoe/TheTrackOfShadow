@@ -6,7 +6,10 @@ import taboolib.module.chat.impl.DefaultComponent
 import top.ycmt.thetrackofshadow.constant.GameConst.GAME_MAX_TIME
 import top.ycmt.thetrackofshadow.constant.LegacyTextConst.CN_LOGO_LEGACY_TEXT
 import top.ycmt.thetrackofshadow.game.Game
-import top.ycmt.thetrackofshadow.game.flow.*
+import top.ycmt.thetrackofshadow.game.flow.PVPFlow
+import top.ycmt.thetrackofshadow.game.flow.RandomFlow
+import top.ycmt.thetrackofshadow.game.flow.StartFlow
+import top.ycmt.thetrackofshadow.game.flow.TeleportFlow
 import top.ycmt.thetrackofshadow.game.state.CancelState
 import top.ycmt.thetrackofshadow.game.task.SpawnWorldTask
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
@@ -20,7 +23,7 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
     private var gameTick = 0L // 游戏tick
 
     // 游戏流程事件列表
-    private val flowEvents: List<FlowInterface> = listOf(
+    private val flowEvents = listOf(
         TeleportFlow(game), // 随机传送流程
         StartFlow(game), // 开始游戏流程
         RandomFlow(game), // 随机事件流程
@@ -135,7 +138,7 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
     private fun getScoreRankTexts(scoreRank: List<Pair<UUID, Int>>, player: Player): List<String> {
         val nullText = "§7无"
         // 玩家积分展示的文本
-        val scoreRankTexts: MutableList<String> = MutableList(5) { nullText }
+        val scoreRankTexts = MutableList(5) { nullText }
         for ((index) in scoreRankTexts.withIndex()) {
             // 玩家排名颜色
             val playerRankColor = when (index + 1) {
@@ -175,7 +178,7 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
         // 剩余宝箱数
         val remainChestCount = game.chestModule.getRemainChestCount()
         // 剩余宝箱数颜色
-        val remainChestRatio = remainChestCount / game.setting.chestCount
+        val remainChestRatio = remainChestCount.toDouble() / game.setting.chestCount.toDouble()
         val remainChestCountColor = when {
             remainChestRatio < 0.1 -> "ffcbcb,ff7093"
             remainChestRatio < 0.3 -> "f7c79c,ef987d"

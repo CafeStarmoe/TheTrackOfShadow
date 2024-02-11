@@ -10,7 +10,6 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import taboolib.module.effect.ParticleSpawner
 import taboolib.module.effect.shape.Circle
-import taboolib.platform.util.toBukkitLocation
 import taboolib.platform.util.toProxyLocation
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
@@ -19,11 +18,10 @@ import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 // 出生点效果显示以及治疗任务
 class SpawnWorldTask(private val game: Game) : TaskAbstract() {
     var tick: Long = 0 // tick数
-    private val spawnLoc =
-        game.setting.gameMapRespawnVector.toLocation(game.setting.gameMapWorld).toBukkitLocation() // 出生点位置
+    private val spawnLoc = game.setting.getRespawnLocation() // 出生点位置
     private var particle: Circle = Circle(
         spawnLoc.toProxyLocation(),
-        game.setting.gameMapRespawnRange,
+        game.setting.respawnRange,
         5.0,
         1 * 20L,
         SpawnParticle(game, this)
@@ -78,7 +76,7 @@ class SpawnWorldTask(private val game: Game) : TaskAbstract() {
     // 给予范围内的玩家药水效果
     private fun potionDistance() {
         game.playerModule.getAlivePlayers().forEach {
-            if (spawnLoc.distance(it.location) <= game.setting.gameMapRespawnRange) {
+            if (spawnLoc.distance(it.location) <= game.setting.respawnRange) {
                 // 判断出生点是否反转
                 if (!game.spawnModule.reverse) {
                     // 每30s给予1次
@@ -97,7 +95,7 @@ class SpawnWorldTask(private val game: Game) : TaskAbstract() {
     // 出生点粒子效果
     class SpawnParticle(private val game: Game, private val spawnWorldTask: SpawnWorldTask) : ParticleSpawner {
         override fun spawn(location: taboolib.common.util.Location) {
-            val world = Bukkit.getWorld(game.setting.gameMapWorld) ?: return
+            val world = Bukkit.getWorld(game.setting.gameWorldName) ?: return
 
             // 判断重生点回复血量是否启用
             if (!game.spawnModule.enableRegain) {

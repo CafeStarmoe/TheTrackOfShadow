@@ -1,6 +1,7 @@
 package top.ycmt.thetrackofshadow.pkg.logger
 
 import taboolib.common.platform.function.console
+import taboolib.common.platform.function.dev
 import taboolib.common.platform.function.severe
 import taboolib.common.platform.function.warning
 import top.ycmt.thetrackofshadow.constant.LegacyTextConst.EN_PREFIX_LEGACY_TEXT
@@ -8,6 +9,13 @@ import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 
 // 格式打印输出
 object Logger {
+
+    // 调试日志
+    fun debug(vararg msgList: String) {
+        msgList.forEach {
+            dev("$it ${getStackTrace()}")
+        }
+    }
 
     // 标准日志
     fun info(vararg msgList: String) {

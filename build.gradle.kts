@@ -5,6 +5,7 @@ plugins {
     java
     id("io.izzel.taboolib") version "2.0.5"
     id("org.jetbrains.kotlin.jvm") version "1.9.22"
+    kotlin("plugin.serialization") version "1.9.22"
 }
 
 kotlin {
@@ -58,24 +59,25 @@ taboolib {
             // 协议库
             name("ProtocolLib").with("bukkit")
         }
+        relocate("kotlinx.serialization", "kotlinx.serialization162")
     }
 }
 
 repositories {
     mavenCentral()
     maven("https://repo.codemc.io/repository/maven-public/")
-    maven("https://oss.sonatype.org/content/repositories/snapshots")
     maven("https://repo.dmulloy2.net/repository/public/")
 }
 
 dependencies {
+    compileOnly("ink.ptms.core:v12004:12004:universal")
     compileOnly("ink.ptms.core:v12004:12004:mapped")
-    compileOnly("ink.ptms.core:v12004:v12004:universal")
     compileOnly(kotlin("stdlib"))
     compileOnly(fileTree("libs"))
-    compileOnly("net.md-5:bungeecord-api:1.20-R0.3-SNAPSHOT")
     compileOnly("me.filoghost.holographicdisplays:holographicdisplays-api:3.0.0")
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
+    taboo("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.2") { isTransitive = false }
+    taboo("app.softwork:kotlinx-serialization-csv:0.0.16") { isTransitive = false }
 }
 
 tasks.withType<JavaCompile> {
