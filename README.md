@@ -7,7 +7,7 @@ Clone this repository
 ```
 git clone --depth=1 https://github.com/YuCraft/TheTrackOfShadow.git
 ```
-Then build with gradle 
+Build with gradle 
 
 ```
 ./gradlew clean build
@@ -24,6 +24,6 @@ The development version contains the TabooLib SDK for developers, **it is not ru
 > The -PDeleteCode parameter use to remove all logic code to reduce the size.
 
 ## Postscript  
-**THE VERSION IS NOT THE FINAL VERSION**  
-**DO NOT RUN THIS PLUGIN ON ANY STABLE SERVER**  
-**WE TRY TO COMPLETE IT**  
+***THE VERSION IS NOT THE FINAL VERSION***  
+***DO NOT RUN THIS PLUGIN ON ANY STABLE SERVER***  
+***WE TRY TO COMPLETE IT***  
