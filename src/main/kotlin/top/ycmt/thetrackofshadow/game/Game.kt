@@ -1,5 +1,6 @@
 package top.ycmt.thetrackofshadow.game
 
+import org.bukkit.Bukkit
 import taboolib.common.platform.function.submit
 import taboolib.common.platform.service.PlatformExecutor
 import top.ycmt.thetrackofshadow.config.GameData
@@ -110,6 +111,8 @@ class Game(val setting: GameData) {
     private fun resetGame() {
         // 重置宝箱
         chestModule.resetChests()
+        // 重置边界
+        Bukkit.getWorld(setting.gameWorldName)?.worldBorder?.reset()
     }
 
     // 停止游戏

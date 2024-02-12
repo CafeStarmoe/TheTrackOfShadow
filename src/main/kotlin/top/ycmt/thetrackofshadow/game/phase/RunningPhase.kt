@@ -1,6 +1,7 @@
 package top.ycmt.thetrackofshadow.game.phase
 
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.entity.Player
 import taboolib.module.chat.impl.DefaultComponent
 import top.ycmt.thetrackofshadow.constant.GameConst.GAME_MAX_TIME
@@ -17,6 +18,7 @@ import top.ycmt.thetrackofshadow.pkg.scoreboard.ScoreBoard
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 // 游戏运行阶段
 class RunningPhase(private val game: Game) : PhaseAbstract() {
@@ -42,6 +44,8 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
         game.statsModule.initPlayersStats(game.playerModule.getAlivePlayers())
         // 初始化子任务
         initTask()
+        // 设置地图边界
+        setGameWorldBorder()
         // 初始化玩家禁止状态
         game.cancelModule.addGlobalCancelState(
             CancelState.CANCEL_PVP, // 禁止PVP
@@ -299,6 +303,29 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
                 .toLegacyText(),
             "",
         )
+    }
+
+    // 设置游戏地图边界
+    private fun setGameWorldBorder() {
+        // 获取两个地图边界点的位置信息
+        val loc1 = game.setting.getGameMapLocation1()
+        val loc2 = game.setting.getGameMapLocation2()
+
+        // 计算两个位置的中心点
+        val centerX = (loc1.x + loc2.x) / 2
+        val centerZ = (loc1.z + loc2.z) / 2
+
+        // 计算地图的大小(这里假设地图是正方形)
+        val sizeX = abs(loc1.x - loc2.x)
+        val sizeZ = abs(loc1.z - loc2.z)
+        val maxSize = sizeX.coerceAtLeast(sizeZ)
+
+        // 获取对应的世界
+        val world = Bukkit.getWorld(game.setting.gameWorldName)
+
+        // 设置世界边界
+        world?.worldBorder?.center = Location(world, centerX, 0.0, centerZ)
+        world?.worldBorder?.size = maxSize
     }
 
 }
