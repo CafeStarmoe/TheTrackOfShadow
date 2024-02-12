@@ -23,7 +23,6 @@ class BloodyRandomTask(private val game: Game, private var tick: Long) : TaskAbs
         game.cancelModule.addGlobalCancelState(CancelState.CANCEL_FIND_CHEST)
         world?.time = 18000L // 修改世界时间为夜晚
         game.playerModule.getOnlineUsers().forEach {
-            it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)
             it.sendMessage(
                 "",
                 "§4§l血色之夜 > §f所有玩家<#ff9c9c,de4949>伤害翻倍</#>§f, 持续<#ffffd6>高亮</#>§f, 重生点<#deffd2,bee8ff>回复禁用</#>§f, 新宝箱<#f7c79c,ef987d>无法打开</#>§f!".toGradientColor(),
@@ -43,6 +42,7 @@ class BloodyRandomTask(private val game: Game, private var tick: Long) : TaskAbs
             game.spawnModule.enableRegain = true
             // 允许打开新宝箱
             game.cancelModule.removeGlobalCancelState(CancelState.CANCEL_FIND_CHEST)
+            // 提示玩家
             game.playerModule.getOnlineUsers().forEach {
                 it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)
                 it.sendMessage(

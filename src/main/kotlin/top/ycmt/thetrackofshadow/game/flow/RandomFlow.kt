@@ -2,9 +2,7 @@ package top.ycmt.thetrackofshadow.game.flow
 
 import org.bukkit.Sound
 import top.ycmt.thetrackofshadow.game.Game
-import top.ycmt.thetrackofshadow.game.flow.random.AnvilRandom
-import top.ycmt.thetrackofshadow.game.flow.random.BarbadosRandom
-import top.ycmt.thetrackofshadow.game.flow.random.BloodyRandom
+import top.ycmt.thetrackofshadow.game.flow.random.*
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendMsg
 import java.util.concurrent.TimeUnit
@@ -17,20 +15,20 @@ class RandomFlow(private val game: Game) : FlowInterface {
     private val addTick: Long = TimeUnit.MINUTES.toSeconds(1)  // 每次增加的时间
 
     private val randomEvents = listOf(
-//        ThunderRandom(game), // 天雷圣裁
-//        MeetRandom(game), // 相遇之缘
-//        RockBlessRandom(game), // 岩之祝福
-//        InsightRandom(game), // 洞察一切
-//        HeavenRandom(game), // 上天去吧
-//        CattailRandom(game), // 猫尾特调
+        ThunderRandom(game), // 天雷圣裁
+        MeetRandom(game), // 相遇之缘
+        RockBlessRandom(game), // 岩之祝福
+        InsightRandom(game), // 洞察一切
+        HeavenRandom(game), // 上天去吧
+        CattailRandom(game), // 猫尾特调
         AnvilRandom(game), // 铁砧雨
-//        ConfineRandom(game), // 禁锢器
-//        ReverseRandom(game), // 反向重生
+        ConfineRandom(game), // 禁锢器
+        ReverseRandom(game), // 反向重生
         BarbadosRandom(game), // 喝醉的巴巴托斯
         BloodyRandom(game), // 血色之夜
-//        PotatoRandom(game), // 熟土豆
-//        LeyLineRandom(game), // 地脉喷涌
-//        RottenRandom(game), // 开摆
+        PotatoRandom(game), // 熟土豆
+        LeyLineRandom(game), // 地脉喷涌
+        RottenRandom(game), // 开摆
     ) // 随机事件列表
 
     override fun exec(leftTick: Long) {

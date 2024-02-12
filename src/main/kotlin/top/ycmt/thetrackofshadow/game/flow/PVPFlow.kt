@@ -1,7 +1,7 @@
 package top.ycmt.thetrackofshadow.game.flow
 
 import org.bukkit.Sound
-import top.ycmt.thetrackofshadow.constant.LegacyTextConst.PLAYER_PVP_PREFIX_LEGACY_TEXT
+import taboolib.module.chat.impl.DefaultComponent
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.state.CancelState
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
@@ -34,11 +34,15 @@ class PVPFlow(private val game: Game) : FlowInterface {
             0L -> {
                 // 清除禁止pvp状态
                 game.cancelModule.removeGlobalCancelState(CancelState.CANCEL_PVP)
+                // PVP开启前缀
+                val prefixText = DefaultComponent()
+                    .append("<#d6a1ff,ba6df8>PVP开启 > </#>".toGradientColor()).bold()
+                    .toLegacyText()
                 game.playerModule.getOnlineUsers().forEach {
                     it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)
                     it.sendMessage(
                         "",
-                        "${PLAYER_PVP_PREFIX_LEGACY_TEXT}§fPVP已开启, 准备好迎接挑战了吗?".toGradientColor(),
+                        "$prefixText§fPVP已开启, 准备好迎接挑战了吗?".toGradientColor(),
                         ""
                     )
                 }

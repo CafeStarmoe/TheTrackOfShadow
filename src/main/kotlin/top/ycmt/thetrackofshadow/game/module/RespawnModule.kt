@@ -9,7 +9,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import top.ycmt.thetrackofshadow.constant.LegacyTextConst.PLAYER_RESPAWN_PREFIX_LEGACY_TEXT
+import taboolib.module.chat.impl.DefaultComponent
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.state.CancelState
 import top.ycmt.thetrackofshadow.game.task.RespawnProtectCleanTask
@@ -98,11 +98,15 @@ class RespawnModule(private val game: Game) {
         player.teleport(respawnLoc)
         // 发射烟花示意有人重生了
         spawnFireworks(respawnLoc)
+        // 玩家重生前缀
+        val prefixText = DefaultComponent()
+            .append("<#a9f1b4,78e0a2>玩家重生 > </#>".toGradientColor()).bold()
+            .toLegacyText()
         // 复活后给其他玩家提示消息
         game.playerModule.getOnlineUsers().forEach {
             it.sendMessage(
                 "",
-                "$PLAYER_RESPAWN_PREFIX_LEGACY_TEXT<#deffd2,bee8ff>${player.name}</#>§f已经重生在出生点了!".toGradientColor(),
+                "$prefixText<#deffd2,bee8ff>${player.name}</#>§f已经重生在出生点了!".toGradientColor(),
                 ""
             )
             it.playSound(it, Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f)

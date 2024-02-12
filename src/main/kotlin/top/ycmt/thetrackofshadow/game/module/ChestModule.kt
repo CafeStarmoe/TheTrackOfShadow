@@ -7,7 +7,7 @@ import org.bukkit.block.Chest
 import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import top.ycmt.thetrackofshadow.constant.LegacyTextConst.CHEST_FOUND_PREFIX_LEGACY_TEXT
+import taboolib.module.chat.impl.DefaultComponent
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 import java.util.*
@@ -37,11 +37,15 @@ class ChestModule(private val game: Game) {
         playerStatsInfo.findChestCount++
         // 宝箱位置文本
         val locationText = "§f位于<#b4f1ff,8ab7e1>${loc.blockX}, ${loc.blockY}, ${loc.blockZ}</#>".toGradientColor()
+        // 宝箱被发现前缀
+        val prefixText = DefaultComponent()
+            .append("<#ffe0a2,f5c66a>藏宝点被发现 > </#>".toGradientColor()).bold()
+            .toLegacyText()
         // 提示宝箱已被找到
         game.playerModule.getOnlineUsers().forEach {
             it.sendMessage(
                 "",
-                "$CHEST_FOUND_PREFIX_LEGACY_TEXT$locationText§f的宝箱被<#deffd2,bee8ff>${player.name}</#>§f打开了!".toGradientColor(),
+                "$prefixText$locationText§f的宝箱被<#deffd2,bee8ff>${player.name}</#>§f打开了!".toGradientColor(),
                 ""
             )
             it.playSound(it, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f)

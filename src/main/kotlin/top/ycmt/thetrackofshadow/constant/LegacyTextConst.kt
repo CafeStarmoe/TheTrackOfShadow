@@ -45,19 +45,4 @@ object LegacyTextConst {
         .append("<#b4f1ff,8ab7e1>随机事件 > </#>".toGradientColor()).bold()
         .toLegacyText()
 
-    // 玩家重生前缀
-    val PLAYER_RESPAWN_PREFIX_LEGACY_TEXT = DefaultComponent()
-        .append("<#a9f1b4,78e0a2>玩家重生 > </#>".toGradientColor()).bold()
-        .toLegacyText()
-
-    // PVP开启前缀
-    val PLAYER_PVP_PREFIX_LEGACY_TEXT = DefaultComponent()
-        .append("<#d6a1ff,ba6df8>PVP开启 > </#>".toGradientColor()).bold()
-        .toLegacyText()
-
-    // 宝箱被发现前缀
-    val CHEST_FOUND_PREFIX_LEGACY_TEXT = DefaultComponent()
-        .append("<#ffe0a2,f5c66a>藏宝点被发现 > </#>".toGradientColor()).bold()
-        .toLegacyText()
-
 }
