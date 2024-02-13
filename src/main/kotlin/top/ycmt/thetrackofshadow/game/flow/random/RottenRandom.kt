@@ -9,8 +9,8 @@ import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 // 开摆随机事件
 class RottenRandom(private val game: Game) : RandomInterface {
     override fun exec() {
-        // 开启地脉喷涌事件
-        game.subTaskModule.submitTask(period = 1 * 20L, task = RottenRandomTask(game, 10L))
+        // 开启开摆事件
+        game.subTaskModule.submitTask(period = 5L, task = RottenRandomTask(game, 10 * 5L))
         // 提示玩家
         game.playerModule.getOnlineUsers().forEach {
             it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)

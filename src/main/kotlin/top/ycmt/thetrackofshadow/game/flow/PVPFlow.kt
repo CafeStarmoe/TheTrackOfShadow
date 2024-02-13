@@ -14,19 +14,11 @@ class PVPFlow(private val game: Game) : FlowInterface {
     override val eventMsg = "等待开启PVP" // 事件消息
 
     override fun exec(leftTick: Long) {
-        // 根据时间改变颜色
-        val leftTickColor = when (leftTick) {
-            10L -> "c1c1ff,7373ff"
-            in 4L..5L -> "f7c79c,ef987d"
-            in 1L..3L -> "ff9c9c,de4949"
-            else -> ""
-        }
-
         // 输出提示通知玩家
         when (leftTick) {
             in 1L..5L, 10L -> {
                 game.playerModule.getOnlineUsers().forEach {
-                    it.sendMsg("<#d6a1ff,ba6df8>PVP将在</#><#$leftTickColor>${leftTick}秒</#><#d6a1ff,ba6df8>后开启!</#>".toGradientColor())
+                    it.sendMsg("<#c67070,ac3838>PVP将在${leftTick}秒<#c67070,ac3838>后开启!</#>".toGradientColor())
                     it.playSound(it, Sound.BLOCK_NOTE_BLOCK_HAT, 1f, 1f)
                 }
             }
@@ -36,7 +28,7 @@ class PVPFlow(private val game: Game) : FlowInterface {
                 game.cancelModule.removeGlobalCancelState(CancelState.CANCEL_PVP)
                 // PVP开启前缀
                 val prefixText = DefaultComponent()
-                    .append("<#d6a1ff,ba6df8>PVP开启 > </#>".toGradientColor()).bold()
+                    .append("<#c67070,ac3838>PVP开启 > </#>".toGradientColor()).bold()
                     .toLegacyText()
                 game.playerModule.getOnlineUsers().forEach {
                     it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)

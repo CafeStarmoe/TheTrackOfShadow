@@ -11,8 +11,6 @@ class RespawnTask(private val game: Game, private val player: Player, private va
     override fun run() {
         // 玩家不在线 或 玩家退出了游戏 则取消任务
         if (!player.isOnline || !game.playerModule.containsPlayer(player)) {
-            // 取消重生
-            game.respawnModule.cancelRespawn(player)
             this.cancel()
             return
         }
@@ -34,6 +32,12 @@ class RespawnTask(private val game: Game, private val player: Player, private va
             player.sendMsg("<#ffefbb,e3ce82>你将在</#><#ff9c9c,de4949>${tick}秒</#><#ffefbb,e3ce82>后重生!</#>".toGradientColor())
         }
         tick--
+    }
+
+    override fun cancel() {
+        super.cancel()
+        // 取消重生
+        game.respawnModule.cancelRespawn(player)
     }
 
 }

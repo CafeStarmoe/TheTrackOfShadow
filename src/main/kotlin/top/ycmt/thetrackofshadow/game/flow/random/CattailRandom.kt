@@ -11,9 +11,9 @@ import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 class CattailRandom(private val game: Game) : RandomInterface {
 
     override fun exec() {
-        // 随机抽取一名玩家给予(反胃，持续时间10s)
+        // 随机抽取一名玩家给予(反胃，持续时间30s)
         game.playerModule.getAlivePlayers().shuffled().take(1).forEach {
-            it.addPotionEffect(PotionEffect(PotionEffectType.CONFUSION, 10 * 20, 1))
+            it.addPotionEffect(PotionEffect(PotionEffectType.CONFUSION, 30 * 20, 1))
         }
         // 提示玩家
         game.playerModule.getOnlineUsers().forEach {
