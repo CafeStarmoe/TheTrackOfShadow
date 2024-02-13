@@ -2,7 +2,7 @@ package top.ycmt.thetrackofshadow.game.task
 
 import org.bukkit.Sound
 import org.bukkit.entity.Player
-import top.ycmt.thetrackofshadow.constant.LegacyTextConst.RANDOM_EVENT_PREFIX_LEGACY_TEXT
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 
@@ -25,7 +25,7 @@ class RottenRandomTask(private val game: Game, private var tick: Long) : TaskAbs
                 it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)
                 it.sendMessage(
                     "",
-                    "${RANDOM_EVENT_PREFIX_LEGACY_TEXT}<#beffeb,70e5bb>开摆</#>§f现已结束限制玩家无法离开<#ff9c9c,de4949>重生点</#>§f!".toGradientColor(),
+                    "${LegacyTextConst.RANDOM_EVENT_PREFIX_LEGACY_TEXT}<#beffeb,70e5bb>开摆</#>§f现已结束限制玩家无法离开<#ff9c9c,de4949>重生点</#>§f!".toGradientColor(),
                     ""
                 )
             }

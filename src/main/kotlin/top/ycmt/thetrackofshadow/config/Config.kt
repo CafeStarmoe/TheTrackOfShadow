@@ -9,7 +9,7 @@ import taboolib.common.platform.function.getDataFolder
 import taboolib.common.platform.function.releaseResourceFile
 import taboolib.module.configuration.Config
 import taboolib.module.configuration.Configuration
-import top.ycmt.thetrackofshadow.constant.ConfigConst.CONFIG_PATH_PREFIX
+import top.ycmt.thetrackofshadow.constant.ConfigConst
 import top.ycmt.thetrackofshadow.pkg.logger.Logger
 import java.io.File
 
@@ -17,6 +17,7 @@ import java.io.File
 object Config {
     private lateinit var gameDataMap: Map<String, GameData> // 游戏配置表
     private lateinit var itemDataMap: Map<Int, ItemData> // 物品配置表
+    private lateinit var weaponDataMap: Map<Int, WeaponData> // 武器配置表
 
     @Config("setting.toml")
     private lateinit var pluginSetting: Configuration // 插件配置文件
@@ -27,23 +28,47 @@ object Config {
         releaseDefaultConfig()
         // 读取配置表
         loadGameData() // 游戏配置表
+        loadItemData() // 物品配置表
+        loadWeaponData() // 武器配置表
     }
 
     // 加载游戏配置表
     private fun loadGameData() {
         val dataMap = mutableMapOf<String, GameData>()
-        val gameDataList = readTable(GameData.serializer(), "$CONFIG_PATH_PREFIX/GameData.csv")
-        gameDataList?.forEach {
+        val dataList = readTable(GameData.serializer(), "${ConfigConst.CONFIG_PATH_PREFIX}/GameData.csv")
+        dataList?.forEach {
             dataMap[it.gameName] = it
         }
         gameDataMap = dataMap
         Logger.info("游戏配置表读取完毕, 共${gameDataMap.size}条数据")
     }
 
+    // 加载物品配置表
+    private fun loadItemData() {
+        val dataMap = mutableMapOf<Int, ItemData>()
+        val dataList = readTable(ItemData.serializer(), "${ConfigConst.CONFIG_PATH_PREFIX}/ItemData.csv")
+        dataList?.forEach {
+            dataMap[it.itemId] = it
+        }
+        itemDataMap = dataMap
+        Logger.info("物品配置表读取完毕, 共${itemDataMap.size}条数据")
+    }
+
+    // 加载武器配置表
+    private fun loadWeaponData() {
+        val dataMap = mutableMapOf<Int, WeaponData>()
+        val dataList = readTable(WeaponData.serializer(), "${ConfigConst.CONFIG_PATH_PREFIX}/WeaponData.csv")
+        dataList?.forEach {
+            dataMap[it.itemId] = it
+        }
+        weaponDataMap = dataMap
+        Logger.info("武器配置表读取完毕, 共${weaponDataMap.size}条数据")
+    }
+
     // 释放默认配置表文件
     private fun releaseDefaultConfig() {
         runningResourcesInJar.keys.filter {
-            it.startsWith("$CONFIG_PATH_PREFIX/")
+            it.startsWith("${ConfigConst.CONFIG_PATH_PREFIX}/")
         }.forEach {
             releaseResourceFile(it)
         }
@@ -77,6 +102,26 @@ object Config {
     // 获取游戏配置表
     fun getGameDataMap(): Map<String, GameData> {
         return gameDataMap
+    }
+
+    // 获取物品配置表
+    fun getItemDataMap(): Map<Int, ItemData> {
+        return itemDataMap
+    }
+
+    // 通过物品id获取物品配置表
+    fun getItemDataByItemId(itemId: Int): ItemData? {
+        return itemDataMap[itemId]
+    }
+
+    // 获取武器配置表
+    fun getWeaponDataMap(): Map<Int, WeaponData> {
+        return weaponDataMap
+    }
+
+    // 通过物品id获取武器配置表
+    fun getWeaponDataByItemId(itemId: Int): WeaponData? {
+        return weaponDataMap[itemId]
     }
 
 }

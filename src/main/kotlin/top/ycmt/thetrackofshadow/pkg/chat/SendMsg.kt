@@ -1,6 +1,6 @@
 package top.ycmt.thetrackofshadow.pkg.chat
 
-import top.ycmt.thetrackofshadow.constant.LegacyTextConst.CN_PREFIX_LEGACY_TEXT
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 
 // 发送玩家格式化消息
@@ -8,7 +8,7 @@ object SendMsg {
     // 发送自定义格式的消息
     fun org.bukkit.entity.Player.sendMsg(vararg msgList: String) {
         msgList.forEach {
-            this.sendMessage(CN_PREFIX_LEGACY_TEXT + it)
+            this.sendMessage(LegacyTextConst.CN_PREFIX_LEGACY_TEXT + it)
         }
     }
 

@@ -86,7 +86,7 @@ object PlayerDeath {
                 .append("§f使用")
                 .append(
                     DefaultComponent()
-                        .append("<#f7c79c,ef987d>$killerItemName</#>".toGradientColor())
+                        .append(killerItemName)
                         .hoverItem(killerItem)
                 )
         } else {

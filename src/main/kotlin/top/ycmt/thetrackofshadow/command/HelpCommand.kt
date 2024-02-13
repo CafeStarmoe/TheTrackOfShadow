@@ -4,7 +4,7 @@ import taboolib.common.platform.ProxyCommandSender
 import taboolib.common.platform.command.CommandContext
 import taboolib.common.platform.command.subCommand
 import taboolib.module.chat.impl.DefaultComponent
-import top.ycmt.thetrackofshadow.constant.LegacyTextConst.CN_LOGO_LEGACY_TEXT
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 
 // 插件帮助命令
@@ -20,7 +20,7 @@ object HelpCommand {
         DefaultComponent().sendTo(sender)
         DefaultComponent().append(
             DefaultComponent()
-                .append("<#727272,e1e1e1>-----//</#> $CN_LOGO_LEGACY_TEXT §f§l- <#c4ffff,7493ff>HELP</#> <#e1e1e1,727272>//-----</#>".toGradientColor())
+                .append("<#727272,e1e1e1>-----//</#> ${LegacyTextConst.CN_LOGO_LEGACY_TEXT} §f§l- <#c4ffff,7493ff>HELP</#> <#e1e1e1,727272>//-----</#>".toGradientColor())
                 .bold()
         ).sendTo(sender)
         DefaultComponent().sendTo(sender)

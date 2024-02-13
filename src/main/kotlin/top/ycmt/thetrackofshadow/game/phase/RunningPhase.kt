@@ -4,8 +4,10 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import taboolib.module.chat.impl.DefaultComponent
-import top.ycmt.thetrackofshadow.constant.GameConst.GAME_MAX_TIME
-import top.ycmt.thetrackofshadow.constant.LegacyTextConst.CN_LOGO_LEGACY_TEXT
+import taboolib.platform.util.giveItem
+import top.ycmt.thetrackofshadow.config.Config
+import top.ycmt.thetrackofshadow.constant.GameConst
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.flow.PVPFlow
 import top.ycmt.thetrackofshadow.game.flow.RandomFlow
@@ -58,6 +60,11 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
             ScoreBoard.removeScore(it)
             // 发送玩法介绍
             sendGameIntroduce(it)
+            // 给予玩家所有武器测试
+            Config.getWeaponDataMap().forEach { (t, _) ->
+                val item = game.itemModule.createItem(t)
+                it.giveItem(item)
+            }
         }
     }
 
@@ -72,7 +79,7 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
 
         // 胜利者是最后一名玩家 或 时间超出设置的时间 结算游戏
         if (game.playerModule.getOnlinePlayers().size <= 1 ||
-            gameTick >= TimeUnit.MINUTES.toSeconds(GAME_MAX_TIME)
+            gameTick >= TimeUnit.MINUTES.toSeconds(GameConst.GAME_MAX_TIME)
         ) {
             // 此阶段结束 进入结算阶段
             this.done()
@@ -117,7 +124,7 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
             return "§f$resultEventMsg - <#dcffcc,9adbb1>${timeToString(resultLeftTime)}</#>".toGradientColor()
         }
         // 默认信息
-        return "§f距离结束时间 - <#dcffcc,9adbb1>${timeToString(TimeUnit.MINUTES.toSeconds(GAME_MAX_TIME) - gameTick)}</#>".toGradientColor()
+        return "§f距离结束时间 - <#dcffcc,9adbb1>${timeToString(TimeUnit.MINUTES.toSeconds(GameConst.GAME_MAX_TIME) - gameTick)}</#>".toGradientColor()
     }
 
     // 获取距离结束的字符串时间
@@ -200,7 +207,7 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
 
             val board: ScoreBoard =
                 if (ScoreBoard.hasScore(it)) ScoreBoard.getByPlayer(it)!!
-                else ScoreBoard.createScore(it, CN_LOGO_LEGACY_TEXT)
+                else ScoreBoard.createScore(it, LegacyTextConst.CN_LOGO_LEGACY_TEXT)
             board.setSlot(15, "§7${df.format(Date())}  §8${game.setting.gameName}")
             board.setSlot(14, "")
             board.setSlot(13, getRecentlyEventMsg())
@@ -242,7 +249,7 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
 
             val board: ScoreBoard =
                 if (ScoreBoard.hasScore(it)) ScoreBoard.getByPlayer(it)!!
-                else ScoreBoard.createScore(it, CN_LOGO_LEGACY_TEXT)
+                else ScoreBoard.createScore(it, LegacyTextConst.CN_LOGO_LEGACY_TEXT)
             board.setSlot(13, "§7${df.format(Date())}  §8${game.setting.gameName}")
             board.setSlot(12, "")
             board.setSlot(11, getRecentlyEventMsg())
@@ -286,7 +293,7 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
                 .bold()
                 .toLegacyText(),
             "",
-            "                              $CN_LOGO_LEGACY_TEXT",
+            "                              ${LegacyTextConst.CN_LOGO_LEGACY_TEXT}",
             "",
             DefaultComponent()
                 .append("<#fff4ba,f4f687>搜寻各种物资，强化自己的战斗能力，最终决战击败其他玩家！</#>".toGradientColor())

@@ -1,7 +1,7 @@
 package top.ycmt.thetrackofshadow.game.phase
 
 import org.bukkit.Sound
-import top.ycmt.thetrackofshadow.constant.LegacyTextConst.CN_LOGO_LEGACY_TEXT
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 import top.ycmt.thetrackofshadow.pkg.chat.SendMsg.sendMsg
@@ -82,7 +82,7 @@ class LobbyPhase(private val game: Game) : PhaseAbstract() {
         game.playerModule.getOnlineUsers().forEach {
             val board: ScoreBoard =
                 if (ScoreBoard.hasScore(it)) ScoreBoard.getByPlayer(it)!!
-                else ScoreBoard.createScore(it, CN_LOGO_LEGACY_TEXT)
+                else ScoreBoard.createScore(it, LegacyTextConst.CN_LOGO_LEGACY_TEXT)
             board.setSlot(11, "§7${df.format(Date())}  §8${game.setting.gameName}")
             board.setSlot(10, "")
             board.setSlot(9, "§f地图: <#dcffcc,9adbb1>${game.setting.mapName}</#>".toGradientColor())

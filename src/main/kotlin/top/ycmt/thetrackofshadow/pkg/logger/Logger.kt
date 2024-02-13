@@ -4,7 +4,7 @@ import taboolib.common.platform.function.console
 import taboolib.common.platform.function.dev
 import taboolib.common.platform.function.severe
 import taboolib.common.platform.function.warning
-import top.ycmt.thetrackofshadow.constant.LegacyTextConst.EN_PREFIX_LEGACY_TEXT
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 
 // 格式打印输出
@@ -20,7 +20,7 @@ object Logger {
     // 标准日志
     fun info(vararg msgList: String) {
         msgList.forEach {
-            console().sendMessage("$EN_PREFIX_LEGACY_TEXT§f$it <#ccffff,88dbfe>${getStackTrace()}</#>".toGradientColor())
+            console().sendMessage("${LegacyTextConst.EN_PREFIX_LEGACY_TEXT}§f$it <#ccffff,88dbfe>${getStackTrace()}</#>".toGradientColor())
         }
     }
 

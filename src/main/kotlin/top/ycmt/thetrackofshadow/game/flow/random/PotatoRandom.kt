@@ -1,7 +1,7 @@
 package top.ycmt.thetrackofshadow.game.flow.random
 
 import org.bukkit.Sound
-import top.ycmt.thetrackofshadow.constant.LegacyTextConst.RANDOM_EVENT_PREFIX_LEGACY_TEXT
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.task.PotatoRandomTask
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
@@ -16,7 +16,7 @@ class PotatoRandom(private val game: Game) : RandomInterface {
             it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)
             it.sendMessage(
                 "",
-                "${RANDOM_EVENT_PREFIX_LEGACY_TEXT}<#ffd685,fec147>熟土豆</#>§f散发出硬件的香味, 怎么..卡卡的? 持续<#ff9c9c,de4949>5秒</#>§f!".toGradientColor(),
+                "${LegacyTextConst.RANDOM_EVENT_PREFIX_LEGACY_TEXT}<#ffd685,fec147>熟土豆</#>§f散发出硬件的香味, 怎么..卡卡的? 持续<#ff9c9c,de4949>5秒</#>§f!".toGradientColor(),
                 ""
             )
         }

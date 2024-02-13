@@ -1,7 +1,7 @@
 package top.ycmt.thetrackofshadow.game.task
 
 import org.bukkit.Sound
-import top.ycmt.thetrackofshadow.constant.LegacyTextConst.RANDOM_EVENT_PREFIX_LEGACY_TEXT
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 
@@ -22,7 +22,7 @@ class ReverseRandomTask(private val game: Game, private var tick: Long) : TaskAb
                 it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)
                 it.sendMessage(
                     "",
-                    "${RANDOM_EVENT_PREFIX_LEGACY_TEXT}<#ffa1a1,ff6e6e>反向重生</#>§f现已结束干扰<#ff9c9c,de4949>重生点</#>§f!".toGradientColor(),
+                    "${LegacyTextConst.RANDOM_EVENT_PREFIX_LEGACY_TEXT}<#ffa1a1,ff6e6e>反向重生</#>§f现已结束干扰<#ff9c9c,de4949>重生点</#>§f!".toGradientColor(),
                     ""
                 )
             }

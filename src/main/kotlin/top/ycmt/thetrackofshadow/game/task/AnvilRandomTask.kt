@@ -4,7 +4,7 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
 import taboolib.platform.util.setMeta
-import top.ycmt.thetrackofshadow.constant.LegacyTextConst.RANDOM_EVENT_PREFIX_LEGACY_TEXT
+import top.ycmt.thetrackofshadow.constant.LegacyTextConst
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.pkg.chat.GradientColor.toGradientColor
 
@@ -17,7 +17,7 @@ class AnvilRandomTask(private val game: Game, private var tick: Int) : TaskAbstr
                 it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f, 1f)
                 it.sendMessage(
                     "",
-                    "$RANDOM_EVENT_PREFIX_LEGACY_TEXT<#989898,777777>铁砧雨</#>§f现已结束在所有玩家上空<#ff9c9c,de4949>落铁</#>§f!".toGradientColor(),
+                    "${LegacyTextConst.RANDOM_EVENT_PREFIX_LEGACY_TEXT}<#989898,777777>铁砧雨</#>§f现已结束在所有玩家上空<#ff9c9c,de4949>落铁</#>§f!".toGradientColor(),
                     ""
                 )
             }
