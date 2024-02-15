@@ -18,6 +18,10 @@ object Config {
     private lateinit var gameDataMap: Map<String, GameData> // 游戏配置表
     private lateinit var itemDataMap: Map<Int, ItemData> // 物品配置表
     private lateinit var weaponDataMap: Map<Int, WeaponData> // 武器配置表
+    private lateinit var equipDataMap: Map<Int, EquipData> // 装备配置表
+    private lateinit var propDataMap: Map<Int, PropData> // 道具配置表
+    private lateinit var potionDataMap: Map<Int, PotionData> // 药水配置表
+    private lateinit var gemDataMap: Map<Int, GemData> // 宝石配置表
 
     @Config("setting.toml")
     private lateinit var pluginSetting: Configuration // 插件配置文件
@@ -30,6 +34,10 @@ object Config {
         loadGameData() // 游戏配置表
         loadItemData() // 物品配置表
         loadWeaponData() // 武器配置表
+        loadEquipData() // 装备配置表
+        loadPropData() // 道具配置表
+        loadPotionData() // 药水配置表
+        loadGemData() // 宝石配置表
     }
 
     // 加载游戏配置表
@@ -63,6 +71,50 @@ object Config {
         }
         weaponDataMap = dataMap
         Logger.info("武器配置表读取完毕, 共${weaponDataMap.size}条数据")
+    }
+
+    // 加载装备配置表
+    private fun loadEquipData() {
+        val dataMap = mutableMapOf<Int, EquipData>()
+        val dataList = readTable(EquipData.serializer(), "${ConfigConst.CONFIG_PATH_PREFIX}/EquipData.csv")
+        dataList?.forEach {
+            dataMap[it.itemId] = it
+        }
+        equipDataMap = dataMap
+        Logger.info("装备配置表读取完毕, 共${equipDataMap.size}条数据")
+    }
+
+    // 加载道具配置表
+    private fun loadPropData() {
+        val dataMap = mutableMapOf<Int, PropData>()
+        val dataList = readTable(PropData.serializer(), "${ConfigConst.CONFIG_PATH_PREFIX}/PropData.csv")
+        dataList?.forEach {
+            dataMap[it.itemId] = it
+        }
+        propDataMap = dataMap
+        Logger.info("道具配置表读取完毕, 共${propDataMap.size}条数据")
+    }
+
+    // 加载药水配置表
+    private fun loadPotionData() {
+        val dataMap = mutableMapOf<Int, PotionData>()
+        val dataList = readTable(PotionData.serializer(), "${ConfigConst.CONFIG_PATH_PREFIX}/PotionData.csv")
+        dataList?.forEach {
+            dataMap[it.itemId] = it
+        }
+        potionDataMap = dataMap
+        Logger.info("药水配置表读取完毕, 共${potionDataMap.size}条数据")
+    }
+
+    // 加载宝石配置表
+    private fun loadGemData() {
+        val dataMap = mutableMapOf<Int, GemData>()
+        val dataList = readTable(GemData.serializer(), "${ConfigConst.CONFIG_PATH_PREFIX}/GemData.csv")
+        dataList?.forEach {
+            dataMap[it.itemId] = it
+        }
+        gemDataMap = dataMap
+        Logger.info("宝石配置表读取完毕, 共${gemDataMap.size}条数据")
     }
 
     // 释放默认配置表文件
@@ -122,6 +174,46 @@ object Config {
     // 通过物品id获取武器配置表
     fun getWeaponDataByItemId(itemId: Int): WeaponData? {
         return weaponDataMap[itemId]
+    }
+
+    // 获取装备配置表
+    fun getEquipDataMap(): Map<Int, EquipData> {
+        return equipDataMap
+    }
+
+    // 通过物品id获取装备配置表
+    fun getEquipDataByItemId(itemId: Int): EquipData? {
+        return equipDataMap[itemId]
+    }
+
+    // 获取道具配置表
+    fun getPropDataMap(): Map<Int, PropData> {
+        return propDataMap
+    }
+
+    // 通过物品id获取道具配置表
+    fun getPropDataByItemId(itemId: Int): PropData? {
+        return propDataMap[itemId]
+    }
+
+    // 获取药水配置表
+    fun getPotionDataMap(): Map<Int, PotionData> {
+        return potionDataMap
+    }
+
+    // 通过物品id获取药水配置表
+    fun getPotionDataByItemId(itemId: Int): PotionData? {
+        return potionDataMap[itemId]
+    }
+
+    // 获取宝石配置表
+    fun getGemDataMap(): Map<Int, GemData> {
+        return gemDataMap
+    }
+
+    // 通过物品id获取宝石配置表
+    fun getGemDataByItemId(itemId: Int): GemData? {
+        return gemDataMap[itemId]
     }
 
 }

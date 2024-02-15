@@ -2,6 +2,7 @@ package top.ycmt.thetrackofshadow.game.module
 
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
 import top.ycmt.thetrackofshadow.game.Game
 import top.ycmt.thetrackofshadow.game.state.PhaseState
@@ -202,7 +203,8 @@ class PlayerModule(private val game: Game) {
         }
 
         // 设置玩家的基础信息
-        player.health = 20.0
+        val playerMaxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: 20.0
+        player.health = playerMaxHealth
         player.foodLevel = 20
         player.level = 0
         player.exp = 0f

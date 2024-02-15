@@ -1,8 +1,7 @@
 package top.ycmt.thetrackofshadow.game.event
 
 import org.bukkit.Material
-import org.bukkit.entity.FallingBlock
-import org.bukkit.entity.Player
+import org.bukkit.entity.*
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -77,18 +76,18 @@ object EntityDamageByEntity {
         if (e.isCancelled) {
             return
         }
-        // 确保攻击者是玩家
-        if (e.damager !is Player) {
-            return
-        }
-        val damager = e.damager as Player
         // 确保玩家存在禁止PVP状态
         if (!game.cancelModule.containsCancelState(player, CancelState.CANCEL_PVP)) {
             return
         }
-        // 提示攻击者
-        damager.sendFailMsg("游戏暂时还没开启PVP!")
-        e.isCancelled = true
+        // 获取攻击者
+        val damagerPlayer: Player = getShooterPlayer(e.damager) ?: return
+        // 如果攻击者是玩家自己就不阻止
+        if (damagerPlayer.uniqueId != player.uniqueId) {
+            // 提示攻击者
+            damagerPlayer.sendFailMsg("游戏暂时还没开启PVP!")
+            e.isCancelled = true
+        }
     }
 
     // 重生后PVP保护
@@ -97,18 +96,46 @@ object EntityDamageByEntity {
         if (e.isCancelled) {
             return
         }
-        // 确保攻击者是玩家
-        if (e.damager !is Player) {
-            return
-        }
-        val damager = e.damager as Player
         // 确保玩家存在禁止PVP状态
         if (!game.cancelModule.containsCancelState(player, CancelState.CANCEL_PVP_RESPAWN_PROTECT)) {
             return
         }
-        // 提示攻击者
-        damager.sendFailMsg("对方还在重生保护状态!")
+        // 阻止一切实体造成伤害
         e.isCancelled = true
+        // 获取攻击者
+        val damagerPlayer: Player = getShooterPlayer(e.damager) ?: return
+        // 如果攻击者是玩家自己就不阻止
+        if (damagerPlayer.uniqueId != player.uniqueId) {
+            // 提示攻击者
+            damagerPlayer.sendFailMsg("对方还在重生保护状态!")
+        }
+    }
+
+    // 获取射出实体的攻击者
+    private fun getShooterPlayer(damager: Entity): Player? {
+        when (damager) {
+            // 玩家
+            is Player -> {
+                return damager
+            }
+            // 箭矢
+            is Arrow -> {
+                val shooter = damager.shooter
+                if (shooter !is Player) {
+                    return null
+                }
+                return shooter
+            }
+            // 三叉戟
+            is Trident -> {
+                val shooter = damager.shooter
+                if (shooter !is Player) {
+                    return null
+                }
+                return shooter
+            }
+        }
+        return null
     }
 
     // 受到其他玩家攻击伤害翻倍

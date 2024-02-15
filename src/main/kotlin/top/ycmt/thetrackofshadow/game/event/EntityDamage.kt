@@ -66,10 +66,6 @@ object EntityDamage {
         if (e.isCancelled) {
             return
         }
-        // 确保游戏处于结算阶段
-        if (game.phaseState != PhaseState.SETTLE_PHASE) {
-            return
-        }
         // 确保玩家存在取消伤害状态
         if (!game.cancelModule.containsCancelState(player, CancelState.CANCEL_DAMAGE)) {
             return

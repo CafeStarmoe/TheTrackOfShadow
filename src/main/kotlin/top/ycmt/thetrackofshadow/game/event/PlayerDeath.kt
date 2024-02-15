@@ -3,6 +3,7 @@ package top.ycmt.thetrackofshadow.game.event
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.inventory.ItemStack
@@ -166,6 +167,7 @@ object PlayerDeath {
             // 最终死亡那就是变成观察者
             game.playerModule.playerToWatcher(player)
         }
-        player.health = 20.0 // 确保玩家不死亡
+        val playerMaxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: 20.0
+        player.health = playerMaxHealth // 确保玩家不死亡
     }
 }

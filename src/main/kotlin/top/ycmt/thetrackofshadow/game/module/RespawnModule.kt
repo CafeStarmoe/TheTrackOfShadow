@@ -45,6 +45,8 @@ class RespawnModule(private val game: Game) {
         // 暂时允许飞行
         player.allowFlight = true
         player.isFlying = true
+        // 设置玩家禁止受伤状态
+        game.cancelModule.addPlayerCancelState(player, CancelState.CANCEL_DAMAGE)
         // 给予玩家隐身效果
         player.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, -1, 0, true, false))
         // 设置玩家隐身
@@ -78,6 +80,8 @@ class RespawnModule(private val game: Game) {
         // 取消允许飞行
         player.allowFlight = false
         player.isFlying = false
+        // 取消玩家禁止受伤状态
+        game.cancelModule.removePlayerCancelState(player, CancelState.CANCEL_DAMAGE)
         // 设置玩家显示
         player.showPlayers(game.playerModule.getOnlineUsers())
         // 清除摔落伤害
@@ -139,6 +143,9 @@ class RespawnModule(private val game: Game) {
     fun removeProtect(player: Player) {
         game.cancelModule.removePlayerCancelState(player, CancelState.CANCEL_PVP_RESPAWN_PROTECT)
         protectPlayers.remove(player.uniqueId)
+        // 提示玩家
+        player.playSound(player.location, Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f)
+        player.sendMessage("<#ffefbb,e3ce82>你的重生保护现已失效!</#>".toGradientColor())
     }
 
     // 玩家是否正在重生

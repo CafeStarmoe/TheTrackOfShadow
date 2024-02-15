@@ -60,8 +60,8 @@ class RunningPhase(private val game: Game) : PhaseAbstract() {
             ScoreBoard.removeScore(it)
             // 发送玩法介绍
             sendGameIntroduce(it)
-            // 给予玩家所有武器测试
-            Config.getWeaponDataMap().forEach { (t, _) ->
+            // 给予玩家所有物品测试
+            Config.getItemDataMap().forEach { (t, _) ->
                 val item = game.itemModule.createItem(t)
                 it.giveItem(item)
             }
