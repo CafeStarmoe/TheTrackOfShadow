@@ -2,8 +2,11 @@ name: build snapshot release
 on:
   workflow_dispatch:
   # 每天晚上7点半自动构建快照版
-  schedule:
-    - cron: "30 11 * * *"
+  #  schedule:
+  #    - cron: "30 11 * * *"
+  # 推送自动构建快照版
+  push:
+    branches: [ develop ]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,9 +14,9 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@v4.1.1
       - name: validate gradle wrapper
-        uses: gradle/wrapper-validation-action@v2.1.0
+        uses: gradle/wrapper-validation-action@v2.1.2
       - name: setup jdk 8.0
-        uses: actions/setup-java@v4.0.0
+        uses: actions/setup-java@v4.2.1
         with:
           distribution: adopt
           java-version: 8.0

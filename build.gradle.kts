@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    id("io.izzel.taboolib") version "2.0.5"
+    id("io.izzel.taboolib") version "2.0.11"
     id("org.jetbrains.kotlin.jvm") version "1.9.22"
     kotlin("plugin.serialization") version "1.9.22"
 }
