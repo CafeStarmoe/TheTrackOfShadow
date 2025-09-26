@@ -5,7 +5,7 @@
 Clone this repository 
  
 ```
-git clone --depth=1 https://github.com/YuCraft/TheTrackOfShadow.git
+git clone --depth=1 https://github.com/CafeStarmoe/TheTrackOfShadow.git
 ```
 Build with gradle 
 
